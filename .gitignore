@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Logs
 logs
 *.log
@@ -134,3 +135,13 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+=======
+node_modules/
+dist/
+.env
+.vscode/
+*.log
+*.zip
+.DS_Store
+
+>>>>>>> f71c85b (web3 changes)

@@ -37,23 +37,6 @@ const ConnectWalletModal = ({ isOpen, setIsOpen }) => {
     }
   };
 
-  // Заглушки для других кошельков (можно реализовать позже)
-  const handleWalletConnect = () => {
-    toast({
-      title: "WalletConnect пока не реализован",
-      description: "В ближайшем будущем добавим поддержку.",
-      variant: "destructive",
-    });
-  };
-
-  const handleCoinbaseConnect = () => {
-    toast({
-      title: "Coinbase Wallet пока не реализован",
-      description: "В ближайшем будущем добавим поддержку.",
-      variant: "destructive",
-    });
-  };
-
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogContent className="sm:max-w-[425px]">

@@ -10,7 +10,8 @@ import { useToast } from '@/components/ui/use-toast';
 import { cn } from '@/lib/utils';
 import ThemeToggle from '@/components/ThemeToggle';
 import MobileMenu from '@/components/MobileMenu';
-import ConnectWalletButton from './ConnectWalletButton'; // ← добавлен импорт
+import ConnectWalletButton from './ConnectWalletButton';
+import StripeButton from './stripe/StripeButton';
 
 const Navbar = ({ isMenuOpen, setIsMenuOpen }) => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -70,7 +71,7 @@ const Navbar = ({ isMenuOpen, setIsMenuOpen }) => {
               <div className="w-10 h-10 rounded-full bg-gradient-to-r from-purple-600 to-blue-500 flex items-center justify-center mr-2">
                 <span className="text-white font-bold text-xl">S</span>
               </div>
-              <span className="text-xl font-bold text-gradient">SkillConnect</span>
+              <span className="text-xl font-bold text-gradient">Art Skills</span>
             </motion.div>
           </Link>
 
@@ -94,7 +95,8 @@ const Navbar = ({ isMenuOpen, setIsMenuOpen }) => {
           {/* Right side actions */}
           <div className="hidden md:flex items-center space-x-2">
             <ThemeToggle />
-            <ConnectWalletButton /> {/* ← Кнопка "Коннект Валлет" */}
+            <ConnectWalletButton />
+            <StripeButton />
             {isLoggedIn ? (
               <>
                 <Button variant="ghost" size="sm" asChild>

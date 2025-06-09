@@ -143,5 +143,6 @@ dist/
 *.log
 *.zip
 .DS_Store
+server.cjs
 
->>>>>>> f71c85b (web3 changes)
+>>>>>>> f71c85b (

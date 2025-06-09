@@ -1,8 +1,8 @@
 import React from 'react';
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { Button } from '@/components/ui/button';
-// Путь ниже — поправь если StripeButton в другой папке
-import StripeButton from "@/components/StripeButton";
+
+
 
 export default function Header() {
   return (

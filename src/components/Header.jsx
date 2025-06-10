@@ -11,10 +11,11 @@ export default function Header() {
       <ConnectButton.Custom>
         {({ openConnectModal }) => (
           <Button
-            variant="outline"
+            variant="default"
             size="sm"
-            className="rounded-xl px-5 py-2 font-bold shadow text-primary min-w-[150px] max-w-[200px]"
+            className="rounded-xl px-5 py-2 font-bold shadow min-w-[150px] max-w-[200px] focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:outline-none"
             onClick={openConnectModal}
+            tabIndex={0}
           >
             Connect Wallet
           </Button>

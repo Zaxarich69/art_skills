@@ -1,10 +1,10 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import Tooltip from '@/components/ui/tooltip';
 
 import { 
   Search, Users, BookOpen, Briefcase, 
@@ -67,12 +67,12 @@ const HomePage = () => {
   ];
 
   return (
-    <div className="flex flex-col min-h-screen pt-16">
+    <div className="flex flex-col h-full pt-16">
       {/* Hero Section */}
-      <section className="relative py-20 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-purple-900/20 via-background to-background z-0"></div>
+      <section className="relative py-20 overflow-hidden bg-background">
         <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent"></div>
-        
+        <div className="animated-hero-gradient"></div>
+
         <div className="container mx-auto px-4 relative z-10">
           <div className="flex flex-col lg:flex-row items-center gap-12">
             <motion.div 
@@ -89,7 +89,7 @@ const HomePage = () => {
               </h1>
               <p className="text-xl text-muted-foreground mb-8 max-w-xl">
                 Connect with teachers, tutors, craftsmen, and experts in various fields. 
-                Share contacts and build your professional network with SkillConnect.
+                Share contacts and build your professional network with Art Skills.
               </p>
               <div className="flex flex-wrap gap-4">
                 <Button size="lg" asChild>
@@ -110,7 +110,7 @@ const HomePage = () => {
             >
               <div className="relative w-full h-[400px] rounded-xl overflow-hidden">
                 <img  alt="Diverse group of professionals networking" className="w-full h-full object-cover rounded-xl" src="https://images.unsplash.com/photo-1700995577988-81c9550aa64b" />
-                <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent"></div>
+                
                 
                 <motion.div 
                   className="absolute bottom-6 left-6 glass-card p-4 rounded-lg max-w-[280px]"
@@ -165,19 +165,25 @@ const HomePage = () => {
                 whileHover={{ y: -5 }}
                 whileTap={{ scale: 0.95 }}
                 initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
+                whileInView="visible"
+                viewport={{ once: true, amount: 0.5 }}
                 transition={{ duration: 0.3, delay: index * 0.1 }}
+                variants={{
+                  visible: { opacity: 1, y: 0 },
+                }}
               >
-                <Link to="/explore" className="block">
-                  <Card className="h-full overflow-hidden border-none bg-gradient-to-br hover:shadow-lg transition-all duration-300">
-                    <CardContent className="p-6 flex flex-col items-center text-center">
-                      <div className={`w-16 h-16 rounded-full bg-gradient-to-br ${category.color} flex items-center justify-center mb-4`}>
-                        {category.icon}
-                      </div>
-                      <h3 className="font-medium">{category.name}</h3>
-                    </CardContent>
-                  </Card>
-                </Link>
+                <Tooltip content={category.name}>
+                  <Link to={`/explore?category=${encodeURIComponent(category.name)}`} className="block">
+                    <Card className="h-full overflow-hidden border-none bg-gradient-to-br hover:shadow-2xl transition-all duration-300 hover:scale-[1.02]">
+                      <CardContent className="p-6 flex flex-col items-center text-center">
+                        <div className={`w-16 h-16 rounded-full bg-gradient-to-br ${category.color} flex items-center justify-center mb-4`}>
+                          {category.icon}
+                        </div>
+                        <h3 className="font-medium">{category.name}</h3>
+                      </CardContent>
+                    </Card>
+                  </Link>
+                </Tooltip>
               </motion.div>
             ))}
           </div>
@@ -199,9 +205,13 @@ const HomePage = () => {
               <motion.div
                 key={index}
                 initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
+                whileInView="visible"
+                viewport={{ once: true, amount: 0.5 }}
                 transition={{ duration: 0.3, delay: index * 0.1 }}
-                className="glass-card rounded-xl p-6"
+                variants={{
+                  visible: { opacity: 1, y: 0 },
+                }}
+                className="glass-card rounded-xl p-6 transition-all duration-300 hover:shadow-2xl hover:scale-[1.02]"
               >
                 <div className="mb-4 text-primary">{feature.icon}</div>
                 <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
@@ -227,9 +237,13 @@ const HomePage = () => {
               <motion.div
                 key={index}
                 initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
+                whileInView="visible"
+                viewport={{ once: true, amount: 0.5 }}
                 transition={{ duration: 0.3, delay: index * 0.1 }}
-                className="glass-card rounded-xl p-6"
+                variants={{
+                  visible: { opacity: 1, y: 0 },
+                }}
+                className="glass-card rounded-xl p-6 transition-all duration-300 hover:shadow-2xl hover:scale-[1.02]"
               >
                 <div className="mb-4 text-primary">
                   <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

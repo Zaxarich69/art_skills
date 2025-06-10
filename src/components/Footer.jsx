@@ -51,11 +51,11 @@ const Footer = () => {
               <div className="w-10 h-10 rounded-full bg-gradient-to-r from-purple-600 to-blue-500 flex items-center justify-center mr-2">
                 <span className="text-white font-bold text-xl">S</span>
               </div>
-              <span className="text-xl font-bold text-gradient">SkillConnect</span>
+              <span className="text-xl font-bold text-gradient">Art Skills</span>
             </Link>
             <p className="text-muted-foreground mb-4 max-w-md">
               Connect with skilled professionals, teachers, tutors, and craftsmen. 
-              Share contacts and build your network with SkillConnect.
+              Share contacts and build your network with Art Skills.
             </p>
             <div className="flex space-x-3">
               {socialLinks.map((social, index) => (

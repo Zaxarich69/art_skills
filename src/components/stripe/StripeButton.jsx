@@ -32,7 +32,14 @@ export default function StripeButton() {
 
   return (
     <>
-      <Button variant="outline" onClick={handleOpen} disabled={loading}>
+      <Button
+        variant="outline"
+        size="sm"
+        className="rounded-xl px-5 py-2 font-bold shadow text-primary min-w-[150px] max-w-[200px] transition-all duration-200 hover:shadow-lg hover:bg-primary/5 focus-visible:shadow-lg focus-visible:bg-primary/5 focus-visible:outline-none"
+        onClick={handleOpen}
+        disabled={loading}
+        tabIndex={0}
+      >
         Connect Card
       </Button>
       <Dialog open={open} onOpenChange={setOpen}>

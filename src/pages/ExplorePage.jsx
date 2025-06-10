@@ -1,6 +1,5 @@
-
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -115,6 +114,7 @@ const categories = [
   'Fitness',
   'Business',
   'Arts',
+  'Photography',
 ];
 
 const ExplorePage = () => {
@@ -126,6 +126,16 @@ const ExplorePage = () => {
   const [filteredProfessionals, setFilteredProfessionals] = useState([]);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const { toast } = useToast();
+  const [searchParams] = useSearchParams();
+
+  useEffect(() => {
+    const categoryParam = searchParams.get('category');
+    if (categoryParam && categories.includes(categoryParam)) {
+      setSelectedCategory(categoryParam);
+    } else {
+      setSelectedCategory('All Categories');
+    }
+  }, [searchParams]);
 
   useEffect(() => {
     // Simulate loading data from an API

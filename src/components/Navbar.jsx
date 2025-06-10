@@ -33,7 +33,7 @@ const Navbar = ({ isMenuOpen, setIsMenuOpen }) => {
     setIsLoggedIn(true);
     toast({
       title: "Logged in successfully",
-      description: "Welcome back to SkillConnect!",
+      description: "Welcome back to Art Skills!",
       duration: 3000,
     });
   };
@@ -57,7 +57,7 @@ const Navbar = ({ isMenuOpen, setIsMenuOpen }) => {
   return (
     <header className={cn(
       "fixed top-0 w-full z-50 transition-all duration-300",
-      isScrolled ? "bg-background/80 backdrop-blur-md border-b" : "bg-transparent"
+      isScrolled ? "bg-background/80 backdrop-blur-md border-b header-mist-background" : "bg-transparent"
     )}>
       <div className="container mx-auto px-4 py-3">
         <div className="flex items-center justify-between">
@@ -111,7 +111,12 @@ const Navbar = ({ isMenuOpen, setIsMenuOpen }) => {
                 </Button>
               </>
             ) : (
-              <Button size="sm" onClick={handleLogin}>
+              <Button
+                size="sm"
+                variant="outline"
+                className="text-primary rounded-xl px-5 py-2 font-bold shadow min-w-[150px] max-w-[200px] transition-all duration-200 hover:shadow-lg hover:bg-primary/5 focus-visible:shadow-lg focus-visible:bg-primary/5 focus-visible:outline-none"
+                onClick={handleLogin}
+              >
                 <LogIn className="h-4 w-4 mr-1" />
                 Login
               </Button>

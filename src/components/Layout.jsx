@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
@@ -9,7 +8,7 @@ const Layout = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <div className="flex flex-col min-h-screen bg-background hero-pattern">
+    <div className="flex flex-col h-full">
       <Navbar isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />
       
       <AnimatePresence mode="wait">

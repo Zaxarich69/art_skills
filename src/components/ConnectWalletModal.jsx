@@ -37,6 +37,24 @@ const ConnectWalletModal = ({ isOpen, setIsOpen }) => {
     }
   };
 
+  // Заглушка для WalletConnect
+  const handleWalletConnect = () => {
+    toast({
+      title: "WalletConnect",
+      description: "Подключение WalletConnect пока не реализовано.",
+      variant: "default",
+    });
+  };
+
+  // Заглушка для Coinbase Wallet
+  const handleCoinbaseConnect = () => {
+    toast({
+      title: "Coinbase Wallet",
+      description: "Подключение Coinbase Wallet пока не реализовано.",
+      variant: "default",
+    });
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogContent className="sm:max-w-[425px]">

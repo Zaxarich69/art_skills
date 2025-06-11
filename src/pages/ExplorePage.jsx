@@ -23,7 +23,7 @@ const mockProfessionals = [
     id: 1,
     name: 'Dr. Emily Johnson',
     title: 'Mathematics Professor',
-    category: 'Education',
+    category: 'language_tutor',
     rating: 4.9,
     reviews: 128,
     location: 'New York, NY',
@@ -37,7 +37,7 @@ const mockProfessionals = [
     id: 2,
     name: 'Marcus Chen',
     title: 'Woodworking Craftsman',
-    category: 'Crafts',
+    category: 'craftsman',
     rating: 4.8,
     reviews: 93,
     location: 'Portland, OR',
@@ -51,7 +51,7 @@ const mockProfessionals = [
     id: 3,
     name: 'Sofia Rodriguez',
     title: 'Spanish Language Tutor',
-    category: 'Education',
+    category: 'language_tutor',
     rating: 4.7,
     reviews: 156,
     location: 'Miami, FL',
@@ -65,7 +65,7 @@ const mockProfessionals = [
     id: 4,
     name: 'James Wilson',
     title: 'Web Development Instructor',
-    category: 'Technology',
+    category: 'web_developer',
     rating: 4.9,
     reviews: 201,
     location: 'San Francisco, CA',
@@ -79,7 +79,7 @@ const mockProfessionals = [
     id: 5,
     name: 'Aisha Patel',
     title: 'Yoga Instructor',
-    category: 'Fitness',
+    category: 'fitness_coach',
     rating: 4.8,
     reviews: 175,
     location: 'Austin, TX',
@@ -93,7 +93,7 @@ const mockProfessionals = [
     id: 6,
     name: 'David Kim',
     title: 'Piano Teacher',
-    category: 'Music',
+    category: 'musician',
     rating: 4.9,
     reviews: 112,
     location: 'Chicago, IL',
@@ -106,15 +106,50 @@ const mockProfessionals = [
 ];
 
 const categories = [
-  'All Categories',
-  'Education',
-  'Technology',
-  'Crafts',
-  'Music',
-  'Fitness',
-  'Business',
-  'Arts',
-  'Photography',
+  {
+    value: 'All Categories',
+    label: 'Все категории'
+  },
+  {
+    value: 'art_tutor',
+    label: 'Репетитор по искусству'
+  },
+  {
+    value: 'web_developer',
+    label: 'Веб-разработчик'
+  },
+  {
+    value: 'ui_ux_designer',
+    label: 'UI/UX Дизайнер'
+  },
+  {
+    value: 'musician',
+    label: 'Музыкант'
+  },
+  {
+    value: 'language_tutor',
+    label: 'Репетитор по языкам'
+  },
+  {
+    value: 'fitness_coach',
+    label: 'Фитнес-тренер'
+  },
+  {
+    value: 'photographer',
+    label: 'Фотограф'
+  },
+  {
+    value: 'chef',
+    label: 'Повар'
+  },
+  {
+    value: 'craftsman',
+    label: 'Мастер поделок'
+  },
+  {
+    value: 'other',
+    label: 'Другое'
+  }
 ];
 
 const ExplorePage = () => {
@@ -130,7 +165,7 @@ const ExplorePage = () => {
 
   useEffect(() => {
     const categoryParam = searchParams.get('category');
-    if (categoryParam && categories.includes(categoryParam)) {
+    if (categoryParam && categories.some(cat => cat.value === categoryParam)) {
       setSelectedCategory(categoryParam);
     } else {
       setSelectedCategory('All Categories');
@@ -222,14 +257,17 @@ const ExplorePage = () => {
               />
             </div>
             <div className="flex gap-2">
-              <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+              <Select 
+                value={selectedCategory}
+                onValueChange={(value) => setSelectedCategory(value)}
+              >
                 <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder="Category" />
+                  <SelectValue placeholder="Категория" />
                 </SelectTrigger>
                 <SelectContent>
-                  {categories.map((category) => (
-                    <SelectItem key={category} value={category}>
-                      {category}
+                  {categories.map((cat) => (
+                    <SelectItem key={cat.value} value={cat.value}>
+                      {cat.label}
                     </SelectItem>
                   ))}
                 </SelectContent>

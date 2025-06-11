@@ -212,6 +212,49 @@ const initialUserData = {
   ]
 };
 
+const categories = [
+  {
+    value: 'art_tutor',
+    label: 'Репетитор по искусству'
+  },
+  {
+    value: 'web_developer',
+    label: 'Веб-разработчик'
+  },
+  {
+    value: 'ui_ux_designer',
+    label: 'UI/UX Дизайнер'
+  },
+  {
+    value: 'musician',
+    label: 'Музыкант'
+  },
+  {
+    value: 'language_tutor',
+    label: 'Репетитор по языкам'
+  },
+  {
+    value: 'fitness_coach',
+    label: 'Фитнес-тренер'
+  },
+  {
+    value: 'photographer',
+    label: 'Фотограф'
+  },
+  {
+    value: 'chef',
+    label: 'Повар'
+  },
+  {
+    value: 'craftsman',
+    label: 'Мастер поделок'
+  },
+  {
+    value: 'other',
+    label: 'Другое'
+  }
+];
+
 const ProfilePage = () => {
   const { toast } = useToast();
   const [activeTab, setActiveTab] = useState('profile');
@@ -443,6 +486,7 @@ const ProfilePage = () => {
                   setFormData={setFormData} 
                   userData={userData}
                   onSave={handleSaveProfile}
+                  categories={categories}
                 />
               </TabsContent>
               

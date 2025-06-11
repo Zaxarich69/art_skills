@@ -2,15 +2,23 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
 import { Edit, Save } from 'lucide-react';
 
-const ProfileForm = ({ isEditing, formData, setFormData, onSave }) => {
+const ProfileForm = ({ isEditing, formData, setFormData, onSave, categories }) => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prevData => ({
       ...prevData,
       [name]: value
+    }));
+  };
+
+  const handleSelectChange = (value) => {
+    setFormData(prevData => ({
+      ...prevData,
+      category: value
     }));
   };
 
@@ -86,6 +94,25 @@ const ProfileForm = ({ isEditing, formData, setFormData, onSave }) => {
               onChange={handleChange}
               disabled={!isEditing}
             />
+          </div>
+          <div className="grid gap-2">
+            <Label htmlFor="category">Категория</Label>
+            <Select 
+              onValueChange={handleSelectChange}
+              value={formData.category || ''}
+              disabled={!isEditing}
+            >
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Выберите категорию" />
+              </SelectTrigger>
+              <SelectContent>
+                {categories.map((category) => (
+                  <SelectItem key={category.value} value={category.value}>
+                    {category.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
           <div className="grid gap-2">
             <Label htmlFor="hourlyRate">Почасовая ставка</Label>

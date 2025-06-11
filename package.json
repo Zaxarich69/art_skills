@@ -46,7 +46,8 @@
     "tailwindcss-animate": "^1.0.7",
     "uuid": "^9.0.1",
     "viem": "^2",
-    "wagmi": "^2"
+    "wagmi": "^2",
+    "date-fns": "^3.6.0"
   },
   "devDependencies": {
     "@types/node": "^20.8.3",

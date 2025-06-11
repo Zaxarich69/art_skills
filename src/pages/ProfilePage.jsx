@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
@@ -15,10 +15,12 @@ import Balance from '@/components/profile/Balance';
 import Reviews from '@/components/profile/Reviews';
 import Lessons from '@/components/profile/Lessons';
 import ConnectWalletModal from '@/components/ConnectWalletModal';
-import Messages from '@/components/profile/Messages';
+import ChatInterface from '@/components/profile/ChatInterface';
 import Settings from '@/components/profile/Settings';
 import DepositModal from '@/components/DepositModal';
 import WithdrawModal from '@/components/WithdrawModal';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 
 const initialUserData = {
   name: 'Алексей Морозов',
@@ -209,7 +211,8 @@ const initialUserData = {
         }
       ]
     }
-  ]
+  ],
+  category: 'web_developer',
 };
 
 const categories = [
@@ -259,22 +262,31 @@ const ProfilePage = () => {
   const { toast } = useToast();
   const [activeTab, setActiveTab] = useState('profile');
   const [isEditing, setIsEditing] = useState(false);
-  const [userData, setUserData] = useState(initialUserData);
-  const [formData, setFormData] = useState({...initialUserData});
+  const [userData, setUserData] = useState(() => {
+    const savedProfile = localStorage.getItem('userProfile');
+    return savedProfile ? JSON.parse(savedProfile) : initialUserData;
+  });
+  const [formData, setFormData] = useState(userData);
   const [isConnectWalletModalOpen, setIsConnectWalletModalOpen] = useState(false);
   const [isDepositModalOpen, setIsDepositModalOpen] = useState(false);
   const [isWithdrawModalOpen, setIsWithdrawModalOpen] = useState(false);
+  const [balance, setBalance] = useState(userData.balance);
 
   const fileInputRef = useRef(null);
 
+  useEffect(() => {
+    if (!isEditing) {
+      setFormData(userData);
+    }
+  }, [isEditing, userData]);
+
   const handleSaveProfile = (updatedData) => {
     setUserData(updatedData);
-    setFormData(updatedData); 
+    localStorage.setItem('userProfile', JSON.stringify(updatedData));
     setIsEditing(false);
     toast({
       title: "Профиль обновлен",
-      description: "Ваш профиль был успешно обновлен.",
-      duration: 3000,
+      description: "Ваши изменения успешно сохранены.",
     });
   };
 
@@ -346,37 +358,68 @@ const ProfilePage = () => {
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
-    if (!file) return;
+    if (file) {
+      if (!file.type.startsWith('image/')) {
+        toast({
+          title: "Ошибка загрузки",
+          description: "Пожалуйста, выберите файл изображения.",
+          variant: "destructive",
+        });
+        return;
+      }
+      if (file.size > 5 * 1024 * 1024) {
+        toast({
+          title: "Ошибка загрузки",
+          description: "Размер файла превышает 5 МБ.",
+          variant: "destructive",
+        });
+        return;
+      }
 
-    if (!file.type.startsWith('image/')) {
-      toast({
-        title: "Ошибка загрузки",
-        description: "Пожалуйста, выберите файл изображения (JPEG, PNG, GIF).",
-        variant: "destructive",
-      });
-      return;
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setUserData(prevData => ({
+          ...prevData,
+          profilePicture: reader.result
+        }));
+        setFormData(prevData => ({
+          ...prevData,
+          profilePicture: reader.result
+        }));
+        toast({
+          title: "Фото профиля обновлено",
+          description: "Ваше новое фото профиля успешно загружено.",
+        });
+      };
+      reader.readAsDataURL(file);
     }
+  };
 
-    if (file.size > 5 * 1024 * 1024) {
-      toast({
-        title: "Ошибка загрузки",
-        description: "Размер файла не должен превышать 5 МБ.",
-        variant: "destructive",
+  const handleSendMessage = (conversationId, text) => {
+    setUserData(prevUserData => {
+      const updatedConversations = prevUserData.conversations.map(conv => {
+        if (conv.id === conversationId) {
+          const newId = `m${conv.messages.length + 1}`;
+          const newMessage = {
+            id: newId,
+            text: text,
+            time: new Date().toISOString(),
+            isOwn: true, // Assuming current user sends the message
+          };
+          return {
+            ...conv,
+            messages: [...conv.messages, newMessage],
+            lastMessage: text,
+            lastMessageTime: newMessage.time,
+          };
+        }
+        return conv;
       });
-      return;
-    }
 
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setUserData(prevData => ({ ...prevData, profilePicture: reader.result }));
-      setFormData(prevData => ({ ...prevData, profilePicture: reader.result }));
-      toast({
-        title: "Фото профиля обновлено",
-        description: "Ваше фото профиля успешно загружено.",
-        duration: 3000,
-      });
-    };
-    reader.readAsDataURL(file);
+      const updatedUserData = { ...prevUserData, conversations: updatedConversations };
+      localStorage.setItem('userProfile', JSON.stringify(updatedUserData));
+      return updatedUserData;
+    });
   };
 
   return (
@@ -529,7 +572,10 @@ const ProfilePage = () => {
               </TabsContent>
 
               <TabsContent value="messages" className="mt-0">
-                <Messages conversations={userData.conversations} />
+                <ChatInterface 
+                  conversations={userData.conversations} 
+                  onSendMessage={handleSendMessage}
+                />
               </TabsContent>
 
               <TabsContent value="settings" className="mt-0">

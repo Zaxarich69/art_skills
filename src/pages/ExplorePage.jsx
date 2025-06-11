@@ -175,8 +175,36 @@ const ExplorePage = () => {
   useEffect(() => {
     // Simulate loading data from an API
     setTimeout(() => {
-      setProfessionals(mockProfessionals);
-      setFilteredProfessionals(mockProfessionals);
+      const savedUserProfile = localStorage.getItem('userProfile');
+      let userProfessional = null;
+      if (savedUserProfile) {
+        const userData = JSON.parse(savedUserProfile);
+        userProfessional = {
+          id: userData.id || 'user-profile', // Assign a unique ID for the user's profile
+          name: userData.name || 'Ваш Профиль',
+          title: userData.title || 'Пользователь',
+          category: userData.category || 'other', // Default to 'other' if not set
+          rating: userData.averageRating || 5.0, // Default rating
+          reviews: userData.reviews ? userData.reviews.length : 0, // Number of reviews
+          location: userData.location || 'Не указано',
+          hourlyRate: userData.hourlyRate || 0,
+          acceptsCrypto: userData.acceptsCrypto || false,
+          about: userData.bio || 'О себе',
+          image: userData.profilePicture || null,
+          tags: userData.skills || [],
+        };
+      }
+
+      let combinedProfessionals = [...mockProfessionals];
+      if (userProfessional) {
+        // Check if userProfessional is already in the list to prevent duplicates
+        if (!combinedProfessionals.some(pro => pro.id === userProfessional.id)) {
+          combinedProfessionals.unshift(userProfessional); // Add user profile to the beginning
+        }
+      }
+
+      setProfessionals(combinedProfessionals);
+      setFilteredProfessionals(combinedProfessionals);
     }, 500);
   }, []);
 
@@ -388,7 +416,11 @@ const ExplorePage = () => {
               <Card className="h-full overflow-hidden hover:shadow-lg transition-all duration-300 glass-card">
                 <CardContent className="p-0">
                   <div className="relative h-48 bg-gradient-to-r from-primary/20 to-secondary/20">
-                    <img  alt={`${professional.name}, ${professional.title}`} className="w-full h-full object-cover" src="https://images.unsplash.com/photo-1586732711591-12c04655338f" />
+                    <img 
+                      alt={`${professional.name}, ${professional.title}`} 
+                      className="w-full h-full object-cover"
+                      src={professional.image || "https://images.unsplash.com/photo-1586732711591-12c04655338f?auto=format&fit=crop&q=80&w=2070&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"}
+                    />
                     <div className="absolute top-4 right-4 flex space-x-2">
                       <Button 
                         variant="secondary" 

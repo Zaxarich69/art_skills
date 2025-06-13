@@ -74,33 +74,96 @@ const initialUserData = {
     {
       id: 'l1',
       title: 'Введение в React',
-      student: { name: 'Иван Петров', avatar: null },
-      date: '2024-03-20T15:00:00',
-      location: 'Онлайн'
+      teacher: 'Иван Петров',
+      date: new Date(new Date().getTime() + 2 * 60 * 60 * 1000).toISOString(), // Через 2 часа
+      location: 'Онлайн',
+      status: 'ожидается',
+      jitsiLink: 'https://meet.jit.si/VvedenieVReact-IvanPetrov',
+      hasRecording: false,
+      recordUrl: null,
+      feedbackLeft: false,
+      hasChat: true,
     },
     {
       id: 'l2',
       title: 'Продвинутый JavaScript',
-      student: { name: 'Мария Иванова', avatar: null },
-      date: '2024-03-21T18:00:00',
-      location: 'Онлайн'
-    }
+      teacher: 'Мария Иванова',
+      date: new Date(new Date().getTime() + 24 * 60 * 60 * 1000).toISOString(), // Завтра
+      location: 'Онлайн',
+      status: 'ожидается',
+      jitsiLink: 'https://meet.jit.si/ProdvinutiyJavaScript-MariaIvanova',
+      hasRecording: false,
+      recordUrl: null,
+      feedbackLeft: false,
+      hasChat: false,
+    },
+    {
+      id: 'l5',
+      title: 'Основы Tailwind CSS',
+      teacher: 'Петр Смирнов',
+      date: new Date(new Date().getTime() - 30 * 60 * 1000).toISOString(), // Начался 30 минут назад
+      location: 'Онлайн',
+      status: 'онлайн',
+      jitsiLink: 'https://meet.jit.si/OsnovyTailwindCSS-PetrSmirnov',
+      hasRecording: false,
+      recordUrl: null,
+      feedbackLeft: false,
+      hasChat: true,
+    },
   ],
   pastLessons: [
     {
       id: 'l3',
       title: 'Основы TypeScript',
-      student: { name: 'Анна Сидорова', avatar: null },
-      date: '2024-03-15T14:00:00',
-      hasReview: true
+      teacher: 'Анна Сидорова',
+      date: new Date(new Date().getTime() - 7 * 24 * 60 * 60 * 1000).toISOString(), // Неделю назад
+      location: 'Онлайн',
+      status: 'завершено',
+      jitsiLink: null,
+      hasRecording: true,
+      recordUrl: 'https://example.com/recordings/typescript_anna.mp4',
+      feedbackLeft: true,
+      hasChat: true,
     },
     {
       id: 'l4',
       title: 'Node.js для начинающих',
-      student: { name: 'Дмитрий Смирнов', avatar: null },
-      date: '2024-03-14T16:00:00',
-      hasReview: false
-    }
+      teacher: 'Дмитрий Смирнов',
+      date: new Date(new Date().getTime() - 14 * 24 * 60 * 60 * 1000).toISOString(), // Две недели назад
+      location: 'Онлайн',
+      status: 'завершено',
+      jitsiLink: null,
+      hasRecording: true,
+      recordUrl: 'https://example.com/recordings/nodejs_dmitry.mp4',
+      feedbackLeft: false,
+      hasChat: false,
+    },
+    {
+      id: 'l6',
+      title: 'Введение в Figma',
+      teacher: 'Елена Козлова',
+      date: new Date(new Date().getTime() - 21 * 24 * 60 * 60 * 1000).toISOString(), // Три недели назад
+      location: 'Онлайн',
+      status: 'в записи',
+      jitsiLink: null,
+      hasRecording: true,
+      recordUrl: 'https://example.com/recordings/figma_elena.mp4',
+      feedbackLeft: false,
+      hasChat: false,
+    },
+    {
+      id: 'l7',
+      title: 'Основы UI/UX Дизайна',
+      teacher: 'Ирина Новикова',
+      date: new Date(new Date().getTime() - 28 * 24 * 60 * 60 * 1000).toISOString(), // Четыре недели назад
+      location: 'Онлайн',
+      status: 'отмена',
+      jitsiLink: null,
+      hasRecording: false,
+      recordUrl: null,
+      feedbackLeft: false,
+      hasChat: false,
+    },
   ],
   reviews: [
     {
@@ -248,41 +311,26 @@ const categories = [
     value: 'chef',
     label: 'Повар'
   },
-  {
-    value: 'craftsman',
-    label: 'Мастер поделок'
-  },
-  {
-    value: 'other',
-    label: 'Другое'
-  }
 ];
 
 const ProfilePage = () => {
   const { toast } = useToast();
+  const [userData, setUserData] = useState(initialUserData);
   const [activeTab, setActiveTab] = useState('profile');
   const [isEditing, setIsEditing] = useState(false);
-  const [userData, setUserData] = useState(() => {
-    const savedProfile = localStorage.getItem('userProfile');
-    return savedProfile ? JSON.parse(savedProfile) : initialUserData;
-  });
-  const [formData, setFormData] = useState(userData);
-  const [isConnectWalletModalOpen, setIsConnectWalletModalOpen] = useState(false);
-  const [isDepositModalOpen, setIsDepositModalOpen] = useState(false);
-  const [isWithdrawModalOpen, setIsWithdrawModalOpen] = useState(false);
-  const [balance, setBalance] = useState(userData.balance);
-
+  const [showConnectWalletModal, setShowConnectWalletModal] = useState(false);
+  const [showDepositModal, setShowDepositModal] = useState(false);
+  const [showWithdrawModal, setShowWithdrawModal] = useState(false);
   const fileInputRef = useRef(null);
 
   useEffect(() => {
-    if (!isEditing) {
-      setFormData(userData);
-    }
-  }, [isEditing, userData]);
+    // В реальном приложении здесь будет загрузка данных пользователя с сервера
+    // и установка их в состояние userData.
+    // Для мок-данных мы просто имитируем загрузку.
+  }, []);
 
   const handleSaveProfile = (updatedData) => {
-    setUserData(updatedData);
-    localStorage.setItem('userProfile', JSON.stringify(updatedData));
+    setUserData(prev => ({ ...prev, ...updatedData }));
     setIsEditing(false);
     toast({
       title: "Профиль обновлен",
@@ -291,104 +339,52 @@ const ProfilePage = () => {
   };
 
   const handleEditToggle = () => {
-    if (isEditing) {
-      handleSaveProfile(formData);
-    } else {
-      setFormData({...userData}); 
-      setIsEditing(true);
-    }
+    setIsEditing(!isEditing);
   };
-  
+
   const handleOpenConnectWalletModal = () => {
-    setIsConnectWalletModalOpen(true);
+    setShowConnectWalletModal(true);
   };
 
   const handleOpenDepositModal = () => {
-    setIsDepositModalOpen(true);
+    setShowDepositModal(true);
   };
 
   const handleOpenWithdrawModal = () => {
-    setIsWithdrawModalOpen(true);
+    setShowWithdrawModal(true);
   };
 
   const handleDepositSuccess = (amount) => {
-    setUserData(prevData => ({
-      ...prevData,
-      balance: prevData.balance + amount,
-      transactions: [{
-        id: `t${Date.now()}`,
-        type: 'deposit',
-        amount: amount,
-        description: 'Пополнение счета',
-        date: new Date().toISOString()
-      }, ...prevData.transactions]
-    }));
+    setUserData(prev => ({ ...prev, balance: prev.balance + amount }));
+    setShowDepositModal(false);
     toast({
-      title: "Успешно пополнено!",
-      description: `Баланс пополнен на ${amount} ₽.`,
-      duration: 3000,
+      title: "Пополнение успешно",
+      description: `Счет пополнен на ${amount} RUB.`,
     });
-    setIsDepositModalOpen(false);
   };
 
   const handleWithdrawSuccess = (amount) => {
-    setUserData(prevData => ({
-      ...prevData,
-      balance: prevData.balance - amount,
-      transactions: [{
-        id: `t${Date.now()}`,
-        type: 'withdrawal',
-        amount: amount,
-        description: 'Вывод средств на карту',
-        date: new Date().toISOString()
-      }, ...prevData.transactions]
-    }));
+    setUserData(prev => ({ ...prev, balance: prev.balance - amount }));
+    setShowWithdrawModal(false);
     toast({
       title: "Вывод средств",
-      description: `Запрос на вывод ${amount} ₽ отправлен.`,
-      duration: 3000,
+      description: `Заявка на вывод ${amount} RUB принята.`,
     });
-    setIsWithdrawModalOpen(false);
   };
 
   const handleAvatarClick = () => {
-    if (!isEditing) return;
     fileInputRef.current.click();
   };
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file) {
-      if (!file.type.startsWith('image/')) {
-        toast({
-          title: "Ошибка загрузки",
-          description: "Пожалуйста, выберите файл изображения.",
-          variant: "destructive",
-        });
-        return;
-      }
-      if (file.size > 5 * 1024 * 1024) {
-        toast({
-          title: "Ошибка загрузки",
-          description: "Размер файла превышает 5 МБ.",
-          variant: "destructive",
-        });
-        return;
-      }
-
       const reader = new FileReader();
       reader.onloadend = () => {
-        setUserData(prevData => ({
-          ...prevData,
-          profilePicture: reader.result
-        }));
-        setFormData(prevData => ({
-          ...prevData,
-          profilePicture: reader.result
-        }));
+        setUserData(prev => ({ ...prev, profilePicture: reader.result }));
         toast({
           title: "Фото профиля обновлено",
-          description: "Ваше новое фото профиля успешно загружено.",
+          description: "Ваше новое фото профиля установлено.",
         });
       };
       reader.readAsDataURL(file);
@@ -396,199 +392,184 @@ const ProfilePage = () => {
   };
 
   const handleSendMessage = (conversationId, text) => {
-    setUserData(prevUserData => {
-      const updatedConversations = prevUserData.conversations.map(conv => {
+    setUserData(prevData => {
+      const updatedConversations = prevData.conversations.map(conv => {
         if (conv.id === conversationId) {
-          const newId = `m${conv.messages.length + 1}`;
           const newMessage = {
-            id: newId,
+            id: `m${conv.messages.length + 1}`,
             text: text,
             time: new Date().toISOString(),
-            isOwn: true, // Assuming current user sends the message
+            isOwn: true,
           };
-          return {
-            ...conv,
-            messages: [...conv.messages, newMessage],
-            lastMessage: text,
-            lastMessageTime: newMessage.time,
-          };
+          return { ...conv, messages: [...conv.messages, newMessage], lastMessage: text, lastMessageTime: newMessage.time };
         }
         return conv;
       });
+      return { ...prevData, conversations: updatedConversations };
+    });
+  };
 
-      const updatedUserData = { ...prevUserData, conversations: updatedConversations };
-      localStorage.setItem('userProfile', JSON.stringify(updatedUserData));
-      return updatedUserData;
+  const handleLeaveReview = (lessonId, rating, comment) => {
+    setUserData(prevData => {
+      const updatedPastLessons = prevData.pastLessons.map(lesson => {
+        if (lesson.id === lessonId) {
+          return { ...lesson, feedbackLeft: true };
+        }
+        return lesson;
+      });
+      const newReview = {
+        id: `r${prevData.reviews.length + 1}`,
+        student: { name: userData.name, avatar: userData.profilePicture }, // Имитация студента, который оставляет отзыв
+        rating: rating,
+        comment: comment,
+        date: new Date().toISOString(),
+      };
+      return {
+        ...prevData,
+        pastLessons: updatedPastLessons,
+        reviews: [...prevData.reviews, newReview],
+      };
     });
   };
 
   return (
-    <div className="pt-24 pb-10">
-      <div className="container mx-auto px-4">
-        <div className="max-w-5xl mx-auto">
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
-            <div>
-              <h1 className="text-3xl font-bold mb-2">Мой профиль</h1>
-              <p className="text-muted-foreground">
-                Управление личной информацией и настройками
-              </p>
-            </div>
-            {activeTab === 'profile' && (
-              <Button 
-                onClick={handleEditToggle}
-                className="flex items-center gap-2"
-              >
-                {isEditing ? (
-                  <>
-                    <Save className="h-4 w-4" />
-                    Сохранить
-                  </>
-                ) : (
-                  <>
-                    <Edit className="h-4 w-4" />
-                    Редактировать
-                  </>
-                )}
-              </Button>
+    <div className="container mx-auto px-4 py-8 max-w-7xl">
+      <div className="flex flex-col md:flex-row gap-8">
+        {/* Sidebar */}
+        <aside className="w-full md:w-64">
+          <Card className="p-6 text-center shadow-lg">
+            <input
+              type="file"
+              ref={fileInputRef}
+              onChange={handleFileChange}
+              className="hidden"
+              accept="image/*"
+            />
+            <Avatar className="w-24 h-24 mx-auto mb-4 cursor-pointer" onClick={handleAvatarClick}>
+              <AvatarImage src={userData.profilePicture || "https://api.dicebear.com/7.x/initials/svg?seed=AlexeyMorozov"} alt="Аватар" />
+              <AvatarFallback>AM</AvatarFallback>
+            </Avatar>
+            <h2 className="text-xl font-bold">{userData.name}</h2>
+            <p className="text-muted-foreground">{userData.title}</p>
+            {userData.averageRating && (
+              <div className="flex items-center justify-center mt-2 text-yellow-500">
+                <Star className="h-4 w-4 fill-current mr-1" />
+                <span>{userData.averageRating.toFixed(1)}</span>
+              </div>
             )}
-          </div>
-          
-          <Tabs defaultValue="profile" value={activeTab} onValueChange={setActiveTab} orientation="vertical" className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div className="md:col-span-1">
-              <Card className="sticky top-24">
-                <CardContent className="p-4">
-                  <div 
-                    className="flex flex-col items-center mb-6 pt-4 cursor-pointer relative"
-                    onClick={handleAvatarClick}
-                  >
-                    <Avatar className="h-24 w-24 mb-4">
-                      <AvatarImage src={userData.profilePicture || undefined} alt={userData.name} />
-                      <AvatarFallback className="text-2xl bg-primary text-primary-foreground">
-                        {userData.name.charAt(0)}
-                      </AvatarFallback>
-                    </Avatar>
-                    {isEditing && (
-                      <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center rounded-full opacity-0 hover:opacity-100 transition-opacity duration-300">
-                        <span className="text-white text-sm">Загрузить фото</span>
-                      </div>
-                    )}
-                    <input 
-                      type="file" 
-                      ref={fileInputRef} 
-                      onChange={handleFileChange} 
-                      accept="image/*" 
-                      className="hidden" 
-                    />
-                    <h2 className="text-xl font-semibold text-center">{userData.name}</h2>
-                    <p className="text-muted-foreground text-center">{userData.title}</p>
-                  </div>
-                  
-                  <TabsList className="flex flex-col h-auto w-full bg-transparent space-y-1">
-                    <TabsTrigger value="profile" className="justify-start w-full">
-                      <User className="mr-2 h-4 w-4" />
-                      Профиль
-                    </TabsTrigger>
-                    <TabsTrigger value="balance" className="justify-start w-full">
-                      <Wallet className="mr-2 h-4 w-4" />
-                      Баланс
-                    </TabsTrigger>
-                    <TabsTrigger value="lessons" className="justify-start w-full">
-                      <Calendar className="mr-2 h-4 w-4" />
-                      Занятия
-                    </TabsTrigger>
-                    <TabsTrigger value="reviews" className="justify-start w-full">
-                      <Star className="mr-2 h-4 w-4" />
-                      Отзывы
-                    </TabsTrigger>
-                    <TabsTrigger value="payment" className="justify-start w-full">
-                      <CreditCard className="mr-2 h-4 w-4" />
-                      Платежи
-                    </TabsTrigger>
-                    <TabsTrigger value="crypto" className="justify-start w-full">
-                      <Bitcoin className="mr-2 h-4 w-4" />
-                      Крипто
-                    </TabsTrigger>
-                    <TabsTrigger value="messages" className="justify-start w-full">
-                      <MessageSquare className="mr-2 h-4 w-4" />
-                      Сообщения
-                    </TabsTrigger>
-                    <TabsTrigger value="settings" className="justify-start w-full">
-                      <SettingsIcon className="mr-2 h-4 w-4" />
-                      Настройки
-                    </TabsTrigger>
-                  </TabsList>
-                </CardContent>
-              </Card>
+            <div className="mt-4 flex flex-col gap-2">
+              <Button
+                variant={activeTab === 'profile' ? 'default' : 'ghost'}
+                className="w-full justify-start"
+                onClick={() => setActiveTab('profile')}
+              >
+                <User className="mr-2 h-4 w-4" /> Профиль
+              </Button>
+              <Button
+                variant={activeTab === 'balance' ? 'default' : 'ghost'}
+                className="w-full justify-start"
+                onClick={() => setActiveTab('balance')}
+              >
+                <Wallet className="mr-2 h-4 w-4" /> Баланс
+              </Button>
+              <Button
+                variant={activeTab === 'lessons' ? 'default' : 'ghost'}
+                className="w-full justify-start"
+                onClick={() => setActiveTab('lessons')}
+              >
+                <Calendar className="mr-2 h-4 w-4" /> Занятия
+              </Button>
+              <Button
+                variant={activeTab === 'reviews' ? 'default' : 'ghost'}
+                className="w-full justify-start"
+                onClick={() => setActiveTab('reviews')}
+              >
+                <Star className="mr-2 h-4 w-4" /> Отзывы
+              </Button>
+              <Button
+                variant={activeTab === 'payments' ? 'default' : 'ghost'}
+                className="w-full justify-start"
+                onClick={() => setActiveTab('payments')}
+              >
+                <CreditCard className="mr-2 h-4 w-4" /> Платежи
+              </Button>
+              <Button
+                variant={activeTab === 'chat' ? 'default' : 'ghost'}
+                className="w-full justify-start"
+                onClick={() => setActiveTab('chat')}
+              >
+                <MessageSquare className="mr-2 h-4 w-4" /> Чат
+              </Button>
+              <Button
+                variant={activeTab === 'settings' ? 'default' : 'ghost'}
+                className="w-full justify-start"
+                onClick={() => setActiveTab('settings')}
+              >
+                <SettingsIcon className="mr-2 h-4 w-4" /> Настройки
+              </Button>
             </div>
-            
-            <div className="md:col-span-3">
-              <TabsContent value="profile" className="mt-0">
-                <ProfileForm 
-                  isEditing={isEditing} 
-                  formData={formData} 
-                  setFormData={setFormData} 
-                  userData={userData}
-                  onSave={handleSaveProfile}
-                  categories={categories}
-                />
-              </TabsContent>
-              
-              <TabsContent value="balance" className="mt-0">
-                <Balance 
-                  balance={userData.balance}
-                  transactions={userData.transactions}
-                  onDepositClick={handleOpenDepositModal}
-                  onWithdrawClick={handleOpenWithdrawModal}
-                />
-              </TabsContent>
+          </Card>
+        </aside>
 
-              <TabsContent value="lessons" className="mt-0">
-                <Lessons 
-                  upcomingLessons={userData.upcomingLessons}
-                  pastLessons={userData.pastLessons}
-                />
-              </TabsContent>
-
-              <TabsContent value="reviews" className="mt-0">
-                <Reviews 
-                  reviews={userData.reviews}
-                  averageRating={userData.averageRating}
-                />
-              </TabsContent>
-              
-              <TabsContent value="payment" className="mt-0">
-                <PaymentMethods 
-                  paymentMethods={userData.paymentMethods} 
-                  setUserData={setUserData} 
-                />
-              </TabsContent>
-              
-              <TabsContent value="crypto" className="mt-0">
-                <CryptoWallets 
-                  cryptoWallets={userData.cryptoWallets} 
-                  setUserData={setUserData}
-                  onConnectWallet={handleOpenConnectWalletModal}
-                />
-              </TabsContent>
-
-              <TabsContent value="messages" className="mt-0">
-                <ChatInterface 
-                  conversations={userData.conversations} 
-                  onSendMessage={handleSendMessage}
-                />
-              </TabsContent>
-
-              <TabsContent value="settings" className="mt-0">
-                <Settings />
-              </TabsContent>
-              
-            </div>
+        {/* Main Content */}
+        <main className="flex-1">
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+            <TabsContent value="profile">
+              <ProfileForm 
+                userData={userData} 
+                onSave={handleSaveProfile} 
+                isEditing={isEditing} 
+                onEditToggle={handleEditToggle}
+                categories={categories}
+              />
+            </TabsContent>
+            <TabsContent value="balance">
+              <Balance 
+                balance={userData.balance} 
+                transactions={userData.transactions} 
+                onOpenDeposit={handleOpenDepositModal}
+                onOpenWithdraw={handleOpenWithdrawModal}
+              />
+            </TabsContent>
+            <TabsContent value="lessons">
+              <Lessons 
+                upcomingLessons={userData.upcomingLessons} 
+                pastLessons={userData.pastLessons} 
+                onLeaveReview={handleLeaveReview} 
+              />
+            </TabsContent>
+            <TabsContent value="reviews">
+              <Reviews reviews={userData.reviews} />
+            </TabsContent>
+            <TabsContent value="payments">
+              <PaymentMethods paymentMethods={userData.paymentMethods} cryptoWallets={userData.cryptoWallets} onOpenConnectWalletModal={handleOpenConnectWalletModal} />
+            </TabsContent>
+            <TabsContent value="chat">
+              <ChatInterface conversations={userData.conversations} onSendMessage={handleSendMessage} />
+            </TabsContent>
+            <TabsContent value="settings">
+              <Settings />
+            </TabsContent>
           </Tabs>
-        </div>
+        </main>
       </div>
-      <ConnectWalletModal isOpen={isConnectWalletModalOpen} setIsOpen={setIsConnectWalletModalOpen} />
-      <DepositModal isOpen={isDepositModalOpen} setIsOpen={setIsDepositModalOpen} onDepositSuccess={handleDepositSuccess} onConnectWallet={handleOpenConnectWalletModal} />
-      <WithdrawModal isOpen={isWithdrawModalOpen} setIsOpen={setIsWithdrawModalOpen} onWithdrawSuccess={handleWithdrawSuccess} onConnectWallet={handleOpenConnectWalletModal} />
+
+      <ConnectWalletModal
+        isOpen={showConnectWalletModal}
+        onClose={() => setShowConnectWalletModal(false)}
+      />
+
+      <DepositModal
+        isOpen={showDepositModal}
+        onClose={() => setShowDepositModal(false)}
+        onDepositSuccess={handleDepositSuccess}
+      />
+
+      <WithdrawModal
+        isOpen={showWithdrawModal}
+        onClose={() => setShowWithdrawModal(false)}
+        onWithdrawSuccess={handleWithdrawSuccess}
+      />
     </div>
   );
 };

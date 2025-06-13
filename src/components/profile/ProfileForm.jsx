@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -6,17 +6,23 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Button } from '@/components/ui/button';
 import { Edit, Save } from 'lucide-react';
 
-const ProfileForm = ({ isEditing, formData, setFormData, onSave, categories }) => {
+const ProfileForm = ({ userData, onSave, isEditing, onEditToggle, categories }) => {
+  const [localFormData, setLocalFormData] = useState(userData);
+
+  useEffect(() => {
+    setLocalFormData(userData);
+  }, [userData]);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prevData => ({
+    setLocalFormData(prevData => ({
       ...prevData,
       [name]: value
     }));
   };
 
   const handleSelectChange = (value) => {
-    setFormData(prevData => ({
+    setLocalFormData(prevData => ({
       ...prevData,
       category: value
     }));
@@ -24,13 +30,34 @@ const ProfileForm = ({ isEditing, formData, setFormData, onSave, categories }) =
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSave(formData);
+    onSave(localFormData);
   };
 
   return (
     <Card>
-      <CardHeader>
+      <CardHeader className="flex items-center justify-between">
         <CardTitle>Личная информация</CardTitle>
+        <Button 
+          onClick={() => {
+            if (isEditing) {
+              handleSubmit(new Event('submit')); // Manually trigger submit for form data
+            }
+            onEditToggle();
+          }}
+          className="flex items-center gap-2"
+        >
+          {isEditing ? (
+            <>
+              <Save className="h-4 w-4" />
+              Сохранить
+            </>
+          ) : (
+            <>
+              <Edit className="h-4 w-4" />
+              Редактировать
+            </>
+          )}
+        </Button>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -39,7 +66,7 @@ const ProfileForm = ({ isEditing, formData, setFormData, onSave, categories }) =
             <Input
               id="name"
               name="name"
-              value={formData.name || ''}
+              value={localFormData.name || ''}
               onChange={handleChange}
               disabled={!isEditing}
             />
@@ -50,7 +77,7 @@ const ProfileForm = ({ isEditing, formData, setFormData, onSave, categories }) =
               id="email"
               name="email"
               type="email"
-              value={formData.email || ''}
+              value={localFormData.email || ''}
               onChange={handleChange}
               disabled={!isEditing}
             />
@@ -60,7 +87,7 @@ const ProfileForm = ({ isEditing, formData, setFormData, onSave, categories }) =
             <Input
               id="phone"
               name="phone"
-              value={formData.phone || ''}
+              value={localFormData.phone || ''}
               onChange={handleChange}
               disabled={!isEditing}
             />
@@ -70,7 +97,7 @@ const ProfileForm = ({ isEditing, formData, setFormData, onSave, categories }) =
             <Input
               id="location"
               name="location"
-              value={formData.location || ''}
+              value={localFormData.location || ''}
               onChange={handleChange}
               disabled={!isEditing}
             />
@@ -80,7 +107,7 @@ const ProfileForm = ({ isEditing, formData, setFormData, onSave, categories }) =
             <Input
               id="bio"
               name="bio"
-              value={formData.bio || ''}
+              value={localFormData.bio || ''}
               onChange={handleChange}
               disabled={!isEditing}
             />
@@ -90,7 +117,7 @@ const ProfileForm = ({ isEditing, formData, setFormData, onSave, categories }) =
             <Input
               id="title"
               name="title"
-              value={formData.title || ''}
+              value={localFormData.title || ''}
               onChange={handleChange}
               disabled={!isEditing}
             />
@@ -99,7 +126,7 @@ const ProfileForm = ({ isEditing, formData, setFormData, onSave, categories }) =
             <Label htmlFor="category">Категория</Label>
             <Select 
               onValueChange={handleSelectChange}
-              value={formData.category || ''}
+              value={localFormData.category || ''}
               disabled={!isEditing}
             >
               <SelectTrigger className="w-full">
@@ -120,12 +147,11 @@ const ProfileForm = ({ isEditing, formData, setFormData, onSave, categories }) =
               id="hourlyRate"
               name="hourlyRate"
               type="number"
-              value={formData.hourlyRate || ''}
+              value={localFormData.hourlyRate || ''}
               onChange={handleChange}
               disabled={!isEditing}
             />
           </div>
-          {/* Кнопка сохранения будет управляться из ProfilePage, чтобы избежать дублирования */}
         </form>
       </CardContent>
     </Card>

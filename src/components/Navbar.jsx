@@ -57,22 +57,17 @@ const Navbar = ({ isMenuOpen, setIsMenuOpen }) => {
   return (
     <header className={cn(
       "fixed top-0 w-full z-50 transition-all duration-300",
-      isScrolled ? "bg-background/80 backdrop-blur-md border-b header-mist-background" : "bg-transparent"
+      isScrolled ? "bg-background/80 backdrop-blur-md border-b" : "bg-transparent"
     )}>
       <div className="container mx-auto px-4 py-3">
         <div className="flex items-center justify-between">
           <Link to="/" className="flex items-center">
-            <motion.div
-              initial={{ scale: 0.8, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ duration: 0.5 }}
-              className="flex items-center"
-            >
-              <div className="w-10 h-10 rounded-full bg-gradient-to-r from-purple-600 to-blue-500 flex items-center justify-center mr-2">
+            <div className="flex items-center">
+              <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center mr-2">
                 <span className="text-white font-bold text-xl">S</span>
               </div>
-              <span className="text-xl font-bold text-gradient">Art Skills</span>
-            </motion.div>
+              <span className="text-xl font-bold text-primary">Art Skills</span>
+            </div>
           </Link>
 
           {/* Desktop Navigation */}

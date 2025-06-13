@@ -413,9 +413,9 @@ const ExplorePage = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3, delay: index * 0.05 }}
             >
-              <Card className="h-full overflow-hidden hover:shadow-lg transition-all duration-300 glass-card">
+              <Card className="h-full overflow-hidden hover:shadow-lg transition-all duration-300">
                 <CardContent className="p-0">
-                  <div className="relative h-48 bg-gradient-to-r from-primary/20 to-secondary/20">
+                  <div className="relative h-48 bg-background">
                     <img 
                       alt={`${professional.name}, ${professional.title}`} 
                       className="w-full h-full object-cover"

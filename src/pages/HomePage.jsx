@@ -70,9 +70,6 @@ const HomePage = () => {
     <div className="flex flex-col h-full pt-16">
       {/* Hero Section */}
       <section className="relative py-20 overflow-hidden bg-background">
-        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent"></div>
-        <div className="animated-hero-gradient"></div>
-
         <div className="container mx-auto px-4 relative z-10">
           <div className="flex flex-col lg:flex-row items-center gap-12">
             <motion.div 
@@ -85,7 +82,7 @@ const HomePage = () => {
                 Connect with Skilled Professionals
               </Badge>
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
-                Find <span className="text-gradient">Experts</span> & Build Your <span className="text-gradient">Network</span>
+                Find <span className="text-primary">Experts</span> & Build Your <span className="text-primary">Network</span>
               </h1>
               <p className="text-xl text-muted-foreground mb-8 max-w-xl">
                 Connect with teachers, tutors, craftsmen, and experts in various fields. 
@@ -273,7 +270,6 @@ const HomePage = () => {
 
       {/* CTA Section */}
       <section className="py-20 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-background to-background z-0"></div>
         <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-3xl mx-auto text-center">
             <h2 className="text-3xl md:text-4xl font-bold mb-6">Ready to Connect with Skilled Professionals?</h2>

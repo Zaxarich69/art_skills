@@ -108,47 +108,88 @@ const mockProfessionals = [
 const categories = [
   {
     value: 'All Categories',
-    label: 'Все категории'
+    label: 'All Categories'
+  },
+  // Education
+  {
+    value: 'language_tutor',
+    label: 'Language Tutor',
+    parent: 'Education'
   },
   {
-    value: 'art_tutor',
-    label: 'Репетитор по искусству'
+    value: 'mathematics_professor',
+    label: 'Mathematics Professor',
+    parent: 'Education'
   },
+  {
+    value: 'other_education',
+    label: 'Other Education',
+    parent: 'Education'
+  },
+  // Business
   {
     value: 'web_developer',
-    label: 'Веб-разработчик'
+    label: 'Web Developer',
+    parent: 'Business'
   },
   {
     value: 'ui_ux_designer',
-    label: 'UI/UX Дизайнер'
+    label: 'UI/UX Designer',
+    parent: 'Business'
   },
   {
-    value: 'musician',
-    label: 'Музыкант'
+    value: 'business_consultant',
+    label: 'Business Consultant',
+    parent: 'Business'
   },
   {
-    value: 'language_tutor',
-    label: 'Репетитор по языкам'
+    value: 'marketing_specialist',
+    label: 'Marketing Specialist',
+    parent: 'Business'
+  },
+  // Arts
+  {
+    value: 'art_tutor',
+    label: 'Art Tutor',
+    parent: 'Arts'
   },
   {
-    value: 'fitness_coach',
-    label: 'Фитнес-тренер'
-  },
-  {
-    value: 'photographer',
-    label: 'Фотограф'
+    value: 'crafts_master',
+    label: 'Crafts Master',
+    parent: 'Arts'
   },
   {
     value: 'chef',
-    label: 'Повар'
+    label: 'Chef',
+    parent: 'Arts'
+  },
+  // Technology
+  {
+    value: 'software_engineer',
+    label: 'Software Engineer',
+    parent: 'Technology'
+  },
+  // Music
+  {
+    value: 'musician',
+    label: 'Musician',
+    parent: 'Music'
   },
   {
-    value: 'craftsman',
-    label: 'Мастер поделок'
+    value: 'music_tutor',
+    label: 'Music Tutor',
+    parent: 'Music'
+  },
+  // Photography
+  {
+    value: 'photographer',
+    label: 'Photographer',
+    parent: 'Photography'
   },
   {
-    value: 'other',
-    label: 'Другое'
+    value: 'videographer',
+    label: 'Videographer',
+    parent: 'Photography'
   }
 ];
 
@@ -165,8 +206,19 @@ const ExplorePage = () => {
 
   useEffect(() => {
     const categoryParam = searchParams.get('category');
-    if (categoryParam && categories.some(cat => cat.value === categoryParam)) {
-      setSelectedCategory(categoryParam);
+    if (categoryParam) {
+      // Если это основная категория, показываем все подкатегории
+      if (categories.some(cat => cat.parent === categoryParam)) {
+        setSelectedCategory(categoryParam);
+      } else {
+        // Если это подкатегория, показываем только её
+        const category = categories.find(cat => cat.value === categoryParam);
+        if (category) {
+          setSelectedCategory(category.value);
+        } else {
+          setSelectedCategory('All Categories');
+        }
+      }
     } else {
       setSelectedCategory('All Categories');
     }
@@ -181,15 +233,15 @@ const ExplorePage = () => {
         const userData = JSON.parse(savedUserProfile);
         userProfessional = {
           id: userData.id || 'user-profile', // Assign a unique ID for the user's profile
-          name: userData.name || 'Ваш Профиль',
-          title: userData.title || 'Пользователь',
-          category: userData.category || 'other', // Default to 'other' if not set
-          rating: userData.averageRating || 5.0, // Default rating
-          reviews: userData.reviews ? userData.reviews.length : 0, // Number of reviews
-          location: userData.location || 'Не указано',
+          name: userData.name || 'Your Profile',
+          title: userData.title || 'User',
+          category: userData.category || 'other',
+          rating: userData.averageRating || 5.0,
+          reviews: userData.reviews ? userData.reviews.length : 0,
+          location: userData.location || 'Not specified',
           hourlyRate: userData.hourlyRate || 0,
           acceptsCrypto: userData.acceptsCrypto || false,
-          about: userData.bio || 'О себе',
+          about: userData.bio || 'About me',
           image: userData.profilePicture || null,
           tags: userData.skills || [],
         };
@@ -224,7 +276,19 @@ const ExplorePage = () => {
     
     // Apply category filter
     if (selectedCategory !== 'All Categories') {
-      results = results.filter(pro => pro.category === selectedCategory);
+      const category = categories.find(cat => cat.value === selectedCategory);
+      if (category) {
+        if (category.parent) {
+          // Если выбрана подкатегория, показываем только её
+          results = results.filter(pro => pro.category === selectedCategory);
+        } else {
+          // Если выбрана основная категория, показываем все её подкатегории
+          const subcategories = categories
+            .filter(cat => cat.parent === selectedCategory)
+            .map(cat => cat.value);
+          results = results.filter(pro => subcategories.includes(pro.category));
+        }
+      }
     }
     
     // Apply price range filter
@@ -290,12 +354,13 @@ const ExplorePage = () => {
                 onValueChange={(value) => setSelectedCategory(value)}
               >
                 <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder="Категория" />
+                  <SelectValue placeholder="Category" />
                 </SelectTrigger>
                 <SelectContent>
-                  {categories.map((cat) => (
-                    <SelectItem key={cat.value} value={cat.value}>
-                      {cat.label}
+                  <SelectItem value="All Categories">All Categories</SelectItem>
+                  {['Education', 'Business', 'Arts', 'Technology', 'Music', 'Photography'].map((mainCategory) => (
+                    <SelectItem key={mainCategory} value={mainCategory}>
+                      {mainCategory}
                     </SelectItem>
                   ))}
                 </SelectContent>

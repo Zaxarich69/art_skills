@@ -14,12 +14,42 @@ import {
 
 const HomePage = () => {
   const categories = [
-    { name: 'Education', icon: <BookOpen className="h-6 w-6" />, color: 'from-blue-500 to-indigo-600' },
-    { name: 'Business', icon: <Briefcase className="h-6 w-6" />, color: 'from-green-500 to-emerald-600' },
-    { name: 'Arts', icon: <Palette className="h-6 w-6" />, color: 'from-yellow-500 to-amber-600' },
-    { name: 'Technology', icon: <Code className="h-6 w-6" />, color: 'from-purple-500 to-violet-600' },
-    { name: 'Music', icon: <Music className="h-6 w-6" />, color: 'from-red-500 to-rose-600' },
-    { name: 'Photography', icon: <Camera className="h-6 w-6" />, color: 'from-pink-500 to-fuchsia-600' },
+    { 
+      name: 'Education', 
+      icon: <BookOpen className="h-6 w-6" />, 
+      color: 'from-blue-500 to-indigo-600',
+      subcategories: ['Language Tutor', 'Mathematics Professor', 'Other Education']
+    },
+    { 
+      name: 'Business', 
+      icon: <Briefcase className="h-6 w-6" />, 
+      color: 'from-green-500 to-emerald-600',
+      subcategories: ['Web Developer', 'UI/UX Designer', 'Business Consultant', 'Marketing Specialist']
+    },
+    { 
+      name: 'Arts', 
+      icon: <Palette className="h-6 w-6" />, 
+      color: 'from-yellow-500 to-amber-600',
+      subcategories: ['Art Tutor', 'Crafts Master', 'Chef']
+    },
+    { 
+      name: 'Technology', 
+      icon: <Code className="h-6 w-6" />, 
+      color: 'from-purple-500 to-violet-600',
+      subcategories: ['Web Developer', 'UI/UX Designer', 'Software Engineer']
+    },
+    { 
+      name: 'Music', 
+      icon: <Music className="h-6 w-6" />, 
+      color: 'from-red-500 to-rose-600',
+      subcategories: ['Musician', 'Music Tutor']
+    },
+    { 
+      name: 'Photography', 
+      icon: <Camera className="h-6 w-6" />, 
+      color: 'from-pink-500 to-fuchsia-600',
+      subcategories: ['Photographer', 'Videographer']
+    },
   ];
 
   const features = [

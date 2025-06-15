@@ -5,7 +5,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { 
   User, CreditCard, Bitcoin, Edit, Save, MessageSquare,
-  Calendar, Wallet, Star, Settings as SettingsIcon
+  Calendar, Wallet, Star, Settings as SettingsIcon, BookOpen, PlusCircle, MinusCircle, ArrowUpCircle, ArrowDownCircle
 } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 import ProfileForm from '@/components/profile/ProfileForm';
@@ -16,11 +16,11 @@ import Reviews from '@/components/profile/Reviews';
 import Lessons from '@/components/profile/Lessons';
 import ConnectWalletModal from '@/components/ConnectWalletModal';
 import ChatInterface from '@/components/profile/ChatInterface';
-import Settings from '@/components/profile/Settings';
 import DepositModal from '@/components/DepositModal';
 import WithdrawModal from '@/components/WithdrawModal';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Switch } from '@/components/ui/switch';
 
 const initialUserData = {
   name: 'Алексей Морозов',
@@ -280,36 +280,28 @@ const initialUserData = {
 
 const categories = [
   {
-    value: 'art_tutor',
-    label: 'Репетитор по искусству'
+    value: 'education',
+    label: 'Education'
   },
   {
-    value: 'web_developer',
-    label: 'Веб-разработчик'
+    value: 'business',
+    label: 'Business'
   },
   {
-    value: 'ui_ux_designer',
-    label: 'UI/UX Дизайнер'
+    value: 'arts',
+    label: 'Arts'
   },
   {
-    value: 'musician',
-    label: 'Музыкант'
+    value: 'technology',
+    label: 'Technology'
   },
   {
-    value: 'language_tutor',
-    label: 'Репетитор по языкам'
+    value: 'music',
+    label: 'Music'
   },
   {
-    value: 'fitness_coach',
-    label: 'Фитнес-тренер'
-  },
-  {
-    value: 'photographer',
-    label: 'Фотограф'
-  },
-  {
-    value: 'chef',
-    label: 'Повар'
+    value: 'photography',
+    label: 'Photography'
   },
 ];
 
@@ -321,55 +313,197 @@ const ProfilePage = () => {
   const [showConnectWalletModal, setShowConnectWalletModal] = useState(false);
   const [showDepositModal, setShowDepositModal] = useState(false);
   const [showWithdrawModal, setShowWithdrawModal] = useState(false);
+  const [selectedWalletToConnect, setSelectedWalletToConnect] = useState(null);
+  const [selectedConversationId, setSelectedConversationId] = useState(null);
   const fileInputRef = useRef(null);
 
   useEffect(() => {
-    // В реальном приложении здесь будет загрузка данных пользователя с сервера
-    // и установка их в состояние userData.
-    // Для мок-данных мы просто имитируем загрузку.
+    // Simulate fetching user data from backend
+    const storedUserData = localStorage.getItem('userProfile');
+    let dataToUse;
+    if (storedUserData) {
+      dataToUse = JSON.parse(storedUserData);
+    } else {
+      dataToUse = initialUserData;
+    }
+
+    // Ensure all lesson statuses are strings, defaulting if undefined
+    dataToUse.upcomingLessons = dataToUse.upcomingLessons.map(lesson => ({
+      ...lesson,
+      status: lesson.status || 'ожидается' // Default status if missing
+    }));
+    dataToUse.pastLessons = dataToUse.pastLessons.map(lesson => ({
+      ...lesson,
+      status: lesson.status || 'завершено' // Default status if missing
+    }));
+
+    setUserData(dataToUse);
+    localStorage.setItem('userProfile', JSON.stringify(dataToUse));
+
+  }, []);
+
+  // Convert initialUserData's Russian fields to English on load if they are still in Russian
+  useEffect(() => {
+    setUserData(prevData => {
+      const updatedData = { ...prevData };
+      if (updatedData.name === 'Алексей Морозов') updatedData.name = 'Alexey Morozov';
+      if (updatedData.location === 'Москва') updatedData.location = 'Moscow';
+      if (updatedData.bio === 'Опытный преподаватель с 5-летним стажем. Специализируюсь на веб-разработке и с удовольствием делюсь своими знаниями с учениками.') updatedData.bio = 'Experienced teacher with 5 years of experience. Specializing in web development and happy to share my knowledge with students.';
+      if (updatedData.title === 'Старший веб-разработчик') updatedData.title = 'Senior Web Developer';
+      
+      updatedData.education = updatedData.education.map(edu => {
+        if (edu.degree === 'Магистр компьютерных наук') edu.degree = 'Master of Computer Science';
+        if (edu.institution === 'МГУ') edu.institution = 'MSU';
+        if (edu.degree === 'Бакалавр компьютерной инженерии') edu.degree = 'Bachelor of Computer Engineering';
+        if (edu.institution === 'МФТИ') edu.institution = 'MIPT';
+        return edu;
+      });
+
+      updatedData.experience = updatedData.experience.map(exp => {
+        if (exp.title === 'Старший веб-разработчик') exp.title = 'Senior Web Developer';
+        if (exp.company === 'Технологии будущего') exp.company = 'Future Technologies';
+        if (exp.period === '2020 - Настоящее время') exp.period = '2020 - Present';
+        if (exp.description === 'Руководство фронтенд-разработкой для корпоративных приложений.') exp.description = 'Leading frontend development for enterprise applications.';
+        if (exp.title === 'Веб-разработчик') exp.title = 'Web Developer';
+        if (exp.company === 'Цифровые решения') exp.company = 'Digital Solutions';
+        if (exp.period === '2018 - 2020') exp.period = '2018 - 2020';
+        if (exp.description === 'Разработка адаптивных веб-приложений с использованием React и Node.js.') exp.description = 'Developing responsive web applications using React and Node.js.';
+        return exp;
+      });
+
+      updatedData.transactions = updatedData.transactions.map(transaction => {
+        if (transaction.description === 'Пополнение счета') transaction.description = 'Account Top-up';
+        if (transaction.description === 'Вывод средств на карту') transaction.description = 'Withdrawal to Card';
+        if (transaction.description === 'Оплата за уроки') transaction.description = 'Payment for Lessons';
+        return transaction;
+      });
+      
+      updatedData.upcomingLessons = updatedData.upcomingLessons.map(lesson => {
+        if (lesson.title === 'Введение в React') lesson.title = 'Introduction to React';
+        if (lesson.teacher === 'Иван Петров') lesson.teacher = 'Ivan Petrov';
+        if (lesson.location === 'Онлайн') lesson.location = 'Online';
+        lesson.status = lesson.status || 'ожидается';
+        if (lesson.status === 'ожидается') lesson.status = 'ожидается';
+        if (lesson.title === 'Продвинутый JavaScript') lesson.title = 'Advanced JavaScript';
+        if (lesson.teacher === 'Мария Иванова') lesson.teacher = 'Maria Ivanova';
+        if (lesson.title === 'Основы Tailwind CSS') lesson.title = 'Tailwind CSS Basics';
+        if (lesson.teacher === 'Петр Смирнов') lesson.teacher = 'Petr Smirnov';
+        if (lesson.status === 'онлайн') lesson.status = 'онлайн';
+        return lesson;
+      });
+
+      updatedData.pastLessons = updatedData.pastLessons.map(lesson => {
+        if (lesson.title === 'Основы TypeScript') lesson.title = 'TypeScript Basics';
+        if (lesson.teacher === 'Анна Сидорова') lesson.teacher = 'Anna Sidorova';
+        if (lesson.location === 'Онлайн') lesson.location = 'Online';
+        lesson.status = lesson.status || 'завершено';
+        if (lesson.status === 'завершено') lesson.status = 'завершено';
+        if (lesson.title === 'Node.js для начинающих') lesson.title = 'Node.js for Beginners';
+        if (lesson.teacher === 'Дмитрий Смирнов') lesson.teacher = 'Dmitry Smirnov';
+        if (lesson.title === 'Введение в Figma') lesson.title = 'Introduction to Figma';
+        if (lesson.teacher === 'Елена Козлова') lesson.teacher = 'Elena Kozlova';
+        if (lesson.status === 'в записи') lesson.status = 'в записи';
+        if (lesson.title === 'Основы UI/UX Дизайна') lesson.title = 'UI/UX Design Basics';
+        if (lesson.teacher === 'Ирина Новикова') lesson.teacher = 'Irina Novikova';
+        if (lesson.status === 'отмена') lesson.status = 'отмена';
+        return lesson;
+      });
+
+      updatedData.reviews = updatedData.reviews.map(review => {
+        if (review.student.name === 'Анна Сидорова') review.student.name = 'Anna Sidorova';
+        if (review.comment === 'Отличный преподаватель! Объясняет сложные вещи простым языком. Рекомендую!') review.comment = 'Excellent teacher! Explains complex things in simple language. Highly recommended!';
+        if (review.student.name === 'Дмитрий Смирнов') review.student.name = 'Dmitry Smirnov';
+        if (review.comment === 'Хорошие уроки, много практики. Спасибо за помощь в освоении Node.js!') review.comment = 'Good lessons, lots of practice. Thanks for helping me master Node.js!';
+        return review;
+      });
+
+      updatedData.cryptoWallets = updatedData.cryptoWallets.map(wallet => {
+        if (wallet.name === 'Мой Bitcoin кошелек') wallet.name = 'My Bitcoin Wallet';
+        if (wallet.name === 'Мой Ethereum кошелек') wallet.name = 'My Ethereum Wallet';
+        return wallet;
+      });
+      
+      updatedData.conversations = updatedData.conversations.map(conv => {
+        if (conv.user.name === 'Иван Петров') conv.user.name = 'Ivan Petrov';
+        if (conv.lastMessage === 'Спасибо за урок! Очень полезно.') conv.lastMessage = 'Thanks for the lesson! Very useful.';
+        conv.messages = conv.messages.map(msg => {
+          if (msg.text === 'Здравствуйте! Я хотел бы записаться на урок по React.') msg.text = 'Hello! I would like to sign up for a React lesson.';
+          if (msg.text === 'Здравствуйте! Конечно, я могу помочь вам с React. Когда вам удобно?') msg.text = 'Hello! Of course, I can help you with React. When is it convenient for you?';
+          if (msg.text === 'Может быть завтра в 15:00?') msg.text = 'Maybe tomorrow at 3 PM?';
+          if (msg.text === 'Да, завтра в 15:00 подходит. Я отправлю вам ссылку на конференцию.') msg.text = 'Yes, tomorrow at 3 PM works. I will send you the conference link.';
+          if (msg.text === 'Спасибо за урок! Очень полезно.') msg.text = 'Thanks for the lesson! Very useful.';
+          return msg;
+        });
+        if (conv.user.name === 'Мария Иванова') conv.user.name = 'Maria Ivanova';
+        if (conv.lastMessage === 'До встречи на следующем уроке!') conv.lastMessage = 'See you in the next lesson!';
+        if (conv.messages[0] && conv.messages[0].text === 'Здравствуйте! Я хотела бы обсудить домашнее задание.') conv.messages[0].text = 'Hello! I would like to discuss the homework.';
+        return conv;
+      });
+
+      return updatedData;
+    });
   }, []);
 
   const handleSaveProfile = (updatedData) => {
-    setUserData(prev => ({ ...prev, ...updatedData }));
-    setIsEditing(false);
+    setUserData(prevData => {
+      const newData = { ...prevData, ...updatedData };
+      localStorage.setItem('userProfile', JSON.stringify(newData));
+      return newData;
+    });
     toast({
-      title: "Профиль обновлен",
-      description: "Ваши изменения успешно сохранены.",
+      title: "Profile updated",
+      description: "Your profile has been successfully updated.",
     });
   };
 
-  const handleEditToggle = () => {
-    setIsEditing(!isEditing);
-  };
+  const handleEditToggle = () => setIsEditing(prev => !prev);
 
   const handleOpenConnectWalletModal = () => {
     setShowConnectWalletModal(true);
   };
 
-  const handleOpenDepositModal = () => {
-    setShowDepositModal(true);
-  };
+  const handleOpenDepositModal = () => setShowDepositModal(true);
+  const handleCloseDepositModal = () => setShowDepositModal(false);
 
-  const handleOpenWithdrawModal = () => {
-    setShowWithdrawModal(true);
-  };
+  const handleOpenWithdrawModal = () => setShowWithdrawModal(true);
+  const handleCloseWithdrawModal = () => setShowWithdrawModal(false);
 
   const handleDepositSuccess = (amount) => {
-    setUserData(prev => ({ ...prev, balance: prev.balance + amount }));
-    setShowDepositModal(false);
-    toast({
-      title: "Пополнение успешно",
-      description: `Счет пополнен на ${amount} RUB.`,
+    setUserData(prevData => {
+      const newBalance = prevData.balance + amount;
+      const newTransactions = [
+        { id: `t${Date.now()}`, type: 'deposit', amount, description: 'Account Top-up', date: new Date().toISOString() },
+        ...prevData.transactions
+      ];
+      const newData = { ...prevData, balance: newBalance, transactions: newTransactions };
+      localStorage.setItem('userProfile', JSON.stringify(newData));
+      return newData;
     });
+    toast({
+      title: "Deposit Successful",
+      description: `Successfully deposited ${amount} ₽.`,
+      duration: 3000,
+    });
+    handleCloseDepositModal();
   };
 
   const handleWithdrawSuccess = (amount) => {
-    setUserData(prev => ({ ...prev, balance: prev.balance - amount }));
-    setShowWithdrawModal(false);
-    toast({
-      title: "Вывод средств",
-      description: `Заявка на вывод ${amount} RUB принята.`,
+    setUserData(prevData => {
+      const newBalance = prevData.balance - amount;
+      const newTransactions = [
+        { id: `t${Date.now()}`, type: 'withdrawal', amount, description: 'Withdrawal Pending', date: new Date().toISOString(), status: 'pending' },
+        ...prevData.transactions
+      ];
+      const newData = { ...prevData, balance: newBalance, transactions: newTransactions };
+      localStorage.setItem('userProfile', JSON.stringify(newData));
+      return newData;
     });
+    toast({
+      title: "Withdrawal Initiated",
+      description: `Withdrawal of ${amount} ₽ initiated. Status: pending.`,
+      duration: 3000,
+    });
+    handleCloseWithdrawModal();
   };
 
   const handleAvatarClick = () => {
@@ -381,10 +515,14 @@ const ProfilePage = () => {
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setUserData(prev => ({ ...prev, profilePicture: reader.result }));
+        setUserData(prevData => ({
+          ...prevData,
+          profilePicture: reader.result
+        }));
+        localStorage.setItem('userProfile', JSON.stringify({ ...userData, profilePicture: reader.result }));
         toast({
-          title: "Фото профиля обновлено",
-          description: "Ваше новое фото профиля установлено.",
+          title: "Profile picture updated",
+          description: "Your profile picture has been successfully updated.",
         });
       };
       reader.readAsDataURL(file);
@@ -396,39 +534,46 @@ const ProfilePage = () => {
       const updatedConversations = prevData.conversations.map(conv => {
         if (conv.id === conversationId) {
           const newMessage = {
-            id: `m${conv.messages.length + 1}`,
-            text: text,
+            id: `m${Date.now()}`,
+            text,
             time: new Date().toISOString(),
-            isOwn: true,
+            isOwn: true
           };
           return { ...conv, messages: [...conv.messages, newMessage], lastMessage: text, lastMessageTime: newMessage.time };
         }
         return conv;
       });
-      return { ...prevData, conversations: updatedConversations };
+      const newData = { ...prevData, conversations: updatedConversations };
+      localStorage.setItem('userProfile', JSON.stringify(newData));
+      return newData;
     });
   };
 
   const handleLeaveReview = (lessonId, rating, comment) => {
     setUserData(prevData => {
-      const updatedPastLessons = prevData.pastLessons.map(lesson => {
-        if (lesson.id === lessonId) {
-          return { ...lesson, feedbackLeft: true };
-        }
-        return lesson;
-      });
+      const updatedLessons = prevData.pastLessons.map(lesson => 
+        lesson.id === lessonId ? { ...lesson, feedbackLeft: true } : lesson
+      );
       const newReview = {
-        id: `r${prevData.reviews.length + 1}`,
-        student: { name: userData.name, avatar: userData.profilePicture }, // Имитация студента, который оставляет отзыв
-        rating: rating,
-        comment: comment,
-        date: new Date().toISOString(),
+        id: `r${Date.now()}`,
+        student: { name: 'Current User', avatar: userData.profilePicture }, // Replace with actual current user data
+        rating,
+        comment,
+        date: new Date().toISOString()
       };
-      return {
-        ...prevData,
-        pastLessons: updatedPastLessons,
-        reviews: [...prevData.reviews, newReview],
+      const newData = { 
+        ...prevData, 
+        pastLessons: updatedLessons, 
+        reviews: [...prevData.reviews, newReview], 
+        averageRating: parseFloat(((prevData.averageRating * prevData.reviews.length + rating) / (prevData.reviews.length + 1)).toFixed(1))
       };
+      localStorage.setItem('userProfile', JSON.stringify(newData));
+      return newData;
+    });
+    toast({
+      title: "Review Submitted",
+      description: "Your review has been successfully submitted.",
+      duration: 3000,
     });
   };
 
@@ -463,49 +608,70 @@ const ProfilePage = () => {
                 className="w-full justify-start"
                 onClick={() => setActiveTab('profile')}
               >
-                <User className="mr-2 h-4 w-4" /> Профиль
+                <div className="flex items-center gap-4">
+                  <User className="h-5 w-5 text-muted-foreground" />
+                  Profile
+                </div>
               </Button>
               <Button
                 variant={activeTab === 'balance' ? 'default' : 'ghost'}
                 className="w-full justify-start"
                 onClick={() => setActiveTab('balance')}
               >
-                <Wallet className="mr-2 h-4 w-4" /> Баланс
+                <div className="flex items-center gap-4">
+                  <Wallet className="h-5 w-5 text-muted-foreground" />
+                  Balance
+                </div>
               </Button>
               <Button
                 variant={activeTab === 'lessons' ? 'default' : 'ghost'}
                 className="w-full justify-start"
                 onClick={() => setActiveTab('lessons')}
               >
-                <Calendar className="mr-2 h-4 w-4" /> Занятия
+                <div className="flex items-center gap-4">
+                  <BookOpen className="h-5 w-5 text-muted-foreground" />
+                  Lessons
+                </div>
               </Button>
               <Button
                 variant={activeTab === 'reviews' ? 'default' : 'ghost'}
                 className="w-full justify-start"
                 onClick={() => setActiveTab('reviews')}
               >
-                <Star className="mr-2 h-4 w-4" /> Отзывы
+                <div className="flex items-center gap-4">
+                  <Star className="h-5 w-5 text-muted-foreground" />
+                  Reviews
+                </div>
               </Button>
               <Button
                 variant={activeTab === 'payments' ? 'default' : 'ghost'}
                 className="w-full justify-start"
                 onClick={() => setActiveTab('payments')}
               >
-                <CreditCard className="mr-2 h-4 w-4" /> Платежи
+                <div className="flex items-center gap-4">
+                  <CreditCard className="h-5 w-5 text-muted-foreground" />
+                  Payments
+                </div>
               </Button>
               <Button
                 variant={activeTab === 'chat' ? 'default' : 'ghost'}
                 className="w-full justify-start"
                 onClick={() => setActiveTab('chat')}
               >
-                <MessageSquare className="mr-2 h-4 w-4" /> Чат
+                <div className="flex items-center gap-4">
+                  <MessageSquare className="h-5 w-5 text-muted-foreground" />
+                  Chat
+                </div>
               </Button>
               <Button
                 variant={activeTab === 'settings' ? 'default' : 'ghost'}
                 className="w-full justify-start"
                 onClick={() => setActiveTab('settings')}
               >
-                <SettingsIcon className="mr-2 h-4 w-4" /> Настройки
+                <div className="flex items-center gap-4">
+                  <SettingsIcon className="h-5 w-5 text-muted-foreground" />
+                  Settings
+                </div>
               </Button>
             </div>
           </Card>
@@ -524,12 +690,49 @@ const ProfilePage = () => {
               />
             </TabsContent>
             <TabsContent value="balance">
-              <Balance 
-                balance={userData.balance} 
-                transactions={userData.transactions} 
-                onOpenDeposit={handleOpenDepositModal}
-                onOpenWithdraw={handleOpenWithdrawModal}
-              />
+              <Card>
+                <CardHeader>
+                  <CardTitle>Your Balance</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-4xl font-bold mb-4">
+                    {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(userData.balance)} available
+                  </div>
+                  <div className="flex gap-4 mb-8">
+                    <Button onClick={handleOpenDepositModal} className="flex-1">
+                      <PlusCircle className="mr-2 h-4 w-4" /> Top Up
+                    </Button>
+                    <Button onClick={handleOpenWithdrawModal} className="flex-1" variant="outline">
+                      <MinusCircle className="mr-2 h-4 w-4" /> Withdraw
+                    </Button>
+                  </div>
+                  <h3 className="text-2xl font-semibold mb-4">Transaction History</h3>
+                  <div className="space-y-4">
+                    {userData.transactions.length > 0 ? (
+                      userData.transactions.map(transaction => (
+                        <div key={transaction.id} className="flex items-center justify-between bg-muted p-4 rounded-md">
+                          <div className="flex items-center gap-3">
+                            {transaction.type === 'deposit' ? (
+                              <ArrowUpCircle className="h-6 w-6 text-green-500" />
+                            ) : (
+                              <ArrowDownCircle className="h-6 w-6 text-red-500" />
+                            )}
+                            <div>
+                              <p className="font-medium">{transaction.description}</p>
+                              <p className="text-sm text-muted-foreground">{new Date(transaction.date).toLocaleDateString()}</p>
+                            </div>
+                          </div>
+                          <div className={`font-bold ${transaction.type === 'deposit' ? 'text-green-500' : 'text-red-500'}`}>
+                            {transaction.type === 'deposit' ? '+' : '-'}{new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(transaction.amount)}
+                          </div>
+                        </div>
+                      ))
+                    ) : (
+                      <p className="text-muted-foreground">No transactions yet.</p>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
             </TabsContent>
             <TabsContent value="lessons">
               <Lessons 
@@ -539,16 +742,70 @@ const ProfilePage = () => {
               />
             </TabsContent>
             <TabsContent value="reviews">
-              <Reviews reviews={userData.reviews} />
+              <Reviews reviews={userData.reviews} averageRating={userData.averageRating} />
             </TabsContent>
             <TabsContent value="payments">
-              <PaymentMethods paymentMethods={userData.paymentMethods} cryptoWallets={userData.cryptoWallets} onOpenConnectWalletModal={handleOpenConnectWalletModal} />
+              <Card>
+                <CardHeader>
+                  <CardTitle>Your Payment Methods</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  {/* Placeholder for payment methods content */}
+                  <p className="text-muted-foreground">No payment methods added.</p>
+                </CardContent>
+              </Card>
             </TabsContent>
             <TabsContent value="chat">
-              <ChatInterface conversations={userData.conversations} onSendMessage={handleSendMessage} />
+              <Card>
+                <CardHeader>
+                  <CardTitle>Messages</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  {userData.conversations && userData.conversations.length > 0 ? (
+                    <div className="flex h-[600px] max-h-[600px]">
+                      <div className="flex flex-col w-1/3 border-r pr-4 space-y-2 overflow-y-auto">
+                        {userData.conversations.map(conv => (
+                          <div
+                            key={conv.id}
+                            className={`flex items-center gap-3 p-3 rounded-md cursor-pointer ${
+                              selectedConversationId === conv.id ? 'bg-accent text-accent-foreground' : 'hover:bg-muted'
+                            }`}
+                            onClick={() => setSelectedConversationId(conv.id)}
+                          >
+                            <Avatar>
+                              <AvatarImage src={conv.user.avatar} />
+                              <AvatarFallback>{conv.user.name.charAt(0)}</AvatarFallback>
+                            </Avatar>
+                            <div>
+                              <p className="font-medium">{conv.user.name}</p>
+                              <p className="text-sm text-muted-foreground truncate">{conv.lastMessage}</p>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                      <div className="flex flex-col w-2/3 pl-4">
+                        {selectedConversationId ? (
+                          <ChatWindow 
+                            conversation={userData.conversations.find(c => c.id === selectedConversationId)}
+                            onSendMessage={handleSendMessage}
+                          />
+                        ) : (
+                          <div className="flex-1 flex items-center justify-center text-muted-foreground">
+                            Select a chat to start messaging
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="flex-1 flex items-center justify-center text-muted-foreground">
+                      No conversations yet.
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
             </TabsContent>
             <TabsContent value="settings">
-              <Settings />
+              {/* Settings content (previously Settings component) */}
             </TabsContent>
           </Tabs>
         </main>
@@ -557,18 +814,23 @@ const ProfilePage = () => {
       <ConnectWalletModal
         isOpen={showConnectWalletModal}
         onClose={() => setShowConnectWalletModal(false)}
+        onConnect={setSelectedWalletToConnect}
       />
 
       <DepositModal
         isOpen={showDepositModal}
-        onClose={() => setShowDepositModal(false)}
+        onClose={handleCloseDepositModal}
         onDepositSuccess={handleDepositSuccess}
+        walletConnected={userData.cryptoWallets.length > 0}
       />
 
       <WithdrawModal
         isOpen={showWithdrawModal}
-        onClose={() => setShowWithdrawModal(false)}
+        onClose={handleCloseWithdrawModal}
         onWithdrawSuccess={handleWithdrawSuccess}
+        balance={userData.balance}
+        bankCardConnected={userData.paymentMethods.length > 0}
+        walletConnected={userData.cryptoWallets.length > 0}
       />
     </div>
   );

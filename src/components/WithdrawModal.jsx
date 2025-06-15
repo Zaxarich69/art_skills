@@ -39,7 +39,7 @@ const WithdrawModal = ({ isOpen, setIsOpen, onWithdrawSuccess, onConnectWallet }
   const handleWithdraw = async () => {
     setError(null);
     if (!amount || parseFloat(amount) <= 0) {
-      setError('Пожалуйста, введите корректную сумму.');
+      setError('Please enter a valid amount.');
       return;
     }
 
@@ -47,19 +47,32 @@ const WithdrawModal = ({ isOpen, setIsOpen, onWithdrawSuccess, onConnectWallet }
 
     try {
       if (paymentMethod === 'stripe') {
-        // Simulate Stripe Connect withdrawal
+        // --- Stripe (Web2) Integration ---
+        // Implement your Stripe Connect or Payout logic here.
+        // This would typically involve calling your backend API.
+        // Example: const response = await fetch('/api/create-stripe-payout', {
+        //   method: 'POST',
+        //   headers: { 'Content-Type': 'application/json' },
+        //   body: JSON.stringify({ amount: parseFloat(amount) * 100, currency: 'rub', destination: 'acct_your_connected_account_id' }),
+        // });
+        // const result = await response.json();
+        // After initiating payout, your backend should notify your app
+        // to update the user's balance and transaction history with a 'pending' status.
+        // For this simulation, we'll directly call onWithdrawSuccess.
+
         await new Promise(resolve => setTimeout(resolve, 1500)); // Simulate API call
-        console.log('Stripe Withdrawal successful for amount:', amount);
+        console.log('Stripe Withdrawal initiated for amount:', amount);
         toast({
-          title: "Запрос на вывод через Stripe отправлен!",
-          description: `Вывод ${amount} ₽ начнется в ближайшее время.`,
+          title: "Stripe Withdrawal Request Sent!",
+          description: `Withdrawal of ${amount} ₽ will start soon.`,
         });
         onWithdrawSuccess(parseFloat(amount));
       } else if (paymentMethod === 'web3') {
+        // --- Web3 (Crypto) Integration ---
         if (!isConnected) {
           toast({
-            title: "Кошелек не подключен",
-            description: "Пожалуйста, подключите свой Web3-кошелек для продолжения.",
+            title: "Wallet Not Connected",
+            description: "Please connect your Web3 wallet to proceed.",
             variant: "destructive"
           });
           onConnectWallet();
@@ -68,14 +81,16 @@ const WithdrawModal = ({ isOpen, setIsOpen, onWithdrawSuccess, onConnectWallet }
         }
 
         if (!recipientAddress || !isAddress(recipientAddress)) {
-          setError('Пожалуйста, введите корректный адрес Web3 кошелька получателя.');
+          setError('Please enter a valid Web3 recipient wallet address.');
           setLoading(false);
           return;
         }
 
+        // For USDT/USDC or other tokens, you would interact with their ERC-20 contract methods to transfer tokens.
+        // Current simulation uses native coin (ETH) transaction for simplicity.
         const valueInEther = parseFloat(amount) / 1000; // Convert amount to a smaller ETH value for simulation
         if (ethBalanceData && parseFloat(ethBalanceData.formatted) < valueInEther) {
-            setError(`Недостаточно ETH для оплаты комиссии. Ваш баланс: ${ethBalanceData.formatted} ETH`);
+            setError(`Insufficient ETH balance for gas fees. Your balance: ${ethBalanceData.formatted} ${ethBalanceData.symbol}`);
             setLoading(false);
             return;
         }
@@ -89,26 +104,26 @@ const WithdrawModal = ({ isOpen, setIsOpen, onWithdrawSuccess, onConnectWallet }
           await new Promise(resolve => setTimeout(resolve, 3000)); // Simulate transaction confirmation
           
           toast({
-            title: "Вывод через Web3 успешно!",
-            description: `Транзакция отправлена. Сумма: ${amount} ₽`,
+            title: "Web3 Withdrawal Successful!",
+            description: `Transaction sent. Amount: ${amount} ₽`,
           });
           onWithdrawSuccess(parseFloat(amount));
         } catch (txError) {
           console.error("Web3 withdrawal transaction failed:", txError);
-          setError(txError.message || "Ошибка Web3 транзакции вывода средств.");
+          setError(txError.message || "Web3 withdrawal transaction error.");
           toast({
-            title: "Ошибка Web3 транзакции",
-            description: txError.message || "Не удалось отправить транзакцию вывода средств.",
+            title: "Web3 Transaction Error",
+            description: txError.message || "Failed to send withdrawal transaction.",
             variant: "destructive"
           });
         }
       }
     } catch (err) {
       console.error("Withdrawal error:", err);
-      setError(err.message || "Произошла ошибка при выводе средств.");
+      setError(err.message || "An error occurred during withdrawal.");
       toast({
-        title: "Ошибка вывода средств",
-        description: err.message || "Что-то пошло не так.",
+        title: "Withdrawal Error",
+        description: err.message || "Something went wrong.",
         variant: "destructive"
       });
     } finally {
@@ -123,38 +138,38 @@ const WithdrawModal = ({ isOpen, setIsOpen, onWithdrawSuccess, onConnectWallet }
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Вывести средства</DialogTitle>
+          <DialogTitle>Withdraw Funds</DialogTitle>
           <DialogDescription>
-            Выберите способ вывода и введите сумму.
+            Select a withdrawal method and enter the amount.
           </DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
           <div className="grid gap-2">
-            <Label htmlFor="amount">Сумма (₽)</Label>
+            <Label htmlFor="amount">Amount (₽)</Label>
             <Input
               id="amount"
               type="text"
               value={amount}
               onChange={handleAmountChange}
-              placeholder="Введите сумму"
+              placeholder="Enter amount"
               inputMode="decimal"
             />
             {error && <p className="text-red-500 text-sm">{error}</p>}
           </div>
 
           <div className="grid gap-2">
-            <Label>Способ вывода</Label>
+            <Label>Withdrawal Method</Label>
             <RadioGroup value={paymentMethod} onValueChange={setPaymentMethod} className="flex flex-col space-y-1">
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="stripe" id="stripe" />
                 <Label htmlFor="stripe" className="flex items-center gap-2">
-                  <CreditCard className="h-4 w-4" /> Stripe Connect (На карту/Банковский счет)
+                  <CreditCard className="h-4 w-4" /> To Bank Card (Stripe)
                 </Label>
               </div>
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="web3" id="web3" />
                 <Label htmlFor="web3" className="flex items-center gap-2">
-                  <Banknote className="h-4 w-4" /> Web3 Transfer (На адрес кошелька)
+                  <Banknote className="h-4 w-4" /> To Crypto Wallet (Web3)
                 </Label>
               </div>
             </RadioGroup>
@@ -162,7 +177,7 @@ const WithdrawModal = ({ isOpen, setIsOpen, onWithdrawSuccess, onConnectWallet }
 
           {paymentMethod === 'web3' && (
             <div className="grid gap-2">
-              <Label htmlFor="recipientAddress">Адрес кошелька получателя</Label>
+              <Label htmlFor="recipientAddress">Recipient Wallet Address</Label>
               <Input
                 id="recipientAddress"
                 type="text"
@@ -176,12 +191,12 @@ const WithdrawModal = ({ isOpen, setIsOpen, onWithdrawSuccess, onConnectWallet }
 
           {paymentMethod === 'web3' && !isConnected && (
             <div className="text-center text-sm text-muted-foreground">
-              Web3 кошелек не подключен. <Button variant="link" onClick={onConnectWallet} className="p-0 h-auto">Подключить кошелек</Button>
+              Web3 wallet not connected. <Button variant="link" onClick={onConnectWallet} className="p-0 h-auto">Connect Wallet</Button>
             </div>
           )}
           {paymentMethod === 'web3' && isConnected && ethBalanceData && (
             <div className="text-center text-sm text-muted-foreground">
-              Подключен: {address.substring(0, 6)}...{address.substring(address.length - 4)}. Баланс: {ethBalanceData.formatted} {ethBalanceData.symbol}
+              Connected: {address.substring(0, 6)}...{address.substring(address.length - 4)}. Balance: {ethBalanceData.formatted} {ethBalanceData.symbol}
             </div>
           )}
         </div>
@@ -191,7 +206,7 @@ const WithdrawModal = ({ isOpen, setIsOpen, onWithdrawSuccess, onConnectWallet }
           ) : (
             <ArrowDownLeft className="mr-2 h-4 w-4" />
           )}
-          {loading ? 'Обработка...' : 'Вывести'}
+          {loading ? 'Processing...' : 'Withdraw'}
         </Button>
       </DialogContent>
     </Dialog>

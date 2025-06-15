@@ -5,10 +5,7 @@ import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Send, MessageSquare } from 'lucide-react';
 import { format } from 'date-fns';
-import { ru } from 'date-fns/locale';
-
-console.log("date-fns format:", format);
-console.log("date-fns locale ru:", ru);
+import { enUS } from 'date-fns/locale';
 
 const ChatInterface = ({ conversations, onSendMessage }) => {
   const [selectedConversation, setSelectedConversation] = useState(null);
@@ -43,10 +40,10 @@ const ChatInterface = ({ conversations, onSendMessage }) => {
     <div className="flex h-[600px] bg-secondary/10 rounded-lg overflow-hidden">
       {/* Conversation List */}
       <div className="w-1/3 border-r border-border p-4 space-y-2 overflow-y-auto">
-        <h3 className="text-lg font-semibold mb-4">Сообщения</h3>
+        <h3 className="text-lg font-semibold mb-4">Messages</h3>
         {conversations.length === 0 ? (
           <div className="text-muted-foreground text-center py-4">
-            У вас пока нет активных бесед.
+            You don't have any active conversations yet.
           </div>
         ) : (
           conversations.map((conv) => (
@@ -64,13 +61,13 @@ const ChatInterface = ({ conversations, onSendMessage }) => {
               <div className="flex-1">
                 <div className="flex justify-between items-center">
                   <p className="font-medium">{conv.user.name}</p>
-                  {conv.user.online && <span className="h-2 w-2 rounded-full bg-green-500" title="В сети"></span>}
+                  {conv.user.online && <span className="h-2 w-2 rounded-full bg-green-500" title="Online"></span>}
                 </div>
                 <p className="text-sm text-muted-foreground truncate">
                   {conv.lastMessage}
                 </p>
                 <span className="text-xs text-muted-foreground">
-                  {conv.lastMessageTime ? format(new Date(conv.lastMessageTime), 'dd.MM.yyyy HH:mm', { locale: ru }) : ''}
+                  {conv.lastMessageTime ? format(new Date(conv.lastMessageTime), 'dd.MM.yyyy HH:mm', { locale: enUS }) : ''}
                 </span>
               </div>
             </div>
@@ -91,7 +88,7 @@ const ChatInterface = ({ conversations, onSendMessage }) => {
               </Avatar>
               <div>
                 <p className="font-semibold">{selectedConversation.user.name}</p>
-                {selectedConversation.user.online && <span className="text-xs text-green-500">В сети</span>}
+                {selectedConversation.user.online && <span className="text-xs text-green-500">Online</span>}
               </div>
             </div>
             <ScrollArea className="flex-1 p-4">
@@ -106,7 +103,7 @@ const ChatInterface = ({ conversations, onSendMessage }) => {
                     >
                       <p>{msg.text}</p>
                       <span className="text-xs opacity-75 mt-1 block">
-                        {msg.time ? format(new Date(msg.time), 'HH:mm', { locale: ru }) : ''}
+                        {msg.time ? format(new Date(msg.time), 'HH:mm', { locale: enUS }) : ''}
                       </span>
                     </div>
                   </div>
@@ -116,7 +113,7 @@ const ChatInterface = ({ conversations, onSendMessage }) => {
             </ScrollArea>
             <div className="p-4 border-t border-border bg-background flex items-center gap-2">
               <Input
-                placeholder="Напишите сообщение..."
+                placeholder="Write a message..."
                 value={newMessage}
                 onChange={(e) => setNewMessage(e.target.value)}
                 onKeyPress={handleKeyPress}
@@ -124,7 +121,7 @@ const ChatInterface = ({ conversations, onSendMessage }) => {
               />
               <Button onClick={handleSendMessage} disabled={!newMessage.trim()}>
                 <Send className="h-4 w-4" />
-                <span className="sr-only">Отправить</span>
+                <span className="sr-only">Send</span>
               </Button>
             </div>
           </>
@@ -132,7 +129,7 @@ const ChatInterface = ({ conversations, onSendMessage }) => {
           <div className="flex-1 flex items-center justify-center text-muted-foreground text-center p-4">
             <div className="flex flex-col items-center">
               <MessageSquare className="h-12 w-12 mb-4" />
-              <p>Выберите чат для начала общения</p>
+              <p>Select a chat to start messaging</p>
             </div>
           </div>
         )}

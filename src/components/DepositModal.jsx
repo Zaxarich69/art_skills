@@ -35,7 +35,7 @@ const DepositModal = ({ isOpen, setIsOpen, onDepositSuccess, onConnectWallet }) 
   const handleDeposit = async () => {
     setError(null);
     if (!amount || parseFloat(amount) <= 0) {
-      setError('Пожалуйста, введите корректную сумму.');
+      setError('Please enter a valid amount.');
       return;
     }
 
@@ -43,19 +43,34 @@ const DepositModal = ({ isOpen, setIsOpen, onDepositSuccess, onConnectWallet }) 
 
     try {
       if (paymentMethod === 'stripe') {
-        // Simulate Stripe Checkout/Elements
+        // --- Stripe (Web2) Integration ---
+        // Implement your Stripe checkout.session or paymentIntent logic here.
+        // Example: Call your backend API to create a Stripe Checkout Session
+        // const response = await fetch('/api/create-stripe-checkout-session', {
+        //   method: 'POST',
+        //   headers: { 'Content-Type': 'application/json' },
+        //   body: JSON.stringify({ amount: parseFloat(amount) * 100, currency: 'rub' }), // Convert to cents
+        // });
+        // const { sessionId } = await response.json();
+        // const stripe = await loadStripe(process.env.REACT_APP_STRIPE_PUBLIC_KEY);
+        // await stripe.redirectToCheckout({ sessionId });
+        // After successful payment on Stripe, your backend should notify your app
+        // (e.g., via a webhook) to update the user's balance and transaction history.
+        // For this simulation, we'll directly call onDepositSuccess.
+
         await new Promise(resolve => setTimeout(resolve, 1500)); // Simulate API call
         console.log('Stripe Deposit successful for amount:', amount);
         toast({
-          title: "Успешно пополнено через Stripe!",
-          description: `Вы пополнили баланс на ${amount} ₽.`,
+          title: "Successfully topped up via Stripe!",
+          description: `You have topped up your balance by ${amount} ₽.`,
         });
         onDepositSuccess(parseFloat(amount));
       } else if (paymentMethod === 'web3') {
+        // --- Web3 (Crypto) Integration ---
         if (!isConnected) {
           toast({
-            title: "Кошелек не подключен",
-            description: "Пожалуйста, подключите свой Web3-кошелек для продолжения.",
+            title: "Wallet Not Connected",
+            description: "Please connect your Web3 wallet to proceed.",
             variant: "destructive"
           });
           onConnectWallet(); // Suggest connecting wallet
@@ -63,11 +78,19 @@ const DepositModal = ({ isOpen, setIsOpen, onDepositSuccess, onConnectWallet }) 
           return;
         }
 
-        // Simulate Web3 transaction (e.g., sending 0 ETH to self or a placeholder address)
-        // In a real app, this would involve sending tokens or interacting with a smart contract
+        // For USDT/USDC or other tokens, you would interact with their ERC-20 contract methods.
+        // Example for ERC-20 (assuming you have the contract ABI and address):
+        // const erc20Contract = getContract({
+        //   address: '0xYourTokenContractAddress',
+        //   abi: erc20ABI, // Your ERC-20 ABI
+        //   walletClient: wagmi.getWalletClient(), // Use a wallet client
+        // });
+        // const tx = await erc20Contract.write.transfer(['0xRecipientAddress', parseUnits(amount, tokenDecimals)]);
+
+        // Current simulation uses native coin (ETH) transaction
         const valueInEther = parseFloat(amount) / 1000; // Convert amount to a smaller ETH value for simulation
         if (ethBalanceData && parseFloat(ethBalanceData.formatted) < valueInEther) {
-            setError(`Недостаточно ETH для оплаты комиссии. Ваш баланс: ${ethBalanceData.formatted} ETH`);
+            setError(`Insufficient ETH balance. Your balance: ${ethBalanceData.formatted} ${ethBalanceData.symbol}`);
             setLoading(false);
             return;
         }
@@ -81,26 +104,26 @@ const DepositModal = ({ isOpen, setIsOpen, onDepositSuccess, onConnectWallet }) 
           await new Promise(resolve => setTimeout(resolve, 3000)); // Simulate transaction confirmation
           
           toast({
-            title: "Пополнение через Web3 успешно!",
-            description: `Транзакция отправлена. Сумма: ${amount} ₽`,
+            title: "Web3 Top-up Successful!",
+            description: `Transaction sent. Amount: ${amount} ₽`,
           });
           onDepositSuccess(parseFloat(amount));
         } catch (txError) {
           console.error("Web3 transaction failed:", txError);
-          setError(txError.message || "Ошибка Web3 транзакции.");
+          setError(txError.message || "Web3 transaction error.");
           toast({
-            title: "Ошибка Web3 транзакции",
-            description: txError.message || "Не удалось отправить транзакцию.",
+            title: "Web3 Transaction Error",
+            description: txError.message || "Failed to send transaction.",
             variant: "destructive"
           });
         }
       }
     } catch (err) {
       console.error("Deposit error:", err);
-      setError(err.message || "Произошла ошибка при пополнении.");
+      setError(err.message || "An error occurred during top-up.");
       toast({
-        title: "Ошибка пополнения",
-        description: err.message || "Что-то пошло не так.",
+        title: "Top-up Error",
+        description: err.message || "Something went wrong.",
         variant: "destructive"
       });
     } finally {
@@ -114,32 +137,32 @@ const DepositModal = ({ isOpen, setIsOpen, onDepositSuccess, onConnectWallet }) 
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Пополнить баланс</DialogTitle>
+          <DialogTitle>Top Up Balance</DialogTitle>
           <DialogDescription>
-            Выберите способ пополнения и введите сумму.
+            Select a payment method and enter the amount.
           </DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
           <div className="grid gap-2">
-            <Label htmlFor="amount">Сумма (₽)</Label>
+            <Label htmlFor="amount">Amount (₽)</Label>
             <Input
               id="amount"
               type="text"
               value={amount}
               onChange={handleAmountChange}
-              placeholder="Введите сумму"
+              placeholder="Enter amount"
               inputMode="decimal"
             />
             {error && <p className="text-red-500 text-sm">{error}</p>}
           </div>
 
           <div className="grid gap-2">
-            <Label>Способ пополнения</Label>
+            <Label>Payment Method</Label>
             <RadioGroup value={paymentMethod} onValueChange={setPaymentMethod} className="flex flex-col space-y-1">
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="stripe" id="stripe" />
                 <Label htmlFor="stripe" className="flex items-center gap-2">
-                  <CreditCard className="h-4 w-4" /> Stripe (Кредитная карта, Apple Pay, Google Pay)
+                  <CreditCard className="h-4 w-4" /> Stripe / Bank Card
                 </Label>
               </div>
               <div className="flex items-center space-x-2">
@@ -153,12 +176,12 @@ const DepositModal = ({ isOpen, setIsOpen, onDepositSuccess, onConnectWallet }) 
 
           {paymentMethod === 'web3' && !isConnected && (
             <div className="text-center text-sm text-muted-foreground">
-              Web3 кошелек не подключен. <Button variant="link" onClick={onConnectWallet} className="p-0 h-auto">Подключить кошелек</Button>
+              Web3 wallet not connected. <Button variant="link" onClick={onConnectWallet} className="p-0 h-auto">Connect Wallet</Button>
             </div>
           )}
            {paymentMethod === 'web3' && isConnected && ethBalanceData && (
             <div className="text-center text-sm text-muted-foreground">
-              Подключен: {address.substring(0, 6)}...{address.substring(address.length - 4)}. Баланс: {ethBalanceData.formatted} {ethBalanceData.symbol}
+              Connected: {address.substring(0, 6)}...{address.substring(address.length - 4)}. Balance: {ethBalanceData.formatted} {ethBalanceData.symbol}
             </div>
           )}
         </div>
@@ -168,7 +191,7 @@ const DepositModal = ({ isOpen, setIsOpen, onDepositSuccess, onConnectWallet }) 
           ) : (
             <ArrowUpRight className="mr-2 h-4 w-4" />
           )}
-          {loading ? 'Обработка...' : 'Пополнить'}
+          {loading ? 'Processing...' : 'Top Up'}
         </Button>
       </DialogContent>
     </Dialog>

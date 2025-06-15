@@ -9,7 +9,7 @@ const Reviews = ({ reviews, averageRating }) => {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            Отзывы учеников
+            Student Reviews
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -31,7 +31,7 @@ const Reviews = ({ reviews, averageRating }) => {
               ))}
             </div>
             <span className="text-muted-foreground">
-              ({reviews.length} отзывов)
+              ({reviews.length} reviews)
             </span>
           </div>
 

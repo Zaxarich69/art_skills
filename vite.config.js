@@ -100,6 +100,12 @@ const originalFetch = window.fetch;
 window.fetch = function(...args) {
 	const url = args[0] instanceof Request ? args[0].url : args[0];
 
+	// Ensure url is a string before using string methods
+	if (typeof url !== 'string') {
+		console.error('Fetch URL is not a string:', url);
+		return originalFetch.apply(this, args); // Proceed with original fetch to avoid breaking the app
+	}
+
 	// Skip WebSocket URLs
 	if (url.startsWith('ws:') || url.startsWith('wss:')) {
 		return originalFetch.apply(this, args);

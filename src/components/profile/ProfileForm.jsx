@@ -36,7 +36,7 @@ const ProfileForm = ({ userData, onSave, isEditing, onEditToggle, categories }) 
   return (
     <Card>
       <CardHeader className="flex items-center justify-between">
-        <CardTitle>Личная информация</CardTitle>
+        <CardTitle>Personal Information</CardTitle>
         <Button 
           onClick={() => {
             if (isEditing) {
@@ -49,12 +49,12 @@ const ProfileForm = ({ userData, onSave, isEditing, onEditToggle, categories }) 
           {isEditing ? (
             <>
               <Save className="h-4 w-4" />
-              Сохранить
+              Save
             </>
           ) : (
             <>
               <Edit className="h-4 w-4" />
-              Редактировать
+              Edit
             </>
           )}
         </Button>
@@ -62,7 +62,7 @@ const ProfileForm = ({ userData, onSave, isEditing, onEditToggle, categories }) 
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid gap-2">
-            <Label htmlFor="name">Имя</Label>
+            <Label htmlFor="name">Name</Label>
             <Input
               id="name"
               name="name"
@@ -83,7 +83,7 @@ const ProfileForm = ({ userData, onSave, isEditing, onEditToggle, categories }) 
             />
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="phone">Телефон</Label>
+            <Label htmlFor="phone">Phone</Label>
             <Input
               id="phone"
               name="phone"
@@ -93,7 +93,7 @@ const ProfileForm = ({ userData, onSave, isEditing, onEditToggle, categories }) 
             />
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="location">Местоположение</Label>
+            <Label htmlFor="location">Location</Label>
             <Input
               id="location"
               name="location"
@@ -103,7 +103,7 @@ const ProfileForm = ({ userData, onSave, isEditing, onEditToggle, categories }) 
             />
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="bio">О себе</Label>
+            <Label htmlFor="bio">About Me</Label>
             <Input
               id="bio"
               name="bio"
@@ -113,7 +113,7 @@ const ProfileForm = ({ userData, onSave, isEditing, onEditToggle, categories }) 
             />
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="title">Должность/Профессия</Label>
+            <Label htmlFor="title">Title/Profession</Label>
             <Input
               id="title"
               name="title"
@@ -123,14 +123,14 @@ const ProfileForm = ({ userData, onSave, isEditing, onEditToggle, categories }) 
             />
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="category">Категория</Label>
+            <Label htmlFor="category">Category</Label>
             <Select 
               onValueChange={handleSelectChange}
               value={localFormData.category || ''}
               disabled={!isEditing}
             >
               <SelectTrigger className="w-full">
-                <SelectValue placeholder="Выберите категорию" />
+                <SelectValue placeholder="Select a category" />
               </SelectTrigger>
               <SelectContent>
                 {categories.map((category) => (
@@ -142,7 +142,7 @@ const ProfileForm = ({ userData, onSave, isEditing, onEditToggle, categories }) 
             </Select>
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="hourlyRate">Почасовая ставка</Label>
+            <Label htmlFor="hourlyRate">Hourly Rate</Label>
             <Input
               id="hourlyRate"
               name="hourlyRate"

@@ -8,23 +8,15 @@ import { Label } from '@/components/ui/label';
 import { toast } from '@/components/ui/use-toast';
 
 const LessonCard = ({ lesson, isUpcoming, onLeaveReview }) => {
-  const [showVideo, setShowVideo] = useState(false);
   const [isReviewFormOpen, setIsReviewFormOpen] = useState(false);
   const [reviewRating, setReviewRating] = useState(0);
   const [reviewComment, setReviewComment] = useState('');
 
+  const getRoomName = (lesson) => `artskills_lesson_${lesson.id}`;
+
   const handleJoinLesson = () => {
-    if (lesson.jitsiLink) {
-      // Открываем Jitsi Meet в новом окне/вкладке
-      window.open(lesson.jitsiLink, '_blank');
-    } else {
-      // Если ссылки нет, то можно показать тост или другую индикацию
-      toast({
-        title: "Error",
-        description: "Video conference link is not available.",
-        variant: "destructive",
-      });
-    }
+    const url = `https://meet.jit.si/${getRoomName(lesson)}`;
+    window.open(url, '_blank', 'noopener,noreferrer');
   };
 
   const handleOpenReviewForm = () => {

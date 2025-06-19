@@ -2,6 +2,7 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ArrowUpRight, ArrowDownLeft, Wallet } from 'lucide-react';
+import ConnectWalletButton from '@/components/ConnectWalletButton';
 
 const Balance = ({ balance, transactions, onDepositClick, onWithdrawClick }) => {
   return (
@@ -15,6 +16,9 @@ const Balance = ({ balance, transactions, onDepositClick, onWithdrawClick }) => 
         </CardHeader>
         <CardContent>
           <div className="flex flex-col gap-4">
+            <div className="mb-2">
+              <ConnectWalletButton />
+            </div>
             <div className="flex items-baseline gap-2">
               <span className="text-3xl font-bold">{balance} ₽</span>
               <span className="text-muted-foreground">доступно</span>

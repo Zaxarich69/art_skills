@@ -14,7 +14,6 @@ import CryptoWallets from '@/components/profile/CryptoWallets';
 import Balance from '@/components/profile/Balance';
 import Reviews from '@/components/profile/Reviews';
 import Lessons from '@/components/profile/Lessons';
-import ConnectWalletModal from '@/components/ConnectWalletModal';
 import ChatInterface from '@/components/profile/ChatInterface';
 import DepositModal from '@/components/DepositModal';
 import WithdrawModal from '@/components/WithdrawModal';
@@ -310,10 +309,8 @@ const ProfilePage = () => {
   const [userData, setUserData] = useState(initialUserData);
   const [activeTab, setActiveTab] = useState('profile');
   const [isEditing, setIsEditing] = useState(false);
-  const [showConnectWalletModal, setShowConnectWalletModal] = useState(false);
   const [showDepositModal, setShowDepositModal] = useState(false);
   const [showWithdrawModal, setShowWithdrawModal] = useState(false);
-  const [selectedWalletToConnect, setSelectedWalletToConnect] = useState(null);
   const [selectedConversationId, setSelectedConversationId] = useState(null);
   const fileInputRef = useRef(null);
 
@@ -457,10 +454,6 @@ const ProfilePage = () => {
   };
 
   const handleEditToggle = () => setIsEditing(prev => !prev);
-
-  const handleOpenConnectWalletModal = () => {
-    setShowConnectWalletModal(true);
-  };
 
   const handleOpenDepositModal = () => setShowDepositModal(true);
   const handleCloseDepositModal = () => setShowDepositModal(false);
@@ -811,22 +804,16 @@ const ProfilePage = () => {
         </main>
       </div>
 
-      <ConnectWalletModal
-        isOpen={showConnectWalletModal}
-        onClose={() => setShowConnectWalletModal(false)}
-        onConnect={setSelectedWalletToConnect}
-      />
-
       <DepositModal
         isOpen={showDepositModal}
-        onClose={handleCloseDepositModal}
+        setIsOpen={setShowDepositModal}
         onDepositSuccess={handleDepositSuccess}
         walletConnected={userData.cryptoWallets.length > 0}
       />
 
       <WithdrawModal
         isOpen={showWithdrawModal}
-        onClose={handleCloseWithdrawModal}
+        setIsOpen={setShowWithdrawModal}
         onWithdrawSuccess={handleWithdrawSuccess}
         balance={userData.balance}
         bankCardConnected={userData.paymentMethods.length > 0}

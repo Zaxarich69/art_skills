@@ -9,6 +9,7 @@ import { useToast } from '@/components/ui/use-toast';
 import { useAccount, useConnect, useSendTransaction, useBalance } from 'wagmi';
 import { injected } from 'wagmi/connectors';
 import { parseEther, isAddress } from 'viem';
+import { ConnectButton } from "@rainbow-me/rainbowkit";
 
 const WithdrawModal = ({ isOpen, setIsOpen, onWithdrawSuccess, onConnectWallet }) => {
   const [amount, setAmount] = useState('');
@@ -191,7 +192,7 @@ const WithdrawModal = ({ isOpen, setIsOpen, onWithdrawSuccess, onConnectWallet }
 
           {paymentMethod === 'web3' && !isConnected && (
             <div className="text-center text-sm text-muted-foreground">
-              Web3 wallet not connected. <Button variant="link" onClick={onConnectWallet} className="p-0 h-auto">Connect Wallet</Button>
+              Web3 wallet not connected. <ConnectButton />
             </div>
           )}
           {paymentMethod === 'web3' && isConnected && ethBalanceData && (

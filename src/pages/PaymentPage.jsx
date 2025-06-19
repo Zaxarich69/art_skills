@@ -14,7 +14,6 @@ import {
 } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 import { mockProfessionalsData } from '@/data/professionals';
-import ConnectWalletModal from '@/components/ConnectWalletModal';
 
 
 const cryptoOptions = [
@@ -195,7 +194,6 @@ const PaymentPage = () => {
   const [saveCard, setSaveCard] = useState(false);
   
   const [walletAddress] = useState('bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh'); // Example address
-  const [isConnectWalletModalOpen, setIsConnectWalletModalOpen] = useState(false);
   
   useEffect(() => {
     setLoading(true);
@@ -264,10 +262,6 @@ const PaymentPage = () => {
     }, 2000);
   };
 
-  const handleOpenConnectWalletModal = () => {
-    setIsConnectWalletModalOpen(true);
-  };
-  
   if (loading) {
     return (
       <div className="pt-24 pb-10 flex justify-center items-center min-h-[60vh]">
@@ -320,7 +314,7 @@ const PaymentPage = () => {
                           <CardPaymentForm {...{cardName, setCardName, cardNumber, handleCardNumberChange, cardExpiry, handleExpiryChange, cardCvc, setCardCvc, saveCard, setSaveCard, isProcessing}} />
                         </TabsContent>
                         <TabsContent value="crypto">
-                          <CryptoPaymentForm {...{selectedCrypto, setSelectedCrypto, totalAmount, walletAddress, toast, isProcessing, onConnectWallet: handleOpenConnectWalletModal}} />
+                          <CryptoPaymentForm {...{selectedCrypto, setSelectedCrypto, totalAmount, walletAddress, toast, isProcessing, onConnectWallet: () => {}}} />
                         </TabsContent>
                       </Tabs>
                       <SessionDetailsForm {...{selectedDay, handleDayChange, selectedSlot, handleSlotChange, hours, handleHoursChange, professional, availableSlots, isProcessing}} />
@@ -336,7 +330,6 @@ const PaymentPage = () => {
           )}
         </div>
       </div>
-      <ConnectWalletModal isOpen={isConnectWalletModalOpen} setIsOpen={setIsConnectWalletModalOpen} />
     </div>
   );
 };

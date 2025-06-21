@@ -26,7 +26,7 @@ const Messages = ({ conversations }) => {
             {/* Список чатов */}
             <div className="col-span-4 border-r">
               <div className="p-4 border-b">
-                <h3 className="font-semibold">Сообщения</h3>
+                <h3 className="font-semibold">Messages</h3>
               </div>
               <div className="overflow-y-auto h-[calc(100%-4rem)]">
                 {conversations?.map((chat) => (
@@ -75,7 +75,7 @@ const Messages = ({ conversations }) => {
                       <div>
                         <h3 className="font-semibold">{selectedChat.user.name}</h3>
                         <p className="text-sm text-muted-foreground">
-                          {selectedChat.user.online ? 'В сети' : 'Не в сети'}
+                          {selectedChat.user.online ? 'Online' : 'Offline'}
                         </p>
                       </div>
                     </div>
@@ -130,7 +130,7 @@ const Messages = ({ conversations }) => {
                     <Input
                       value={message}
                       onChange={(e) => setMessage(e.target.value)}
-                      placeholder="Введите сообщение..."
+                      placeholder="Enter your message..."
                       className="flex-1"
                     />
                     <Button type="submit" size="icon" className="shrink-0">
@@ -140,7 +140,7 @@ const Messages = ({ conversations }) => {
                 </>
               ) : (
                 <div className="flex-1 flex items-center justify-center text-muted-foreground">
-                  Выберите чат для начала общения
+                  Select a chat to start messaging
                 </div>
               )}
             </div>

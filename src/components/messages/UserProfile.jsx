@@ -84,27 +84,27 @@ const UserProfile = ({ user, socket }) => {
           className="w-full p-2 bg-purple-500 text-white rounded-md flex items-center justify-center space-x-2 hover:bg-purple-600 transition-colors"
         >
           <Phone size={16} />
-          <span>Позвонить</span>
+          <span>Call</span>
         </button>
         <button
           onClick={handleVideoCall}
           className="w-full p-2 bg-purple-500 text-white rounded-md flex items-center justify-center space-x-2 hover:bg-purple-600 transition-colors"
         >
           <Video size={16} />
-          <span>Видеозвонок</span>
+          <span>Video Call</span>
         </button>
         <button
           onClick={handleScheduleMeeting}
           className="w-full p-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-md flex items-center justify-center space-x-2 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
         >
           <Calendar size={16} />
-          <span>Запланировать встречу</span>
+          <span>Schedule Meeting</span>
         </button>
       </div>
 
       {user.bio && (
         <div className="mt-6">
-          <h3 className="font-semibold mb-2">О себе</h3>
+          <h3 className="font-semibold mb-2">About</h3>
           <p className="text-gray-600 dark:text-gray-400 text-sm">
             {user.bio}
           </p>
@@ -113,7 +113,7 @@ const UserProfile = ({ user, socket }) => {
 
       {user.skills && (
         <div className="mt-6">
-          <h3 className="font-semibold mb-2">Навыки</h3>
+          <h3 className="font-semibold mb-2">Skills</h3>
           <div className="flex flex-wrap gap-2">
             {user.skills.map((skill, index) => (
               <span

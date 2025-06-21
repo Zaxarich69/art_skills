@@ -260,15 +260,15 @@ const ContactCard = ({ professional, toast }) => {
   const handleSendMessage = () => {
     if (message.trim()) {
       toast({
-        title: "Сообщение отправлено",
-        description: `Ваше сообщение для ${professional.name} успешно отправлено.`, 
+        title: "Message sent",
+        description: `Your message to ${professional.name} has been sent successfully.`, 
       });
       setMessage('');
       setIsMessageDialogOpen(false);
     } else {
       toast({
-        title: "Ошибка",
-        description: "Пожалуйста, введите сообщение.",
+        title: "Error",
+        description: "Please enter a message.",
         variant: "destructive",
       });
     }
@@ -284,19 +284,19 @@ const ContactCard = ({ professional, toast }) => {
           <DialogTrigger asChild>
             <Button className="w-full">
               <MessageSquare className="mr-2 h-4 w-4" />
-                Сообщение
+                Message
             </Button>
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
-                <DialogTitle>Написать {professional.name}</DialogTitle>
+                <DialogTitle>Write to {professional.name}</DialogTitle>
               <DialogDescription>
-                  Начните беседу с {professional.name}.
+                  Start a conversation with {professional.name}.
               </DialogDescription>
             </DialogHeader>
             <div className="space-y-4 py-4">
                 <Textarea
-                  placeholder="Ваше сообщение..."
+                  placeholder="Your message..."
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
                   rows={5}
@@ -304,15 +304,15 @@ const ContactCard = ({ professional, toast }) => {
                 />
             </div>
               <DialogFooter>
-                <Button variant="outline" onClick={() => setIsMessageDialogOpen(false)}>Отмена</Button>
-                <Button onClick={handleSendMessage}>Отправить</Button>
+                <Button variant="outline" onClick={() => setIsMessageDialogOpen(false)}>Cancel</Button>
+                <Button onClick={handleSendMessage}>Send</Button>
               </DialogFooter>
           </DialogContent>
         </Dialog>
         
         <Button variant="outline" className="w-full" asChild>
           <Link to={`/payment/${professional.id}`}>
-              Записаться на сессию
+              Book a Session
           </Link>
         </Button>
       </div>
@@ -320,19 +320,19 @@ const ContactCard = ({ professional, toast }) => {
       <Separator className="my-6" />
       
       <div className="space-y-4">
-          <h4 className="font-medium mb-3">Контактная информация</h4>
+          <h4 className="font-medium mb-3">Contact Information</h4>
         <Dialog>
           <DialogTrigger asChild>
             <Button variant="outline" className="w-full justify-start">
               <Mail className="mr-2 h-4 w-4" />
-                Показать email
+                Show email
             </Button>
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
-                <DialogTitle>Контактная информация</DialogTitle>
+                <DialogTitle>Contact Information</DialogTitle>
               <DialogDescription>
-                  Вот как вы можете связаться с {professional.name}.
+                  Here is how you can contact {professional.name}.
               </DialogDescription>
             </DialogHeader>
             <div className="py-4">
@@ -343,8 +343,8 @@ const ContactCard = ({ professional, toast }) => {
                   </div>
                   <Button variant="ghost" size="sm" onClick={() => {
                     navigator.clipboard.writeText(professional.contactInfo?.email);
-                    toast({ title: "Email скопирован", description: "Адрес электронной почты скопирован в буфер обмена" });
-                  }}>Копировать</Button>
+                    toast({ title: "Email copied", description: "Email address copied to clipboard" });
+                  }}>Copy</Button>
               </div>
               <div className="flex items-center justify-between p-3 bg-secondary/20 rounded-md">
                 <div className="flex items-center">
@@ -353,8 +353,8 @@ const ContactCard = ({ professional, toast }) => {
                   </div>
                   <Button variant="ghost" size="sm" onClick={() => {
                     navigator.clipboard.writeText(professional.contactInfo?.phone);
-                    toast({ title: "Телефон скопирован", description: "Номер телефона скопирован в буфер обмена" });
-                  }}>Копировать</Button>
+                    toast({ title: "Phone copied", description: "Phone number copied to clipboard" });
+                  }}>Copy</Button>
               </div>
             </div>
           </DialogContent>
@@ -363,14 +363,14 @@ const ContactCard = ({ professional, toast }) => {
             <DialogTrigger asChild>
               <Button variant="outline" className="w-full justify-start">
                 <Phone className="mr-2 h-4 w-4" />
-                Показать номер телефона
+                Show phone number
               </Button>
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>
-                <DialogTitle>Контактная информация</DialogTitle>
+                <DialogTitle>Contact Information</DialogTitle>
                 <DialogDescription>
-                  Вот как вы можете связаться с {professional.name}.
+                  Here is how you can contact {professional.name}.
                 </DialogDescription>
               </DialogHeader>
               <div className="py-4">
@@ -381,8 +381,8 @@ const ContactCard = ({ professional, toast }) => {
                   </div>
                   <Button variant="ghost" size="sm" onClick={() => {
                     navigator.clipboard.writeText(professional.contactInfo?.email);
-                    toast({ title: "Email скопирован", description: "Адрес электронной почты скопирован в буфер обмена" });
-                  }}>Копировать</Button>
+                    toast({ title: "Email copied", description: "Email address copied to clipboard" });
+                  }}>Copy</Button>
                 </div>
                 <div className="flex items-center justify-between p-3 bg-secondary/20 rounded-md">
                   <div className="flex items-center">
@@ -391,8 +391,8 @@ const ContactCard = ({ professional, toast }) => {
                   </div>
                   <Button variant="ghost" size="sm" onClick={() => {
                     navigator.clipboard.writeText(professional.contactInfo?.phone);
-                    toast({ title: "Телефон скопирован", description: "Номер телефона скопирован в буфер обмена" });
-                  }}>Копировать</Button>
+                    toast({ title: "Phone copied", description: "Phone number copied to clipboard" });
+                  }}>Copy</Button>
                 </div>
               </div>
             </DialogContent>
@@ -402,7 +402,7 @@ const ContactCard = ({ professional, toast }) => {
       <Separator className="my-6" />
       
       <div>
-          <h4 className="font-medium mb-3">Социальные ссылки</h4>
+          <h4 className="font-medium mb-3">Social Links</h4>
         <div className="flex flex-wrap gap-2">
             {professional.socialLinks?.website && (
             <Button variant="outline" size="icon" asChild>
@@ -473,15 +473,15 @@ const ProfessionalPage = () => {
         const userProfessional = {
           ...defaultProfessional,
           id: String(userData.id || 'user-profile'),
-          name: String(userData.name || 'Ваш Профиль'),
-          title: String(userData.title || 'Пользователь'),
+          name: String(userData.name || 'Your Profile'),
+          title: String(userData.title || 'User'),
           category: String(userData.category || 'other'),
           rating: Number(userData.averageRating || 5.0),
           reviews: Number(userData.reviews ? userData.reviews.length : 0),
-          location: String(userData.location || 'Не указано'),
+          location: String(userData.location || 'Not specified'),
           hourlyRate: Number(userData.hourlyRate || 0),
           acceptsCrypto: (userData.acceptsCrypto === true || userData.acceptsCrypto === false) ? userData.acceptsCrypto : false,
-          about: String(userData.bio || 'О себе'),
+          about: String(userData.bio || 'About me'),
           image: String(userData.profilePicture || ''),
           tags: userData.skills || [],
           education: userData.education || [],
@@ -555,15 +555,15 @@ const ProfessionalPage = () => {
     if (isFavorited) {
       updatedFavorites = favorites.filter(favId => favId !== id);
       toast({
-        title: "Удалено из избранного",
-        description: `${professional.name} удален из вашего списка избранного.`, 
+        title: "Removed from favorites",
+        description: `${professional.name} removed from your favorites list.`, 
         duration: 3000,
       });
     } else {
       updatedFavorites = [...favorites, id];
       toast({
-        title: "Добавлено в избранное",
-        description: `${professional.name} добавлен в ваш список избранного.`, 
+        title: "Added to favorites",
+        description: `${professional.name} added to your favorites list.`, 
         duration: 3000,
       });
     }

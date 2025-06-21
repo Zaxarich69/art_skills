@@ -169,7 +169,7 @@ const MessageInput = ({ chatId, socket }) => {
               handleTyping();
             }}
             onKeyPress={handleKeyPress}
-            placeholder="Введите сообщение..."
+            placeholder="Enter your message..."
             className="w-full p-3 pr-12 rounded-lg bg-gray-100 dark:bg-gray-700 focus:ring-2 focus:ring-purple-500 resize-none"
             rows={1}
           />

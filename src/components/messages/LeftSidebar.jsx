@@ -25,7 +25,7 @@ const LeftSidebar = ({ conversations, activeConversation, onSelectConversation, 
   return (
     <div className="flex flex-col h-full bg-background">
       <div className="p-4 border-b border-border flex items-center justify-between">
-        <h2 className="text-xl font-bold">Диалоги</h2>
+        <h2 className="text-xl font-bold">Conversations</h2>
         {isMobile && (
           <Button variant="ghost" size="icon" onClick={onCloseSidebar}>
             <X className="h-5 w-5" />
@@ -36,7 +36,7 @@ const LeftSidebar = ({ conversations, activeConversation, onSelectConversation, 
         <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
-            placeholder="Поиск по диалогам..."
+            placeholder="Search conversations..."
             className="pl-9"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
@@ -51,21 +51,21 @@ const LeftSidebar = ({ conversations, activeConversation, onSelectConversation, 
               onClick={() => setCurrentTab('all')}
               size="sm"
             >
-              Все ({conversations.length})
+              All ({conversations.length})
             </Button>
             <Button 
               variant={currentTab === 'unread' ? 'secondary' : 'ghost'}
               onClick={() => setCurrentTab('unread')}
               size="sm"
             >
-              Непрочитанные ({conversations.filter(c => c.unreadCount > 0).length})
+              Unread ({conversations.filter(c => c.unreadCount > 0).length})
             </Button>
             <Button 
               variant={currentTab === 'archived' ? 'secondary' : 'ghost'}
               onClick={() => setCurrentTab('archived')}
               size="sm"
             >
-              Архив ({conversations.filter(c => c.isArchived).length})
+              Archived ({conversations.filter(c => c.isArchived).length})
             </Button>
           </div>
         </div>
@@ -92,7 +92,7 @@ const LeftSidebar = ({ conversations, activeConversation, onSelectConversation, 
                     <span className="text-xs text-muted-foreground whitespace-nowrap ml-2">{conv.lastMessage.time}</span>
                   </div>
                   <p className="text-sm text-muted-foreground truncate">
-                    {conv.lastMessage.sender === 'me' && 'Вы: '}
+                    {conv.lastMessage.sender === 'me' && 'You: '}
                     {conv.lastMessage.text}
                   </p>
                   <div className="flex items-center mt-1">
@@ -105,7 +105,7 @@ const LeftSidebar = ({ conversations, activeConversation, onSelectConversation, 
           ))
         ) : (
           <div className="p-4 text-center text-muted-foreground">
-            <p>Нет диалогов, соответствующих запросу.</p>
+            <p>No conversations matching your query.</p>
           </div>
         )}
       </ScrollArea>

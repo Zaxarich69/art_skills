@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import { Tabs, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { 
   User, CreditCard, Bitcoin, Edit, Save, MessageSquare,
@@ -327,11 +327,11 @@ const ProfilePage = () => {
     // Ensure all lesson statuses are strings, defaulting if undefined
     dataToUse.upcomingLessons = dataToUse.upcomingLessons.map(lesson => ({
       ...lesson,
-      status: lesson.status || 'ожидается' // Default status if missing
+      status: lesson.status || 'pending' // Default status if missing
     }));
     dataToUse.pastLessons = dataToUse.pastLessons.map(lesson => ({
       ...lesson,
-      status: lesson.status || 'завершено' // Default status if missing
+      status: lesson.status || 'completed' // Default status if missing
     }));
 
     setUserData(dataToUse);
@@ -379,7 +379,7 @@ const ProfilePage = () => {
         if (lesson.title === 'Введение в React') lesson.title = 'Introduction to React';
         if (lesson.teacher === 'Иван Петров') lesson.teacher = 'Ivan Petrov';
         if (lesson.location === 'Онлайн') lesson.location = 'Online';
-        lesson.status = lesson.status || 'ожидается';
+        lesson.status = lesson.status || 'pending';
         if (lesson.status === 'ожидается') lesson.status = 'pending';
         if (lesson.title === 'Продвинутый JavaScript') lesson.title = 'Advanced JavaScript';
         if (lesson.teacher === 'Мария Иванова') lesson.teacher = 'Maria Ivanova';
@@ -393,14 +393,14 @@ const ProfilePage = () => {
         if (lesson.title === 'Основы TypeScript') lesson.title = 'Basics of TypeScript';
         if (lesson.teacher === 'Анна Сидорова') lesson.teacher = 'Anna Sidorova';
         if (lesson.location === 'Онлайн') lesson.location = 'Online';
-        lesson.status = lesson.status || 'завершено';
+        lesson.status = lesson.status || 'completed';
         if (lesson.status === 'завершено') lesson.status = 'completed';
         if (lesson.title === 'Node.js для начинающих') lesson.title = 'Node.js for Beginners';
         if (lesson.teacher === 'Дмитрий Смирнов') lesson.teacher = 'Dmitry Smirnov';
         if (lesson.title === 'Введение в Figma') lesson.title = 'Introduction to Figma';
         if (lesson.teacher === 'Елена Козлова') lesson.teacher = 'Elena Kozlova';
         if (lesson.status === 'в записи') lesson.status = 'recorded';
-        if (lesson.title === 'Основы UI/UX Дизайна') lesson.title = 'Basics of UI/UX Design';
+        if (lesson.title === 'Основы UI/UX Дизайна') lesson.title = 'UI/UX Design Basics';
         if (lesson.teacher === 'Ирина Новикова') lesson.teacher = 'Irina Novikova';
         if (lesson.status === 'отмена') lesson.status = 'cancelled';
         return lesson;

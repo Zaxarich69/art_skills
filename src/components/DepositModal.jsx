@@ -32,15 +32,15 @@ const DepositModal = ({ isOpen, setIsOpen, onDepositSuccess }) => {
   const handleDeposit = async () => {
     setError(null);
     if (!amount || parseFloat(amount) <= 0) {
-      setError('Введите корректную сумму.');
+      setError('Enter a valid amount.');
       return;
     }
     setLoading(true);
     try {
       if (paymentMethod === 'stripe') {
         toast({
-          title: 'В разработке',
-          description: 'Пополнение через карту временно недоступно.',
+          title: 'In development',
+          description: 'Top-up via card is temporarily unavailable.',
           variant: 'destructive',
         });
         setLoading(false);
@@ -48,8 +48,8 @@ const DepositModal = ({ isOpen, setIsOpen, onDepositSuccess }) => {
       } else if (paymentMethod === 'web3') {
         if (!isConnected) {
           toast({
-            title: 'Кошелек не подключен',
-            description: 'Сначала подключите Web3-кошелек.',
+            title: 'Wallet not connected',
+            description: 'Connect your Web3 wallet first.',
             variant: 'destructive',
           });
           setLoading(false);
@@ -57,7 +57,7 @@ const DepositModal = ({ isOpen, setIsOpen, onDepositSuccess }) => {
         }
         const valueInEther = parseFloat(amount) / 1000;
         if (ethBalanceData && parseFloat(ethBalanceData.formatted) < valueInEther) {
-          setError(`Недостаточно средств. Ваш баланс: ${ethBalanceData.formatted} ${ethBalanceData.symbol}`);
+          setError(`Insufficient funds. Your balance: ${ethBalanceData.formatted} ${ethBalanceData.symbol}`);
           setLoading(false);
           return;
         }
@@ -68,24 +68,24 @@ const DepositModal = ({ isOpen, setIsOpen, onDepositSuccess }) => {
           });
           await new Promise(resolve => setTimeout(resolve, 2000));
           toast({
-            title: 'Успешно!',
-            description: `Транзакция отправлена. Сумма: ${amount} ₽`,
+            title: 'Success!',
+            description: `Transaction sent. Amount: ${amount} ₽`,
           });
           onDepositSuccess(parseFloat(amount));
         } catch (txError) {
-          setError(txError.message || 'Ошибка Web3-транзакции.');
+          setError(txError.message || 'Web3 transaction error.');
           toast({
-            title: 'Ошибка Web3',
-            description: txError.message || 'Не удалось отправить транзакцию.',
+            title: 'Web3 Error',
+            description: txError.message || 'Failed to send transaction.',
             variant: 'destructive',
           });
         }
       }
     } catch (err) {
-      setError(err.message || 'Ошибка пополнения.');
+      setError(err.message || 'Top-up error.');
       toast({
-        title: 'Ошибка',
-        description: err.message || 'Что-то пошло не так.',
+        title: 'Error',
+        description: err.message || 'Something went wrong.',
         variant: 'destructive',
       });
     } finally {
@@ -142,7 +142,7 @@ const DepositModal = ({ isOpen, setIsOpen, onDepositSuccess }) => {
               <ConnectButton />
               {isConnected && ethBalanceData && (
                 <div>
-                  Баланс: {ethBalanceData.formatted} {ethBalanceData.symbol}
+                  Balance: {ethBalanceData.formatted} {ethBalanceData.symbol}
                 </div>
               )}
             </div>
@@ -158,7 +158,7 @@ const DepositModal = ({ isOpen, setIsOpen, onDepositSuccess }) => {
           ) : (
             <ArrowUpRight className="mr-2 h-4 w-4" />
           )}
-          {loading ? 'Processing...' : paymentMethod === 'stripe' ? 'В разработке' : 'Top Up'}
+          {loading ? 'Processing...' : paymentMethod === 'stripe' ? 'In development' : 'Top Up'}
         </Button>
       </DialogContent>
     </Dialog>

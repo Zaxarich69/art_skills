@@ -13,8 +13,8 @@ const InfoPanel = ({ activeConversation, isMobile, onCloseInfoPanel }) => {
     return (
       <div className="flex flex-col h-full items-center justify-center text-center p-4">
         <Info className="h-16 w-16 text-gray-400 mb-4" />
-        <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">Информация о диалоге</h2>
-        <p className="text-gray-600 dark:text-gray-400">Выберите диалог, чтобы увидеть информацию о собеседнике.</p>
+        <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">Dialog Information</h2>
+        <p className="text-gray-600 dark:text-gray-400">Select a conversation to see participant info.</p>
       </div>
     );
   }
@@ -24,7 +24,7 @@ const InfoPanel = ({ activeConversation, isMobile, onCloseInfoPanel }) => {
   return (
     <div className="flex flex-col h-full bg-background">
       <div className="p-4 border-b border-border flex items-center justify-between">
-        <h2 className="text-xl font-bold">Информация</h2>
+        <h2 className="text-xl font-bold">Information</h2>
         {isMobile && (
           <Button variant="ghost" size="icon" onClick={onCloseInfoPanel}>
             <X className="h-5 w-5" />
@@ -49,27 +49,27 @@ const InfoPanel = ({ activeConversation, isMobile, onCloseInfoPanel }) => {
             )}
           </CardHeader>
           <CardContent className="flex justify-center gap-2">
-            <Button variant="outline"><Phone className="h-4 w-4 mr-2" />Позвонить</Button>
-            <Button variant="outline"><Video className="h-4 w-4 mr-2" />Видеозвонок</Button>
+            <Button variant="outline"><Phone className="h-4 w-4 mr-2" />Call</Button>
+            <Button variant="outline"><Video className="h-4 w-4 mr-2" />Video Call</Button>
           </CardContent>
         </Card>
 
         {/* Быстрые действия */}
         <Card className="mb-6 bg-white/30 backdrop-blur-md shadow-lg rounded-xl transition-all duration-300 ease-in-out hover:shadow-xl hover:shadow-primary/20">
           <CardHeader>
-            <CardTitle>Быстрые действия</CardTitle>
+            <CardTitle>Quick Actions</CardTitle>
           </CardHeader>
           <CardContent className="grid grid-cols-1 gap-3">
-            <Button variant="secondary" className="w-full justify-start"><Calendar className="h-4 w-4 mr-2" />Забронировать урок</Button>
-            <Button variant="secondary" className="w-full justify-start"><CreditCard className="h-4 w-4 mr-2" />Запросить оплату</Button>
-            <Button variant="secondary" className="w-full justify-start"><MessageSquare className="h-4 w-4 mr-2" />Открыть спор</Button>
+            <Button variant="secondary" className="w-full justify-start"><Calendar className="h-4 w-4 mr-2" />Book a Lesson</Button>
+            <Button variant="secondary" className="w-full justify-start"><CreditCard className="h-4 w-4 mr-2" />Request Payment</Button>
+            <Button variant="secondary" className="w-full justify-start"><MessageSquare className="h-4 w-4 mr-2" />Open Dispute</Button>
           </CardContent>
         </Card>
 
         {/* Общие файлы */}
         <Card className="mb-6 bg-white/30 backdrop-blur-md shadow-lg rounded-xl transition-all duration-300 ease-in-out hover:shadow-xl hover:shadow-primary/20">
           <CardHeader>
-            <CardTitle className="flex items-center"><FileText className="h-5 w-5 mr-2" />Общие файлы</CardTitle>
+            <CardTitle className="flex items-center"><FileText className="h-5 w-5 mr-2" />Shared Files</CardTitle>
           </CardHeader>
           <CardContent>
             {sharedFiles && sharedFiles.length > 0 ? (
@@ -79,7 +79,7 @@ const InfoPanel = ({ activeConversation, isMobile, onCloseInfoPanel }) => {
                 ))}
               </ul>
             ) : (
-              <p className="text-muted-foreground text-sm">Нет общих файлов.</p>
+              <p className="text-muted-foreground text-sm">No shared files.</p>
             )}
           </CardContent>
         </Card>
@@ -87,7 +87,7 @@ const InfoPanel = ({ activeConversation, isMobile, onCloseInfoPanel }) => {
         {/* Закрепленные сообщения */}
         <Card className="bg-white/30 backdrop-blur-md shadow-lg rounded-xl transition-all duration-300 ease-in-out hover:shadow-xl hover:shadow-primary/20">
           <CardHeader>
-            <CardTitle className="flex items-center"><Pin className="h-5 w-5 mr-2" />Закрепленные сообщения</CardTitle>
+            <CardTitle className="flex items-center"><Pin className="h-5 w-5 mr-2" />Pinned Messages</CardTitle>
           </CardHeader>
           <CardContent>
             {pinnedMessages && pinnedMessages.length > 0 ? (
@@ -97,7 +97,7 @@ const InfoPanel = ({ activeConversation, isMobile, onCloseInfoPanel }) => {
                 ))}
               </ul>
             ) : (
-              <p className="text-muted-foreground text-sm">Нет закрепленных сообщений.</p>
+              <p className="text-muted-foreground text-sm">No pinned messages.</p>
             )}
           </CardContent>
         </Card>

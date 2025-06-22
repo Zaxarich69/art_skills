@@ -130,7 +130,7 @@ const Messages = ({ conversations }) => {
                     <Input
                       value={message}
                       onChange={(e) => setMessage(e.target.value)}
-                      placeholder="Type a message..."
+                      placeholder="Enter your message..."
                       className="flex-1"
                     />
                     <Button type="submit" size="icon" className="shrink-0">

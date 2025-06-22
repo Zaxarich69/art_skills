@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 import { mockProfessionalsData } from '@/data/professionals';
+import BookingModal from '@/components/BookingModal';
 
 const defaultProfessional = {
   id: null,
@@ -51,9 +52,8 @@ const defaultProfessional = {
 const ProfileHeader = ({ professional, onFavorite, onShare, isFavorited }) => (
   <div className="relative rounded-xl overflow-hidden mb-6">
     <div className="h-48 md:h-64 bg-gradient-to-r from-primary/30 to-secondary/30">
-      <img  alt={`${String(professional.name || '')} cover image`} className="w-full h-full object-cover" src="https://images.unsplash.com/photo-1607615896122-6c919f897e55" />
+      <img alt={`${String(professional.name || '')} cover image`} className="w-full h-full object-cover" src="https://images.unsplash.com/photo-1607615896122-6c919f897e55" />
     </div>
-    
     <div className="absolute bottom-0 left-0 w-full p-6 bg-gradient-to-t from-background to-transparent">
       <div className="flex items-end gap-4">
         <div className="relative">
@@ -72,7 +72,6 @@ const ProfileHeader = ({ professional, onFavorite, onShare, isFavorited }) => (
             </Badge>
           </div>
         </div>
-        
         <div className="flex-1">
           <h1 className="text-2xl md:text-3xl font-bold">{String(professional.name || '')}</h1>
           <p className="text-muted-foreground">{String(professional.title || '')}</p>
@@ -82,7 +81,6 @@ const ProfileHeader = ({ professional, onFavorite, onShare, isFavorited }) => (
             <span className="text-muted-foreground text-sm">({Number(professional.reviews || 0)} reviews)</span>
           </div>
         </div>
-        
         <div className="flex gap-2">
           <Button 
             variant="outline" 
@@ -136,7 +134,6 @@ const AboutSection = ({ professional }) => (
         {professional.about || ''}
       </p>
     </div>
-    
     <div>
       <h3 className="text-xl font-semibold mb-3">Education</h3>
       <div className="space-y-4">
@@ -153,7 +150,6 @@ const AboutSection = ({ professional }) => (
         ))}
       </div>
     </div>
-    
     <div>
       <h3 className="text-xl font-semibold mb-3">Certifications</h3>
       <div className="space-y-2">
@@ -226,7 +222,6 @@ const ReviewsSection = ({ reviewsCount, rating, testimonials }) => (
         <span className="font-medium text-lg">{rating || 0}</span>
       </div>
     </div>
-    
     <div className="space-y-6">
       {(testimonials || []).map((review, i) => (
         <div key={i} className="border-b border-border pb-6 last:border-0">
@@ -255,6 +250,7 @@ const ReviewsSection = ({ reviewsCount, rating, testimonials }) => (
 const ContactCard = ({ professional, toast }) => {
   const [message, setMessage] = useState('');
   const [isMessageDialogOpen, setIsMessageDialogOpen] = useState(false);
+  const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
 
   const handleSendMessage = () => {
     if (message.trim()) {
@@ -274,26 +270,25 @@ const ContactCard = ({ professional, toast }) => {
   };
 
   return (
-  <Card className="sticky top-24 glass-card">
-    <CardContent className="p-6">
-      <h3 className="text-xl font-semibold mb-4">Contact & Booking</h3>
-      
-      <div className="space-y-4 mb-6">
+    <Card className="sticky top-24 glass-card">
+      <CardContent className="p-6">
+        <h3 className="text-xl font-semibold mb-4">Contact & Booking</h3>
+        <div className="space-y-4 mb-6">
           <Dialog open={isMessageDialogOpen} onOpenChange={setIsMessageDialogOpen}>
-          <DialogTrigger asChild>
-            <Button className="w-full">
-              <MessageSquare className="mr-2 h-4 w-4" />
+            <DialogTrigger asChild>
+              <Button className="w-full">
+                <MessageSquare className="mr-2 h-4 w-4" />
                 Message
-            </Button>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
                 <DialogTitle>Write to {professional.name}</DialogTitle>
-              <DialogDescription>
+                <DialogDescription>
                   Start a conversation with {professional.name}.
-              </DialogDescription>
-            </DialogHeader>
-            <div className="space-y-4 py-4">
+                </DialogDescription>
+              </DialogHeader>
+              <div className="space-y-4 py-4">
                 <Textarea
                   placeholder="Your message..."
                   value={message}
@@ -301,68 +296,25 @@ const ContactCard = ({ professional, toast }) => {
                   rows={5}
                   className="resize-none"
                 />
-            </div>
+              </div>
               <DialogFooter>
                 <Button variant="outline" onClick={() => setIsMessageDialogOpen(false)}>Cancel</Button>
                 <Button onClick={handleSendMessage}>Send</Button>
               </DialogFooter>
-          </DialogContent>
-        </Dialog>
-        
-        <Button variant="outline" className="w-full" asChild>
-          <Link to={`/payment/${professional.id}`}>
-              Book a session
-          </Link>
-        </Button>
-      </div>
-      
-      <Separator className="my-6" />
-      
-      <div className="space-y-4">
+            </DialogContent>
+          </Dialog>
+          <Button onClick={() => setIsBookingModalOpen(true)} className="w-full mb-2">
+            Book a Session
+          </Button>
+        </div>
+        <Separator className="my-6" />
+        <div className="space-y-4">
           <h4 className="font-medium mb-3">Contact Information</h4>
-        <Dialog>
-          <DialogTrigger asChild>
-            <Button variant="outline" className="w-full justify-start">
-              <Mail className="mr-2 h-4 w-4" />
-                Show email
-            </Button>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-                <DialogTitle>Contact Information</DialogTitle>
-              <DialogDescription>
-                  Here's how you can contact {professional.name}.
-              </DialogDescription>
-            </DialogHeader>
-            <div className="py-4">
-              <div className="flex items-center justify-between p-3 bg-secondary/20 rounded-md mb-3">
-                <div className="flex items-center">
-                  <Mail className="h-5 w-5 mr-3 text-primary" />
-                    <span>{professional.contactInfo?.email}</span>
-                  </div>
-                  <Button variant="ghost" size="sm" onClick={() => {
-                    navigator.clipboard.writeText(professional.contactInfo?.email);
-                    toast({ title: "Email copied", description: "Email address copied to clipboard" });
-                  }}>Copy</Button>
-              </div>
-              <div className="flex items-center justify-between p-3 bg-secondary/20 rounded-md">
-                <div className="flex items-center">
-                  <Phone className="h-5 w-5 mr-3 text-primary" />
-                    <span>{professional.contactInfo?.phone}</span>
-                  </div>
-                  <Button variant="ghost" size="sm" onClick={() => {
-                    navigator.clipboard.writeText(professional.contactInfo?.phone);
-                    toast({ title: "Phone copied", description: "Phone number copied to clipboard" });
-                  }}>Copy</Button>
-              </div>
-            </div>
-          </DialogContent>
-        </Dialog>
-         <Dialog>
+          <Dialog>
             <DialogTrigger asChild>
               <Button variant="outline" className="w-full justify-start">
-                <Phone className="mr-2 h-4 w-4" />
-                Show phone number
+                <Mail className="mr-2 h-4 w-4" />
+                Show email
               </Button>
             </DialogTrigger>
             <DialogContent>
@@ -373,7 +325,7 @@ const ContactCard = ({ professional, toast }) => {
                 </DialogDescription>
               </DialogHeader>
               <div className="py-4">
-                 <div className="flex items-center justify-between p-3 bg-secondary/20 rounded-md mb-3">
+                <div className="flex items-center justify-between p-3 bg-secondary/20 rounded-md mb-3">
                   <div className="flex items-center">
                     <Mail className="h-5 w-5 mr-3 text-primary" />
                     <span>{professional.contactInfo?.email}</span>
@@ -396,60 +348,101 @@ const ContactCard = ({ professional, toast }) => {
               </div>
             </DialogContent>
           </Dialog>
-      </div>
-      
-      <Separator className="my-6" />
-      
-      <div>
-          <h4 className="font-medium mb-3">Social Links</h4>
-        <div className="flex flex-wrap gap-2">
-            {professional.socialLinks?.website && (
-            <Button variant="outline" size="icon" asChild>
-              <a href={professional.socialLinks.website} target="_blank" rel="noopener noreferrer">
-                <Globe className="h-4 w-4" />
-              </a>
-            </Button>
-          )}
-            {professional.socialLinks?.linkedin && (
-            <Button variant="outline" size="icon" asChild>
-              <a href={professional.socialLinks.linkedin} target="_blank" rel="noopener noreferrer">
-                <Linkedin className="h-4 w-4" />
-              </a>
-            </Button>
-          )}
-            {professional.socialLinks?.twitter && (
-            <Button variant="outline" size="icon" asChild>
-              <a href={professional.socialLinks.twitter} target="_blank" rel="noopener noreferrer">
-                <Twitter className="h-4 w-4" />
-              </a>
-            </Button>
-          )}
-            {professional.socialLinks?.instagram && (
-            <Button variant="outline" size="icon" asChild>
-              <a href={professional.socialLinks.instagram} target="_blank" rel="noopener noreferrer">
-                <Instagram className="h-4 w-4" />
-              </a>
-            </Button>
-          )}
-            {professional.socialLinks?.facebook && (
-            <Button variant="outline" size="icon" asChild>
-              <a href={professional.socialLinks.facebook} target="_blank" rel="noopener noreferrer">
-                <Facebook className="h-4 w-4" />
-              </a>
-            </Button>
-          )}
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button variant="outline" className="w-full justify-start">
+                <Phone className="mr-2 h-4 w-4" />
+                Show phone number
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Contact Information</DialogTitle>
+                <DialogDescription>
+                  Here's how you can contact {professional.name}.
+                </DialogDescription>
+              </DialogHeader>
+              <div className="py-4">
+                <div className="flex items-center justify-between p-3 bg-secondary/20 rounded-md mb-3">
+                  <div className="flex items-center">
+                    <Mail className="h-5 w-5 mr-3 text-primary" />
+                    <span>{professional.contactInfo?.email}</span>
+                  </div>
+                  <Button variant="ghost" size="sm" onClick={() => {
+                    navigator.clipboard.writeText(professional.contactInfo?.email);
+                    toast({ title: "Email copied", description: "Email address copied to clipboard" });
+                  }}>Copy</Button>
+                </div>
+                <div className="flex items-center justify-between p-3 bg-secondary/20 rounded-md">
+                  <div className="flex items-center">
+                    <Phone className="h-5 w-5 mr-3 text-primary" />
+                    <span>{professional.contactInfo?.phone}</span>
+                  </div>
+                  <Button variant="ghost" size="sm" onClick={() => {
+                    navigator.clipboard.writeText(professional.contactInfo?.phone);
+                    toast({ title: "Phone copied", description: "Phone number copied to clipboard" });
+                  }}>Copy</Button>
+                </div>
+              </div>
+            </DialogContent>
+          </Dialog>
         </div>
-      </div>
-      
-      <Separator className="my-6" />
-      
-      <div className="text-sm text-muted-foreground">
-        <p className="mb-2">Member since 2021</p>
-        <p>Last active: 2 days ago</p>
-      </div>
-    </CardContent>
-  </Card>
-);
+        <Separator className="my-6" />
+        <div>
+          <h4 className="font-medium mb-3">Social Links</h4>
+          <div className="flex flex-wrap gap-2">
+            {professional.socialLinks?.website && (
+              <Button variant="outline" size="icon" asChild>
+                <a href={professional.socialLinks.website} target="_blank" rel="noopener noreferrer">
+                  <Globe className="h-4 w-4" />
+                </a>
+              </Button>
+            )}
+            {professional.socialLinks?.linkedin && (
+              <Button variant="outline" size="icon" asChild>
+                <a href={professional.socialLinks.linkedin} target="_blank" rel="noopener noreferrer">
+                  <Linkedin className="h-4 w-4" />
+                </a>
+              </Button>
+            )}
+            {professional.socialLinks?.twitter && (
+              <Button variant="outline" size="icon" asChild>
+                <a href={professional.socialLinks.twitter} target="_blank" rel="noopener noreferrer">
+                  <Twitter className="h-4 w-4" />
+                </a>
+              </Button>
+            )}
+            {professional.socialLinks?.instagram && (
+              <Button variant="outline" size="icon" asChild>
+                <a href={professional.socialLinks.instagram} target="_blank" rel="noopener noreferrer">
+                  <Instagram className="h-4 w-4" />
+                </a>
+              </Button>
+            )}
+            {professional.socialLinks?.facebook && (
+              <Button variant="outline" size="icon" asChild>
+                <a href={professional.socialLinks.facebook} target="_blank" rel="noopener noreferrer">
+                  <Facebook className="h-4 w-4" />
+                </a>
+              </Button>
+            )}
+          </div>
+        </div>
+        <Separator className="my-6" />
+        <div className="text-sm text-muted-foreground">
+          <p className="mb-2">Member since 2021</p>
+          <p>Last active: 2 days ago</p>
+        </div>
+        {isBookingModalOpen && (
+          <BookingModal
+            open={isBookingModalOpen}
+            onClose={() => setIsBookingModalOpen(false)}
+            professional={professional}
+          />
+        )}
+      </CardContent>
+    </Card>
+  );
 };
 
 const ProfessionalPage = () => {
@@ -459,6 +452,7 @@ const ProfessionalPage = () => {
   const [activeTab, setActiveTab] = useState('about');
   const [isFavorited, setIsFavorited] = useState(false);
   const { toast } = useToast();
+  const [showBooking, setShowBooking] = useState(false);
 
   useEffect(() => {
     setLoading(true);
@@ -498,7 +492,6 @@ const ProfessionalPage = () => {
             facebook: String(userData.socialLinks?.facebook || '')
           },
         };
-        console.log("User Professional data being set:", userProfessional);
         setProfessional(userProfessional);
       } else {
         setProfessional(null);
@@ -538,13 +531,12 @@ const ProfessionalPage = () => {
               facebook: String(foundProfessional.socialLinks?.facebook || '')
             },
           };
-          console.log("Mock Professional data being set:", processedProfessional);
           setProfessional(processedProfessional);
         } else {
           setProfessional(null);
         }
-      setLoading(false);
-    }, 500);
+        setLoading(false);
+      }, 500);
     }
   }, [id]);
 
@@ -632,6 +624,9 @@ const ProfessionalPage = () => {
           <ContactCard professional={displayProfessional} toast={toast} />
         </div>
       </div>
+      {showBooking && (
+        <BookingModal open={showBooking} onClose={() => setShowBooking(false)} professional={professional} />
+      )}
     </div>
   );
 };

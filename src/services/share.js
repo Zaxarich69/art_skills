@@ -3,8 +3,8 @@ import { toast } from '@/components/ui/use-toast';
 export const shareService = {
   shareProfile: async (professionalId, professionalName) => {
     const shareData = {
-      title: `Профиль ${professionalName}`,
-      text: `Посмотрите профиль ${professionalName} на Art Skills!`,
+      title: `Profile of ${professionalName}`,
+      text: `Check out the profile of ${professionalName} on Art Skills!`,
       url: `${window.location.origin}/professional/${professionalId}`
     };
 
@@ -12,23 +12,23 @@ export const shareService = {
       if (navigator.share) {
         await navigator.share(shareData);
         toast({
-          title: "Успешно поделились",
-          description: "Профиль успешно отправлен",
+          title: "Shared successfully",
+          description: "Profile has been shared successfully",
         });
       } else {
-        // Fallback для браузеров без Web Share API
+        // Fallback for browsers without Web Share API
         const url = shareData.url;
         await navigator.clipboard.writeText(url);
         toast({
-          title: "Ссылка скопирована",
-          description: "Ссылка на профиль скопирована в буфер обмена",
+          title: "Link copied",
+          description: "Profile link copied to clipboard",
         });
       }
     } catch (error) {
       if (error.name !== 'AbortError') {
         toast({
-          title: "Ошибка",
-          description: "Не удалось поделиться профилем",
+          title: "Error",
+          description: "Failed to share profile",
           variant: "destructive"
         });
       }

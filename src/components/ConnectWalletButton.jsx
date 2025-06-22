@@ -8,7 +8,7 @@ export default function ConnectWalletButton() {
       {({ openConnectModal }) => (
         <Button
           variant="outline"
-          size="sm" // или "md" — подбери нужный размер
+          size="sm" // or "md" — pick the needed size
           className="rounded-xl px-5 py-2 font-bold shadow text-primary min-w-[150px] max-w-[200px] transition-all duration-200 hover:shadow-lg hover:bg-primary/5 focus-visible:shadow-lg focus-visible:bg-primary/5 focus-visible:outline-none"
           onClick={openConnectModal}
         >

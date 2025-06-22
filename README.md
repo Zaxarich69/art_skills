@@ -1,15 +1,15 @@
 # Art Skills Frontend
 
-## Запуск
+## Getting Started
 
 ```bash
 pnpm install
 pnpm run dev
 ```
 
-## Настройка Stripe
-- Вставьте свой publishable key в `src/components/stripe/StripeButton.jsx`:
+## Stripe Setup
+- Insert your publishable key into `src/components/stripe/StripeButton.jsx`:
   ```js
   const stripePromise = loadStripe("pk_test_...your_publishable_key...");
   ```
-- Убедитесь, что backend доступен по `/api/create-payment-intent`. 
+- Make sure the backend is available at `/api/create-payment-intent`. 

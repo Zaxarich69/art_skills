@@ -9,7 +9,7 @@ const ChatList = ({ chats = [], isLoading, onSelectChat, selectedChatId }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const { darkMode } = useTheme();
 
-  // Фильтрация чатов
+  // Chat filtering
   const filteredChats = useMemo(() => {
     return chats.filter(chat => {
       if (filter === 'online' && !chat.online) return false;
@@ -18,7 +18,7 @@ const ChatList = ({ chats = [], isLoading, onSelectChat, selectedChatId }) => {
     });
   }, [chats, filter, searchTerm]);
 
-  // Виртуализация списка
+  // List virtualization
   const parentRef = React.useRef(null);
   const rowVirtualizer = useVirtualizer({
     count: filteredChats.length,
@@ -56,7 +56,7 @@ const ChatList = ({ chats = [], isLoading, onSelectChat, selectedChatId }) => {
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
           <input
             type="text"
-            placeholder="Поиск чатов..."
+            placeholder="Search chats..."
             className="w-full pl-10 pr-4 py-2 rounded-md bg-gray-100 dark:bg-gray-700 focus:ring-2 focus:ring-purple-500"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
@@ -72,7 +72,7 @@ const ChatList = ({ chats = [], isLoading, onSelectChat, selectedChatId }) => {
             }`}
             onClick={() => setFilter('all')}
           >
-            Все
+            All
           </button>
           <button
             className={`px-3 py-1 rounded-full text-sm ${
@@ -82,7 +82,7 @@ const ChatList = ({ chats = [], isLoading, onSelectChat, selectedChatId }) => {
             }`}
             onClick={() => setFilter('online')}
           >
-            Онлайн
+            Online
           </button>
           <button
             className={`px-3 py-1 rounded-full text-sm ${
@@ -92,7 +92,7 @@ const ChatList = ({ chats = [], isLoading, onSelectChat, selectedChatId }) => {
             }`}
             onClick={() => setFilter('unread')}
           >
-            Непрочитанные
+            Unread
           </button>
         </div>
       </div>

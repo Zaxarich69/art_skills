@@ -43,11 +43,6 @@ const LessonCard = ({ lesson, isUpcoming, onLeaveReview }) => {
   };
 
   const statusColors = {
-    'онлайн': 'text-green-500',
-    'завершено': 'text-gray-500',
-    'в записи': 'text-blue-500',
-    'отмена': 'text-red-500',
-    'ожидается': 'text-yellow-500',
     'online': 'text-green-500',
     'completed': 'text-gray-500',
     'recorded': 'text-blue-500',
@@ -111,7 +106,7 @@ const LessonCard = ({ lesson, isUpcoming, onLeaveReview }) => {
                 )}
               </>
             )}
-            {/* Опционально: доступ к чату/материалам урока */}
+            {/* Optional: access to lesson chat/materials */}
             {lesson.hasChat && (
               <Button variant="ghost" size="icon" className="w-full md:w-auto" title="Open lesson chat">
                 <MessageSquare className="h-5 w-5" />

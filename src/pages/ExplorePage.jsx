@@ -207,11 +207,11 @@ const ExplorePage = () => {
   useEffect(() => {
     const categoryParam = searchParams.get('category');
     if (categoryParam) {
-      // Если это основная категория, показываем все подкатегории
+      // If this is a main category, show all subcategories
       if (categories.some(cat => cat.parent === categoryParam)) {
         setSelectedCategory(categoryParam);
       } else {
-        // Если это подкатегория, показываем только её
+        // If a subcategory is selected, show only it
         const category = categories.find(cat => cat.value === categoryParam);
         if (category) {
           setSelectedCategory(category.value);
@@ -279,10 +279,10 @@ const ExplorePage = () => {
       const category = categories.find(cat => cat.value === selectedCategory);
       if (category) {
         if (category.parent) {
-          // Если выбрана подкатегория, показываем только её
+          // If a subcategory is selected, show only it
           results = results.filter(pro => pro.category === selectedCategory);
         } else {
-          // Если выбрана основная категория, показываем все её подкатегории
+          // If a main category is selected, show all its subcategories
           const subcategories = categories
             .filter(cat => cat.parent === selectedCategory)
             .map(cat => cat.value);

@@ -3,25 +3,25 @@ import { toast } from '@/components/ui/use-toast';
 export const callsService = {
   startCall: async (userId, type = 'audio') => {
     try {
-      // В реальном приложении здесь будет интеграция с WebRTC или другим сервисом
+      // In a real app, there will be WebRTC or other service integration here
       const roomId = `call-${userId}-${Date.now()}`;
       
-      // Имитация создания звонка
+      // Simulate call creation
       await new Promise(resolve => setTimeout(resolve, 1000));
       
       toast({
-        title: type === 'audio' ? "Звонок инициирован" : "Видеозвонок инициирован",
-        description: "Ожидание ответа...",
+        title: type === 'audio' ? "Call initiated" : "Video call initiated",
+        description: "Waiting for response...",
       });
 
-      // В реальном приложении здесь будет открытие окна звонка
+      // In a real app, call window will open here
       window.open(`/call/${roomId}`, '_blank');
       
       return roomId;
     } catch (error) {
       toast({
-        title: "Ошибка",
-        description: "Не удалось инициировать звонок",
+        title: "Error",
+        description: "Failed to initiate call",
         variant: "destructive"
       });
       throw error;
@@ -30,17 +30,17 @@ export const callsService = {
 
   endCall: async (roomId) => {
     try {
-      // В реальном приложении здесь будет закрытие соединения
+      // In a real app, connection will be closed here
       await new Promise(resolve => setTimeout(resolve, 500));
       
       toast({
-        title: "Звонок завершен",
-        description: "Соединение закрыто",
+        title: "Call ended",
+        description: "Connection closed",
       });
     } catch (error) {
       toast({
-        title: "Ошибка",
-        description: "Не удалось завершить звонок",
+        title: "Error",
+        description: "Failed to end call",
         variant: "destructive"
       });
       throw error;

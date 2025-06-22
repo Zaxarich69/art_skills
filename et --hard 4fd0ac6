@@ -1,0 +1,18 @@
+* [33m0a440b8[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m change langv
+[31m|[m * [33macf53d3[m[33m ([m[1;31morigin/dependabot/npm_and_yarn/npm_and_yarn-a91bf2f4f6[m[33m)[m Bump the npm_and_yarn group across 1 directory with 2 updates
+[31m|[m[31m/[m  
+* [33m4fd0ac6[m added web3 balance pay
+* [33m111984d[m added Jittsi videocalls
+* [33mbc0572d[m add profile changes2
+* [33m43ec1db[m add category
+* [33m37a5f11[m add profile videoconnect
+* [33m5dc3613[m add foto2 profile
+* [33m85a4047[m add explore profile info
+* [33med097b1[m add profile foto acc
+* [33m59c5066[m add profile balance changes
+* [33m79f7e0a[m added stripe&make desine
+* [33mc0e9cac[m "add stripe"
+* [33m7b2f34e[m Merge remote changes
+* [33me268c1b[m ...
+* [33m6c51ed4[m web3 changes
+* [33m4340807[m Initial commit

@@ -1,6 +1,6 @@
 import { toast } from '@/components/ui/use-toast';
 
-// Временное хранилище (в реальном приложении будет API)
+// Temporary storage (in a real app, there will be an API)
 let favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
 
 export const favoritesService = {
@@ -11,14 +11,14 @@ export const favoritesService = {
     if (index === -1) {
       favorites.push(professionalId);
       toast({
-        title: "Добавлено в избранное",
-        description: "Профессионал добавлен в ваш список избранного",
+        title: "Added to favorites",
+        description: "Professional has been added to your favorites list",
       });
     } else {
       favorites.splice(index, 1);
       toast({
-        title: "Удалено из избранного",
-        description: "Профессионал удален из вашего списка избранного",
+        title: "Removed from favorites",
+        description: "Professional has been removed from your favorites list",
       });
     }
     localStorage.setItem('favorites', JSON.stringify(favorites));

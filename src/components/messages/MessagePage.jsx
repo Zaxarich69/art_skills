@@ -16,7 +16,7 @@ const MessagePage = () => {
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
-  // Инициализация WebSocket соединения
+  // WebSocket connection initialization
   useEffect(() => {
     const newSocket = io(import.meta.env.VITE_WS_URL, {
       auth: {
@@ -30,7 +30,7 @@ const MessagePage = () => {
 
     newSocket.on('error', (error) => {
       toast({
-        title: 'Ошибка соединения',
+        title: 'Connection Error',
         description: error.message,
         variant: 'destructive'
       });
@@ -104,7 +104,7 @@ const MessagePage = () => {
         ) : (
           <div className="flex items-center justify-center h-full">
             <p className="text-gray-500 dark:text-gray-400">
-              Выберите чат для начала общения
+              Select a chat to start messaging
             </p>
           </div>
         )}

@@ -13,8 +13,8 @@ const Messages = ({ conversations }) => {
     e.preventDefault();
     if (!message.trim()) return;
     
-    // Здесь будет логика отправки сообщения
-    console.log('Отправка сообщения:', message);
+    // Here will be the logic for sending messages
+    console.log('Sending message:', message);
     setMessage('');
   };
 
@@ -23,10 +23,10 @@ const Messages = ({ conversations }) => {
       <Card className="h-full">
         <CardContent className="p-0 h-full">
           <div className="grid grid-cols-12 h-full">
-            {/* Список чатов */}
+            {/* Chat list */}
             <div className="col-span-4 border-r">
               <div className="p-4 border-b">
-                <h3 className="font-semibold">Сообщения</h3>
+                <h3 className="font-semibold">Messages</h3>
               </div>
               <div className="overflow-y-auto h-[calc(100%-4rem)]">
                 {conversations?.map((chat) => (
@@ -59,11 +59,11 @@ const Messages = ({ conversations }) => {
               </div>
             </div>
 
-            {/* Окно чата */}
+            {/* Chat window */}
             <div className="col-span-8 flex flex-col">
               {selectedChat ? (
                 <>
-                  {/* Заголовок чата */}
+                  {/* Chat header */}
                   <div className="p-4 border-b">
                     <div className="flex items-center gap-3">
                       <Avatar>
@@ -75,13 +75,13 @@ const Messages = ({ conversations }) => {
                       <div>
                         <h3 className="font-semibold">{selectedChat.user.name}</h3>
                         <p className="text-sm text-muted-foreground">
-                          {selectedChat.user.online ? 'В сети' : 'Не в сети'}
+                          {selectedChat.user.online ? 'Online' : 'Offline'}
                         </p>
                       </div>
                     </div>
                   </div>
 
-                  {/* Сообщения */}
+                  {/* Messages */}
                   <div className="flex-1 overflow-y-auto p-4 space-y-4">
                     {selectedChat.messages.map((msg) => (
                       <div
@@ -106,7 +106,7 @@ const Messages = ({ conversations }) => {
                     ))}
                   </div>
 
-                  {/* Форма отправки */}
+                  {/* Send form */}
                   <form
                     onSubmit={handleSendMessage}
                     className="p-4 border-t flex items-center gap-2"
@@ -130,7 +130,7 @@ const Messages = ({ conversations }) => {
                     <Input
                       value={message}
                       onChange={(e) => setMessage(e.target.value)}
-                      placeholder="Введите сообщение..."
+                      placeholder="Type a message..."
                       className="flex-1"
                     />
                     <Button type="submit" size="icon" className="shrink-0">
@@ -140,7 +140,7 @@ const Messages = ({ conversations }) => {
                 </>
               ) : (
                 <div className="flex-1 flex items-center justify-center text-muted-foreground">
-                  Выберите чат для начала общения
+                  Select a chat to start messaging
                 </div>
               )}
             </div>

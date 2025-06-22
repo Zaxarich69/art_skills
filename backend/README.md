@@ -1,15 +1,15 @@
 # Art Skills Backend
 
-## Запуск
+## Getting Started
 
 ```bash
 npm install
 npm start
 ```
 
-## Настройка Stripe
-- Вставьте свой secret key в `server.js`:
+## Stripe Setup
+- Insert your secret key into `server.js`:
   ```js
   const stripe = Stripe("sk_test_...your_secret_key...");
   ```
-- Убедитесь, что порт 3001 открыт и доступен для фронтенда. 
+- Make sure port 3001 is open and accessible for the frontend. 

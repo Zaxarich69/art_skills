@@ -22,23 +22,23 @@ import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 
 const initialUserData = {
-  name: 'Алексей Морозов',
+  name: 'Alexey Morozov',
   email: 'alex.morozov@example.com',
   phone: '+7 (999) 123-45-67',
-  location: 'Москва',
-  bio: 'Опытный преподаватель с 5-летним стажем. Специализируюсь на веб-разработке и с удовольствием делюсь своими знаниями с учениками.',
-  title: 'Старший веб-разработчик',
+  location: 'Moscow',
+  bio: 'Experienced teacher with 5 years of practice. I specialize in web development and enjoy sharing my knowledge with students.',
+  title: 'Senior Web Developer',
   hourlyRate: 2500,
   acceptsCrypto: true,
   profilePicture: null,
   skills: ['JavaScript', 'React', 'Node.js', 'TypeScript', 'UI/UX Design'],
   education: [
-    { id: 'edu1', degree: 'Магистр компьютерных наук', institution: 'МГУ', year: '2018' },
-    { id: 'edu2', degree: 'Бакалавр компьютерной инженерии', institution: 'МФТИ', year: '2016' }
+    { id: 'edu1', degree: 'Master of Computer Science', institution: 'MSU', year: '2018' },
+    { id: 'edu2', degree: 'Bachelor of Computer Engineering', institution: 'MIPT', year: '2016' }
   ],
   experience: [
-    { id: 'exp1', title: 'Старший веб-разработчик', company: 'Технологии будущего', period: '2020 - Настоящее время', description: 'Руководство фронтенд-разработкой для корпоративных приложений.' },
-    { id: 'exp2', title: 'Веб-разработчик', company: 'Цифровые решения', period: '2018 - 2020', description: 'Разработка адаптивных веб-приложений с использованием React и Node.js.' }
+    { id: 'exp1', title: 'Senior Web Developer', company: 'Future Technologies', period: '2020 - Present', description: 'Led frontend development for enterprise applications.' },
+    { id: 'exp2', title: 'Web Developer', company: 'Digital Solutions', period: '2018 - 2020', description: 'Developed responsive web apps using React and Node.js.' }
   ],
   certifications: [
     { id: 'cert1', name: 'AWS Certified Developer' },
@@ -51,32 +51,32 @@ const initialUserData = {
       id: 't1',
       type: 'deposit',
       amount: 5000,
-      description: 'Пополнение счета',
+      description: 'Account top-up',
       date: '2024-03-15T10:30:00'
     },
     {
       id: 't2',
       type: 'withdrawal',
       amount: 3000,
-      description: 'Вывод средств на карту',
+      description: 'Withdrawal to card',
       date: '2024-03-10T15:45:00'
     },
     {
       id: 't3',
       type: 'deposit',
       amount: 8000,
-      description: 'Оплата за уроки',
+      description: 'Payment for lessons',
       date: '2024-03-05T09:15:00'
     }
   ],
   upcomingLessons: [
     {
       id: 'l1',
-      title: 'Введение в React',
-      teacher: 'Иван Петров',
-      date: new Date(new Date().getTime() + 2 * 60 * 60 * 1000).toISOString(), // Через 2 часа
-      location: 'Онлайн',
-      status: 'ожидается',
+      title: 'Introduction to React',
+      teacher: 'Ivan Petrov',
+      date: new Date(new Date().getTime() + 2 * 60 * 60 * 1000).toISOString(),
+      location: 'Online',
+      status: 'pending',
       jitsiLink: 'https://meet.jit.si/VvedenieVReact-IvanPetrov',
       hasRecording: false,
       recordUrl: null,
@@ -85,11 +85,11 @@ const initialUserData = {
     },
     {
       id: 'l2',
-      title: 'Продвинутый JavaScript',
-      teacher: 'Мария Иванова',
-      date: new Date(new Date().getTime() + 24 * 60 * 60 * 1000).toISOString(), // Завтра
-      location: 'Онлайн',
-      status: 'ожидается',
+      title: 'Advanced JavaScript',
+      teacher: 'Maria Ivanova',
+      date: new Date(new Date().getTime() + 24 * 60 * 60 * 1000).toISOString(),
+      location: 'Online',
+      status: 'pending',
       jitsiLink: 'https://meet.jit.si/ProdvinutiyJavaScript-MariaIvanova',
       hasRecording: false,
       recordUrl: null,
@@ -98,11 +98,11 @@ const initialUserData = {
     },
     {
       id: 'l5',
-      title: 'Основы Tailwind CSS',
-      teacher: 'Петр Смирнов',
-      date: new Date(new Date().getTime() - 30 * 60 * 1000).toISOString(), // Начался 30 минут назад
-      location: 'Онлайн',
-      status: 'онлайн',
+      title: 'Basics of Tailwind CSS',
+      teacher: 'Petr Smirnov',
+      date: new Date(new Date().getTime() - 30 * 60 * 1000).toISOString(),
+      location: 'Online',
+      status: 'online',
       jitsiLink: 'https://meet.jit.si/OsnovyTailwindCSS-PetrSmirnov',
       hasRecording: false,
       recordUrl: null,
@@ -113,11 +113,11 @@ const initialUserData = {
   pastLessons: [
     {
       id: 'l3',
-      title: 'Основы TypeScript',
-      teacher: 'Анна Сидорова',
-      date: new Date(new Date().getTime() - 7 * 24 * 60 * 60 * 1000).toISOString(), // Неделю назад
-      location: 'Онлайн',
-      status: 'завершено',
+      title: 'Basics of TypeScript',
+      teacher: 'Anna Sidorova',
+      date: new Date(new Date().getTime() - 7 * 24 * 60 * 60 * 1000).toISOString(),
+      location: 'Online',
+      status: 'completed',
       jitsiLink: null,
       hasRecording: true,
       recordUrl: 'https://example.com/recordings/typescript_anna.mp4',
@@ -126,11 +126,11 @@ const initialUserData = {
     },
     {
       id: 'l4',
-      title: 'Node.js для начинающих',
-      teacher: 'Дмитрий Смирнов',
-      date: new Date(new Date().getTime() - 14 * 24 * 60 * 60 * 1000).toISOString(), // Две недели назад
-      location: 'Онлайн',
-      status: 'завершено',
+      title: 'Node.js for Beginners',
+      teacher: 'Dmitry Smirnov',
+      date: new Date(new Date().getTime() - 14 * 24 * 60 * 60 * 1000).toISOString(),
+      location: 'Online',
+      status: 'completed',
       jitsiLink: null,
       hasRecording: true,
       recordUrl: 'https://example.com/recordings/nodejs_dmitry.mp4',
@@ -139,11 +139,11 @@ const initialUserData = {
     },
     {
       id: 'l6',
-      title: 'Введение в Figma',
-      teacher: 'Елена Козлова',
-      date: new Date(new Date().getTime() - 21 * 24 * 60 * 60 * 1000).toISOString(), // Три недели назад
-      location: 'Онлайн',
-      status: 'в записи',
+      title: 'Introduction to Figma',
+      teacher: 'Elena Kozlova',
+      date: new Date(new Date().getTime() - 21 * 24 * 60 * 60 * 1000).toISOString(),
+      location: 'Online',
+      status: 'recorded',
       jitsiLink: null,
       hasRecording: true,
       recordUrl: 'https://example.com/recordings/figma_elena.mp4',
@@ -152,11 +152,11 @@ const initialUserData = {
     },
     {
       id: 'l7',
-      title: 'Основы UI/UX Дизайна',
-      teacher: 'Ирина Новикова',
-      date: new Date(new Date().getTime() - 28 * 24 * 60 * 60 * 1000).toISOString(), // Четыре недели назад
-      location: 'Онлайн',
-      status: 'отмена',
+      title: 'Basics of UI/UX Design',
+      teacher: 'Irina Novikova',
+      date: new Date(new Date().getTime() - 28 * 24 * 60 * 60 * 1000).toISOString(),
+      location: 'Online',
+      status: 'cancelled',
       jitsiLink: null,
       hasRecording: false,
       recordUrl: null,
@@ -167,16 +167,16 @@ const initialUserData = {
   reviews: [
     {
       id: 'r1',
-      student: { name: 'Анна Сидорова', avatar: null },
+      student: { name: 'Anna Sidorova', avatar: null },
       rating: 5,
-      comment: 'Отличный преподаватель! Объясняет сложные вещи простым языком. Рекомендую!',
+      comment: 'Great teacher! Explains complex things in simple terms. Highly recommend!',
       date: '2024-03-15T16:30:00'
     },
     {
       id: 'r2',
-      student: { name: 'Дмитрий Смирнов', avatar: null },
+      student: { name: 'Dmitry Smirnov', avatar: null },
       rating: 4,
-      comment: 'Хорошие уроки, много практики. Спасибо за помощь в освоении Node.js!',
+      comment: 'Good lessons, lots of practice. Thanks for helping me learn Node.js!',
       date: '2024-03-14T18:00:00'
     }
   ],
@@ -185,18 +185,18 @@ const initialUserData = {
     { id: 'pm1', type: 'card', last4: '4242', expiry: '05/25', isDefault: true }
   ],
   cryptoWallets: [
-    { id: 'cw1', type: 'bitcoin', name: 'Мой Bitcoin кошелек', address: 'bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh', isDefault: true },
-    { id: 'cw2', type: 'ethereum', name: 'Мой Ethereum кошелек', address: '0x71C7656EC7ab88b098defB751B7401B5f6d8976F', isDefault: false }
+    { id: 'cw1', type: 'bitcoin', name: 'My Bitcoin Wallet', address: 'bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh', isDefault: true },
+    { id: 'cw2', type: 'ethereum', name: 'My Ethereum Wallet', address: '0x71C7656EC7ab88b098defB751B7401B5f6d8976F', isDefault: false }
   ],
   conversations: [
     {
       id: 'c1',
       user: {
-        name: 'Иван Петров',
+        name: 'Ivan Petrov',
         avatar: null,
         online: true
       },
-      lastMessage: 'Спасибо за урок! Очень полезно.',
+      lastMessage: 'Thank you for the lesson! Very useful.',
       lastMessageTime: '2024-03-19T15:30:00',
       messages: [
         {
@@ -345,7 +345,7 @@ const ProfilePage = () => {
       const updatedData = { ...prevData };
       if (updatedData.name === 'Алексей Морозов') updatedData.name = 'Alexey Morozov';
       if (updatedData.location === 'Москва') updatedData.location = 'Moscow';
-      if (updatedData.bio === 'Опытный преподаватель с 5-летним стажем. Специализируюсь на веб-разработке и с удовольствием делюсь своими знаниями с учениками.') updatedData.bio = 'Experienced teacher with 5 years of experience. Specializing in web development and happy to share my knowledge with students.';
+      if (updatedData.bio === 'Опытный преподаватель с 5-летним стажем. Специализируюсь на веб-разработке и с удовольствием делюсь своими знаниями с учениками.') updatedData.bio = 'Experienced teacher with 5 years of practice. I specialize in web development and enjoy sharing my knowledge with students.';
       if (updatedData.title === 'Старший веб-разработчик') updatedData.title = 'Senior Web Developer';
       
       updatedData.education = updatedData.education.map(edu => {
@@ -360,18 +360,18 @@ const ProfilePage = () => {
         if (exp.title === 'Старший веб-разработчик') exp.title = 'Senior Web Developer';
         if (exp.company === 'Технологии будущего') exp.company = 'Future Technologies';
         if (exp.period === '2020 - Настоящее время') exp.period = '2020 - Present';
-        if (exp.description === 'Руководство фронтенд-разработкой для корпоративных приложений.') exp.description = 'Leading frontend development for enterprise applications.';
+        if (exp.description === 'Руководство фронтенд-разработкой для корпоративных приложений.') exp.description = 'Led frontend development for enterprise applications.';
         if (exp.title === 'Веб-разработчик') exp.title = 'Web Developer';
         if (exp.company === 'Цифровые решения') exp.company = 'Digital Solutions';
         if (exp.period === '2018 - 2020') exp.period = '2018 - 2020';
-        if (exp.description === 'Разработка адаптивных веб-приложений с использованием React и Node.js.') exp.description = 'Developing responsive web applications using React and Node.js.';
+        if (exp.description === 'Разработка адаптивных веб-приложений с использованием React и Node.js.') exp.description = 'Developed responsive web apps using React and Node.js.';
         return exp;
       });
 
       updatedData.transactions = updatedData.transactions.map(transaction => {
-        if (transaction.description === 'Пополнение счета') transaction.description = 'Account Top-up';
-        if (transaction.description === 'Вывод средств на карту') transaction.description = 'Withdrawal to Card';
-        if (transaction.description === 'Оплата за уроки') transaction.description = 'Payment for Lessons';
+        if (transaction.description === 'Пополнение счета') transaction.description = 'Account top-up';
+        if (transaction.description === 'Вывод средств на карту') transaction.description = 'Withdrawal to card';
+        if (transaction.description === 'Оплата за уроки') transaction.description = 'Payment for lessons';
         return transaction;
       });
       
@@ -380,37 +380,37 @@ const ProfilePage = () => {
         if (lesson.teacher === 'Иван Петров') lesson.teacher = 'Ivan Petrov';
         if (lesson.location === 'Онлайн') lesson.location = 'Online';
         lesson.status = lesson.status || 'ожидается';
-        if (lesson.status === 'ожидается') lesson.status = 'ожидается';
+        if (lesson.status === 'ожидается') lesson.status = 'pending';
         if (lesson.title === 'Продвинутый JavaScript') lesson.title = 'Advanced JavaScript';
         if (lesson.teacher === 'Мария Иванова') lesson.teacher = 'Maria Ivanova';
-        if (lesson.title === 'Основы Tailwind CSS') lesson.title = 'Tailwind CSS Basics';
+        if (lesson.title === 'Основы Tailwind CSS') lesson.title = 'Basics of Tailwind CSS';
         if (lesson.teacher === 'Петр Смирнов') lesson.teacher = 'Petr Smirnov';
-        if (lesson.status === 'онлайн') lesson.status = 'онлайн';
+        if (lesson.status === 'онлайн') lesson.status = 'online';
         return lesson;
       });
 
       updatedData.pastLessons = updatedData.pastLessons.map(lesson => {
-        if (lesson.title === 'Основы TypeScript') lesson.title = 'TypeScript Basics';
+        if (lesson.title === 'Основы TypeScript') lesson.title = 'Basics of TypeScript';
         if (lesson.teacher === 'Анна Сидорова') lesson.teacher = 'Anna Sidorova';
         if (lesson.location === 'Онлайн') lesson.location = 'Online';
         lesson.status = lesson.status || 'завершено';
-        if (lesson.status === 'завершено') lesson.status = 'завершено';
+        if (lesson.status === 'завершено') lesson.status = 'completed';
         if (lesson.title === 'Node.js для начинающих') lesson.title = 'Node.js for Beginners';
         if (lesson.teacher === 'Дмитрий Смирнов') lesson.teacher = 'Dmitry Smirnov';
         if (lesson.title === 'Введение в Figma') lesson.title = 'Introduction to Figma';
         if (lesson.teacher === 'Елена Козлова') lesson.teacher = 'Elena Kozlova';
-        if (lesson.status === 'в записи') lesson.status = 'в записи';
-        if (lesson.title === 'Основы UI/UX Дизайна') lesson.title = 'UI/UX Design Basics';
+        if (lesson.status === 'в записи') lesson.status = 'recorded';
+        if (lesson.title === 'Основы UI/UX Дизайна') lesson.title = 'Basics of UI/UX Design';
         if (lesson.teacher === 'Ирина Новикова') lesson.teacher = 'Irina Novikova';
-        if (lesson.status === 'отмена') lesson.status = 'отмена';
+        if (lesson.status === 'отмена') lesson.status = 'cancelled';
         return lesson;
       });
 
       updatedData.reviews = updatedData.reviews.map(review => {
         if (review.student.name === 'Анна Сидорова') review.student.name = 'Anna Sidorova';
-        if (review.comment === 'Отличный преподаватель! Объясняет сложные вещи простым языком. Рекомендую!') review.comment = 'Excellent teacher! Explains complex things in simple language. Highly recommended!';
+        if (review.comment === 'Отличный преподаватель! Объясняет сложные вещи простым языком. Рекомендую!') review.comment = 'Great teacher! Explains complex things in simple terms. Highly recommend!';
         if (review.student.name === 'Дмитрий Смирнов') review.student.name = 'Dmitry Smirnov';
-        if (review.comment === 'Хорошие уроки, много практики. Спасибо за помощь в освоении Node.js!') review.comment = 'Good lessons, lots of practice. Thanks for helping me master Node.js!';
+        if (review.comment === 'Хорошие уроки, много практики. Спасибо за помощь в освоении Node.js!') review.comment = 'Good lessons, lots of practice. Thanks for helping me learn Node.js!';
         return review;
       });
 
@@ -422,7 +422,7 @@ const ProfilePage = () => {
       
       updatedData.conversations = updatedData.conversations.map(conv => {
         if (conv.user.name === 'Иван Петров') conv.user.name = 'Ivan Petrov';
-        if (conv.lastMessage === 'Спасибо за урок! Очень полезно.') conv.lastMessage = 'Thanks for the lesson! Very useful.';
+        if (conv.lastMessage === 'Спасибо за урок! Очень полезно.') conv.lastMessage = 'Thank you for the lesson! Very useful.';
         conv.messages = conv.messages.map(msg => {
           if (msg.text === 'Здравствуйте! Я хотел бы записаться на урок по React.') msg.text = 'Hello! I would like to sign up for a React lesson.';
           if (msg.text === 'Здравствуйте! Конечно, я могу помочь вам с React. Когда вам удобно?') msg.text = 'Hello! Of course, I can help you with React. When is it convenient for you?';
@@ -465,7 +465,7 @@ const ProfilePage = () => {
     setUserData(prevData => {
       const newBalance = prevData.balance + amount;
       const newTransactions = [
-        { id: `t${Date.now()}`, type: 'deposit', amount, description: 'Account Top-up', date: new Date().toISOString() },
+        { id: `t${Date.now()}`, type: 'deposit', amount, description: 'Account top-up', date: new Date().toISOString() },
         ...prevData.transactions
       ];
       const newData = { ...prevData, balance: newBalance, transactions: newTransactions };

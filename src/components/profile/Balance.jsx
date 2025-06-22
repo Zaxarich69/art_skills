@@ -11,7 +11,7 @@ const Balance = ({ balance, transactions, onDepositClick, onWithdrawClick }) => 
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Wallet className="h-5 w-5" />
-            Ваш баланс
+            Your Balance
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -21,17 +21,17 @@ const Balance = ({ balance, transactions, onDepositClick, onWithdrawClick }) => 
             </div>
             <div className="flex items-baseline gap-2">
               <span className="text-3xl font-bold">{balance} ₽</span>
-              <span className="text-muted-foreground">доступно</span>
+              <span className="text-muted-foreground">available</span>
             </div>
             
             <div className="flex gap-4">
               <Button className="flex-1" onClick={onDepositClick}>
                 <ArrowUpRight className="mr-2 h-4 w-4" />
-                Пополнить
+                Deposit
               </Button>
               <Button variant="outline" className="flex-1" onClick={onWithdrawClick}>
                 <ArrowDownLeft className="mr-2 h-4 w-4" />
-                Вывести
+                Withdraw
               </Button>
             </div>
           </div>
@@ -40,7 +40,7 @@ const Balance = ({ balance, transactions, onDepositClick, onWithdrawClick }) => 
 
       <Card>
         <CardHeader>
-          <CardTitle>История операций</CardTitle>
+          <CardTitle>Transaction History</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">

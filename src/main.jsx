@@ -11,7 +11,7 @@ import { WagmiProvider } from "wagmi";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { mainnet, polygon, optimism, arbitrum } from "wagmi/chains";
 
-// Настрой RainbowKit c WalletConnect Project ID
+// RainbowKit setup with WalletConnect Project ID
 const config = getDefaultConfig({
   appName: "Art Skills",
   projectId: "41a4762b14be30174b4529ad7cf3698a", 

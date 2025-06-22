@@ -125,7 +125,6 @@ const HomePage = () => {
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Link>
                 </Button>
-                {/* Кнопка "Learn More" удалена */}
               </div>
             </motion.div>
             

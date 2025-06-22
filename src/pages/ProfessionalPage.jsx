@@ -563,13 +563,25 @@ const ProfessionalPage = () => {
   };
 
   const handleShare = () => {
-    toast({
-      title: "Share link copied",
-      description: "Link has been copied to your clipboard",
-      duration: 3000,
-    });
+    const shareUrl = `${window.location.origin}/professional/${professional.id}`;
+    navigator.clipboard.writeText(shareUrl)
+      .then(() => {
+        toast({
+          title: "Share link copied",
+          description: "Profile link has been copied to your clipboard.",
+          duration: 3000,
+        });
+      })
+      .catch(() => {
+        toast({
+          title: "Error",
+          description: "Failed to copy link. Try again.",
+          duration: 3000,
+          variant: "destructive",
+        });
+      });
   };
-
+  
   if (loading) {
     return (
       <div className="pt-24 pb-10 container mx-auto px-4">

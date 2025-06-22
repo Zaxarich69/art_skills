@@ -20,6 +20,7 @@ import WithdrawModal from '@/components/WithdrawModal';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
+import FavoritesTab from '@/components/profile/FavoritesTab';
 
 const initialUserData = {
   name: 'Alexey Morozov',
@@ -627,25 +628,38 @@ const ProfilePage = () => {
                 </div>
               </Button>
               <Button
-                variant={activeTab === 'reviews' ? 'default' : 'ghost'}
-                className="w-full justify-start"
-                onClick={() => setActiveTab('reviews')}
-              >
-                <div className="flex items-center gap-4">
-                  <Star className="h-5 w-5 text-muted-foreground" />
-                  Reviews
-                </div>
-              </Button>
-              <Button
-                variant={activeTab === 'payments' ? 'default' : 'ghost'}
-                className="w-full justify-start"
-                onClick={() => setActiveTab('payments')}
-              >
-                <div className="flex items-center gap-4">
-                  <CreditCard className="h-5 w-5 text-muted-foreground" />
-                  Payments
-                </div>
-              </Button>
+  variant={activeTab === 'reviews' ? 'default' : 'ghost'}
+  className="w-full justify-start"
+  onClick={() => setActiveTab('reviews')}
+>
+  <div className="flex items-center gap-4">
+    <Star className="h-5 w-5 text-muted-foreground" />
+    Reviews
+  </div>
+</Button>
+
+<Button
+  variant={activeTab === 'favorites' ? 'default' : 'ghost'}
+  className="w-full justify-start"
+  onClick={() => setActiveTab('favorites')}
+>
+  <div className="flex items-center gap-4">
+    <Star className="h-5 w-5 text-purple-500" />
+    Favorites
+  </div>
+</Button>
+
+<Button
+  variant={activeTab === 'payments' ? 'default' : 'ghost'}
+  className="w-full justify-start"
+  onClick={() => setActiveTab('payments')}
+>
+  <div className="flex items-center gap-4">
+    <CreditCard className="h-5 w-5 text-muted-foreground" />
+    Payments
+  </div>
+</Button>
+
               <Button
                 variant={activeTab === 'chat' ? 'default' : 'ghost'}
                 className="w-full justify-start"
@@ -737,6 +751,10 @@ const ProfilePage = () => {
             <TabsContent value="reviews">
               <Reviews reviews={userData.reviews} averageRating={userData.averageRating} />
             </TabsContent>
+            <TabsContent value="favorites">
+  <FavoritesTab />
+</TabsContent>
+
             <TabsContent value="payments">
               <Card>
                 <CardHeader>

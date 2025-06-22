@@ -1,10 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react'; 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
-import { Edit, Save } from 'lucide-react';
+import { Edit, Save, PlusCircle, Trash2 } from 'lucide-react';
+
+const emptyEducation = { degree: '', institution: '', year: '' };
+const emptyCertification = { name: '' };
+const emptySocialLinks = { website: '', linkedin: '', twitter: '', instagram: '', facebook: '' };
 
 const ProfileForm = ({ userData, onSave, isEditing, onEditToggle, categories }) => {
   const [localFormData, setLocalFormData] = useState(userData);
@@ -12,6 +16,8 @@ const ProfileForm = ({ userData, onSave, isEditing, onEditToggle, categories }) 
   useEffect(() => {
     setLocalFormData(userData);
   }, [userData]);
+
+  // --- HANDLERS ---
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -28,6 +34,57 @@ const ProfileForm = ({ userData, onSave, isEditing, onEditToggle, categories }) 
     }));
   };
 
+  // --- EDUCATION ---
+  const handleEducationChange = (idx, field, value) => {
+    setLocalFormData(prevData => {
+      const updated = [...(prevData.education || [])];
+      updated[idx][field] = value;
+      return { ...prevData, education: updated };
+    });
+  };
+  const addEducation = () => {
+    setLocalFormData(prevData => ({
+      ...prevData,
+      education: [...(prevData.education || []), { ...emptyEducation }]
+    }));
+  };
+  const removeEducation = (idx) => {
+    setLocalFormData(prevData => ({
+      ...prevData,
+      education: prevData.education.filter((_, i) => i !== idx)
+    }));
+  };
+
+  // --- CERTIFICATIONS ---
+  const handleCertChange = (idx, value) => {
+    setLocalFormData(prevData => {
+      const updated = [...(prevData.certifications || [])];
+      updated[idx].name = value;
+      return { ...prevData, certifications: updated };
+    });
+  };
+  const addCertification = () => {
+    setLocalFormData(prevData => ({
+      ...prevData,
+      certifications: [...(prevData.certifications || []), { ...emptyCertification }]
+    }));
+  };
+  const removeCertification = (idx) => {
+    setLocalFormData(prevData => ({
+      ...prevData,
+      certifications: prevData.certifications.filter((_, i) => i !== idx)
+    }));
+  };
+
+  // --- SOCIAL LINKS ---
+  const handleSocialChange = (field, value) => {
+    setLocalFormData(prevData => ({
+      ...prevData,
+      socialLinks: { ...prevData.socialLinks, [field]: value }
+    }));
+  };
+
+  // --- SUBMIT ---
   const handleSubmit = (e) => {
     e.preventDefault();
     onSave(localFormData);
@@ -40,7 +97,7 @@ const ProfileForm = ({ userData, onSave, isEditing, onEditToggle, categories }) 
         <Button 
           onClick={() => {
             if (isEditing) {
-              handleSubmit(new Event('submit')); // Manually trigger submit for form data
+              handleSubmit(new Event('submit'));
             }
             onEditToggle();
           }}
@@ -152,6 +209,91 @@ const ProfileForm = ({ userData, onSave, isEditing, onEditToggle, categories }) 
               disabled={!isEditing}
             />
           </div>
+
+          {/* EDUCATION */}
+          <div>
+            <Label>Education</Label>
+            {(localFormData.education || []).map((edu, idx) => (
+              <div key={idx} className="flex gap-2 items-center mb-2">
+                <Input
+                  className="flex-1"
+                  placeholder="Degree"
+                  value={edu.degree}
+                  disabled={!isEditing}
+                  onChange={e => handleEducationChange(idx, 'degree', e.target.value)}
+                />
+                <Input
+                  className="flex-1"
+                  placeholder="Institution"
+                  value={edu.institution}
+                  disabled={!isEditing}
+                  onChange={e => handleEducationChange(idx, 'institution', e.target.value)}
+                />
+                <Input
+                  className="w-24"
+                  placeholder="Year"
+                  value={edu.year}
+                  disabled={!isEditing}
+                  onChange={e => handleEducationChange(idx, 'year', e.target.value)}
+                />
+                {isEditing && (
+                  <Button type="button" size="icon" variant="ghost" onClick={() => removeEducation(idx)}>
+                    <Trash2 className="h-4 w-4 text-red-500" />
+                  </Button>
+                )}
+              </div>
+            ))}
+            {isEditing && (
+              <Button type="button" variant="outline" size="sm" onClick={addEducation} className="mt-1">
+                <PlusCircle className="h-4 w-4 mr-1" />
+                Add education
+              </Button>
+            )}
+          </div>
+
+          {/* CERTIFICATIONS */}
+          <div>
+            <Label>Certifications</Label>
+            {(localFormData.certifications || []).map((cert, idx) => (
+              <div key={idx} className="flex gap-2 items-center mb-2">
+                <Input
+                  className="flex-1"
+                  placeholder="Certification name"
+                  value={cert.name}
+                  disabled={!isEditing}
+                  onChange={e => handleCertChange(idx, e.target.value)}
+                />
+                {isEditing && (
+                  <Button type="button" size="icon" variant="ghost" onClick={() => removeCertification(idx)}>
+                    <Trash2 className="h-4 w-4 text-red-500" />
+                  </Button>
+                )}
+              </div>
+            ))}
+            {isEditing && (
+              <Button type="button" variant="outline" size="sm" onClick={addCertification} className="mt-1">
+                <PlusCircle className="h-4 w-4 mr-1" />
+                Add certificate
+              </Button>
+            )}
+          </div>
+
+          {/* SOCIAL LINKS */}
+          <div>
+            <Label>Social Links</Label>
+            <div className="grid gap-2">
+              {['website', 'linkedin', 'twitter', 'instagram', 'facebook'].map(field => (
+                <Input
+                  key={field}
+                  placeholder={field.charAt(0).toUpperCase() + field.slice(1)}
+                  value={localFormData.socialLinks?.[field] || ''}
+                  disabled={!isEditing}
+                  onChange={e => handleSocialChange(field, e.target.value)}
+                />
+              ))}
+            </div>
+          </div>
+
         </form>
       </CardContent>
     </Card>

@@ -49,10 +49,6 @@ const ChatThread = ({
 }) => {
   const messagesEndRef = useRef(null);
 
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
-
   if (!activeConversation) {
     return (
       <div className="flex-1 flex flex-col items-center justify-center text-center p-4">

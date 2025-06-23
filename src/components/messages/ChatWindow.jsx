@@ -32,11 +32,6 @@ const ChatWindow = ({ chat, socket }) => {
     }
   });
 
-  // Автоскролл к последнему сообщению
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
-
   // Группировка сообщений по дате
   const groupedMessages = messages.reduce((groups, message) => {
     const date = format(new Date(message.timestamp), 'yyyy-MM-dd');

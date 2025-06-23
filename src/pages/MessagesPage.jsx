@@ -10,32 +10,40 @@ import {
   Phone, Video, Info, ChevronLeft, MessageSquare
 } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
+import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
+import { Textarea } from '@/components/ui/textarea';
 
 const mockConversationsData = [
   {
     id: 1,
     user: { id: 101, name: 'Dr. Emily Johnson', avatar: null, title: 'Mathematics Professor', isOnline: true },
-    lastMessage: { text: 'I can help you with calculus. When would you like to schedule our first session?', time: '10:42 AM', isRead: true, sender: 'them' },
+    lastMessage: { text: 'I can help you with math. When would you like to schedule our first session?', time: '10:42 AM', isRead: true, sender: 'them' },
     unreadCount: 0,
   },
   {
     id: 2,
     user: { id: 102, name: 'Marcus Chen', avatar: null, title: 'Woodworking Craftsman', isOnline: false },
-    lastMessage: { text: 'Your custom bookshelf design looks great! I can start working on it next week.', time: 'Yesterday', isRead: false, sender: 'them' },
+    lastMessage: { text: 'Your bookshelf project looks great! I can start next week.', time: 'Yesterday', isRead: false, sender: 'them' },
     unreadCount: 2,
   },
 ];
 
 const mockMessagesData = {
   1: [
-    { id: 'm1-1', text: 'Hello! I saw your profile and I\'m interested in learning calculus.', time: '10:30 AM', sender: 'me', status: 'read' },
-    { id: 'm1-2', text: 'Hi there! I\'d be happy to help. What topics are you focusing on?', time: '10:35 AM', sender: 'them', status: 'delivered' },
+    { id: 'm1-1', text: 'Hello! I want to improve my math skills.', time: '10:30 AM', sender: 'me', status: 'read' },
+    { id: 'm1-2', text: 'Hi! I will be happy to help. What topics are you interested in?', time: '10:35 AM', sender: 'them', status: 'delivered' },
   ],
   2: [
-    { id: 'm2-1', text: 'Hey Marcus, about that bookshelf...', time: 'Yesterday', sender: 'me', status: 'read' },
-    { id: 'm2-2', text: 'Your custom bookshelf design looks great! I can start working on it next week.', time: 'Yesterday', sender: 'them', status: 'delivered' },
+    { id: 'm2-1', text: 'Hi Marcus! About the bookshelf...', time: 'Yesterday', sender: 'me', status: 'read' },
+    { id: 'm2-2', text: 'Your bookshelf project looks great! I can start next week.', time: 'Yesterday', sender: 'them', status: 'delivered' },
   ],
 };
+
+const mockSessions = [
+  { id: 1, date: '2025-06-28', specialist: 'Marcus Chen', topic: 'Art Therapy', status: 'upcoming', reviewed: false },
+  { id: 2, date: '2025-06-20', specialist: 'Dr. Emily Johnson', topic: 'Psychology', status: 'past', reviewed: false },
+  { id: 3, date: '2025-06-15', specialist: 'Anna Petrova', topic: 'Drawing', status: 'past', reviewed: true },
+];
 
 const ConversationItem = ({ conversation, isActive, onSelect }) => (
   <div
@@ -82,7 +90,7 @@ const MessageBubble = ({ message, userAvatar, userName }) => (
       </div>
       <div className={`flex items-center mt-1 text-xs text-muted-foreground ${message.sender === 'me' ? 'justify-end' : 'justify-start'}`}>
         <span>{message.time}</span>
-        {message.sender === 'me' && <span className="ml-2">{message.status}</span>}
+        {message.sender === 'me' && <span className="ml-2">{message.status === 'read' ? 'read' : message.status === 'sent' ? 'sent' : message.status === 'delivered' ? 'delivered' : ''}</span>}
       </div>
     </div>
   </div>
@@ -120,7 +128,7 @@ const MessageInput = ({ newMessage, setNewMessage, onSendMessage }) => (
   <div className="p-4 border-t border-border">
     <form onSubmit={onSendMessage} className="flex items-center gap-2">
       <Button type="button" variant="ghost" size="icon"><Paperclip className="h-5 w-5" /></Button>
-      <Input type="text" placeholder="Type a message..." value={newMessage} onChange={(e) => setNewMessage(e.target.value)} className="flex-1" />
+      <Input type="text" placeholder="Enter message..." value={newMessage} onChange={(e) => setNewMessage(e.target.value)} className="flex-1" />
       <Button type="submit" size="icon" disabled={!newMessage.trim()}><Send className="h-5 w-5" /></Button>
     </form>
   </div>
@@ -135,12 +143,8 @@ const MessagesPage = () => {
   const [isMobileView, setIsMobileView] = useState(false);
   const [showConversationList, setShowConversationList] = useState(true);
   const messagesEndRef = useRef(null);
-
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
-
-  useEffect(scrollToBottom, [messages]);
+  const [sessions, setSessions] = useState(mockSessions);
+  const [reviewModal, setReviewModal] = useState({ open: false, sessionId: null, text: '' });
 
   useEffect(() => {
     setTimeout(() => {
@@ -221,6 +225,13 @@ const MessagesPage = () => {
     conv.user.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  const openReview = (sessionId) => setReviewModal({ open: true, sessionId, text: '' });
+  const closeReview = () => setReviewModal({ open: false, sessionId: null, text: '' });
+  const submitReview = () => {
+    setSessions(sessions.map(s => s.id === reviewModal.sessionId ? { ...s, reviewed: true } : s));
+    closeReview();
+  };
+
   return (
     <div className="pt-20 pb-10 h-screen">
       <div className="container mx-auto px-4 h-full max-h-[calc(100vh-8rem)]">
@@ -240,7 +251,7 @@ const MessagesPage = () => {
                   <div className="p-4 border-b border-border">
                     <div className="relative">
                       <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
-                      <Input type="text" placeholder="Search conversations..." className="pl-10" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
+                      <Input type="text" placeholder="Search chats..." className="pl-10" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
                     </div>
                   </div>
                   <ScrollArea className="flex-1">
@@ -249,7 +260,7 @@ const MessagesPage = () => {
                         <ConversationItem key={conversation.id} conversation={conversation} isActive={activeConversation?.id === conversation.id} onSelect={() => handleConversationSelect(conversation)} />
                       ))
                     ) : (
-                      <div className="p-4 text-center text-muted-foreground">No conversations found</div>
+                      <div className="p-4 text-center text-muted-foreground">No chats found</div>
                     )}
                   </ScrollArea>
                 </motion.div>
@@ -279,12 +290,58 @@ const MessagesPage = () => {
                 <div className="w-full md:w-2/3 flex flex-col items-center justify-center p-4 text-center">
                   <div className="mb-4 text-muted-foreground">
                     <MessageSquare className="h-16 w-16 mx-auto mb-4" />
-                    <h3 className="text-xl font-semibold mb-2">No Conversation Selected</h3>
-                    <p className="text-muted-foreground mb-6">Select a conversation from the list to start messaging</p>
-                    {isMobileView && <Button onClick={() => setShowConversationList(true)}>View Conversations</Button>}
+                    <h3 className="text-xl font-semibold mb-2">No chat selected</h3>
+                    <p className="text-muted-foreground mb-6">Select a chat on the left to start messaging</p>
+                    {isMobileView && <Button onClick={() => setShowConversationList(true)}>Back to chat list</Button>}
                   </div>
                 </div>
               )}
+
+              <div className="hidden lg:block w-80 border-l border-border bg-background p-4 overflow-y-auto">
+                <h3 className="text-lg font-semibold mb-4">Sessions</h3>
+                <div>
+                  <div className="font-medium mb-2">Upcoming</div>
+                  <ul className="mb-4 space-y-2">
+                    {sessions.filter(s => s.status === 'upcoming').map(s => (
+                      <li key={s.id} className="border-b border-border pb-2">
+                        <div className="text-sm">{s.date} — {s.specialist}</div>
+                        <div className="text-xs text-muted-foreground">{s.topic}</div>
+                      </li>
+                    ))}
+                  </ul>
+                  <div className="font-medium mb-2">Past</div>
+                  <ul className="space-y-2">
+                    {sessions.filter(s => s.status === 'past').map(s => (
+                      <li key={s.id} className="border-b border-border pb-2">
+                        <div className="text-sm">{s.date} — {s.specialist}</div>
+                        <div className="text-xs text-muted-foreground">{s.topic}</div>
+                        {!s.reviewed && (
+                          <Button size="sm" variant="outline" className="mt-2" onClick={() => openReview(s.id)}>Leave a review</Button>
+                        )}
+                        {s.reviewed && <span className="text-green-600 text-xs ml-2">Review left</span>}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+
+              <Dialog open={reviewModal.open} onOpenChange={closeReview}>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Leave a review</DialogTitle>
+                  </DialogHeader>
+                  <Textarea
+                    value={reviewModal.text}
+                    onChange={e => setReviewModal({ ...reviewModal, text: e.target.value })}
+                    rows={4}
+                    placeholder="Your review..."
+                  />
+                  <DialogFooter>
+                    <Button variant="ghost" onClick={closeReview}>Cancel</Button>
+                    <Button onClick={submitReview}>Send</Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
             </div>
           </div>
         </div>

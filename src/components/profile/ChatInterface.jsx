@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
@@ -11,16 +11,6 @@ const ChatInterface = ({ conversations, onSendMessage }) => {
   const [selectedConversation, setSelectedConversation] = useState(null);
   const [newMessage, setNewMessage] = useState('');
   const messagesEndRef = useRef(null);
-
-  useEffect(() => {
-    if (selectedConversation) {
-      scrollToBottom();
-    }
-  }, [selectedConversation, conversations]); // Scroll when conversation or messages change
-
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
 
   const handleSendMessage = () => {
     if (newMessage.trim() && selectedConversation) {

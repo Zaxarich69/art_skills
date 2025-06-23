@@ -10,10 +10,11 @@ import MessagesPage from '@/pages/MessagesPage';
 import PaymentPage from '@/pages/PaymentPage';
 import FavoritesPage from '@/pages/FavoritesPage'; // <--- добавил
 import NotFoundPage from '@/pages/NotFoundPage';
+import { UserStoreProvider } from './data/userStore';
 
 function App() {
   return (
-    <>
+    <UserStoreProvider>
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<HomePage />} />
@@ -27,7 +28,7 @@ function App() {
         </Route>
       </Routes>
       <Toaster />
-    </>
+    </UserStoreProvider>
   );
 }
 

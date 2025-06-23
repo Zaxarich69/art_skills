@@ -16,6 +16,7 @@ import {
   ChevronDown, ChevronUp, Bitcoin, CreditCard
 } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
+import SendMessageModal from '@/components/messages/SendMessageModal';
 
 // Mock data for professionals
 const mockProfessionals = [
@@ -203,6 +204,10 @@ const ExplorePage = () => {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const { toast } = useToast();
   const [searchParams] = useSearchParams();
+  const [messageModalOpen, setMessageModalOpen] = useState(false);
+  const [selectedProfessional, setSelectedProfessional] = useState(null);
+  // Заглушка: авторизован ли пользователь (заменить на реальную логику)
+  const isAuthenticated = Boolean(localStorage.getItem('userProfile'));
 
   useEffect(() => {
     const categoryParam = searchParams.get('category');
@@ -536,11 +541,9 @@ const ExplorePage = () => {
                         <span className="text-muted-foreground text-sm"> /hour</span>
                       </div>
                       <div className="flex space-x-2">
-                        <Button variant="outline" size="sm" asChild>
-                          <Link to={`/messages?id=${professional.id}`}>
-                            <MessageSquare className="h-4 w-4 mr-1" />
-                            Message
-                          </Link>
+                        <Button variant="outline" size="sm" onClick={() => { setSelectedProfessional(professional); setMessageModalOpen(true); }}>
+                          <MessageSquare className="h-4 w-4 mr-1" />
+                          Message
                         </Button>
                         <Button size="sm" asChild>
                           <Link to={`/professional/${professional.id}`}>
@@ -575,6 +578,15 @@ const ExplorePage = () => {
             </Button>
           </div>
         )}
+        <SendMessageModal
+          open={messageModalOpen}
+          onClose={() => setMessageModalOpen(false)}
+          professional={selectedProfessional || {}}
+          isAuthenticated={isAuthenticated}
+          onLogin={() => window.location.href = '/login'}
+          onRegister={() => window.location.href = '/register'}
+          onMessageSent={() => {/* обновить счетчик чатов, если нужно */}}
+        />
       </div>
     </div>
   );

@@ -17,6 +17,7 @@ import {
 import { useToast } from '@/components/ui/use-toast';
 import { mockProfessionalsData } from '@/data/professionals';
 import BookingModal from '@/components/BookingModal';
+import ReviewModal from '@/components/reviews/ReviewModal';
 
 const defaultProfessional = {
   id: null,
@@ -453,6 +454,10 @@ const ProfessionalPage = () => {
   const [isFavorited, setIsFavorited] = useState(false);
   const { toast } = useToast();
   const [showBooking, setShowBooking] = useState(false);
+  const [reviewModalOpen, setReviewModalOpen] = useState(false);
+  const [hasLeftReview, setHasLeftReview] = useState(false);
+
+  const canReview = !hasLeftReview && professional && professional.id !== 'user-profile';
 
   useEffect(() => {
     setLoading(true);
@@ -622,6 +627,11 @@ const ProfessionalPage = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 space-y-8">
           <ProfileHeader professional={displayProfessional} onFavorite={handleFavorite} onShare={handleShare} isFavorited={isFavorited} />
+          {canReview && (
+            <Button className="mb-4" onClick={() => setReviewModalOpen(true)}>
+              Оставить отзыв
+            </Button>
+          )}
           <ProfileDetails professional={displayProfessional} />
           <AboutSection professional={displayProfessional} />
           <ExperienceSection experience={displayProfessional.experience || []} />
@@ -639,6 +649,16 @@ const ProfessionalPage = () => {
       {showBooking && (
         <BookingModal open={showBooking} onClose={() => setShowBooking(false)} professional={professional} />
       )}
+      <ReviewModal
+        open={reviewModalOpen}
+        onClose={() => setReviewModalOpen(false)}
+        onSubmit={async (review) => {
+          setHasLeftReview(true);
+          toast({ title: 'Спасибо за отзыв!', description: 'Ваш отзыв отправлен на модерацию.' });
+        }}
+        professional={displayProfessional}
+        sessionId={null}
+      />
     </div>
   );
 };

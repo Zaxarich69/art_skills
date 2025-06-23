@@ -1,9 +1,20 @@
-import React from 'react';
+import React, { useState, useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Star } from 'lucide-react';
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select';
 
 const Reviews = ({ reviews, averageRating }) => {
+  const [sortBy, setSortBy] = useState('date'); // 'date' | 'rating'
+
+  const sortedReviews = useMemo(() => {
+    if (sortBy === 'rating') {
+      return [...reviews].sort((a, b) => b.rating - a.rating);
+    } else {
+      return [...reviews].sort((a, b) => new Date(b.date) - new Date(a.date));
+    }
+  }, [reviews, sortBy]);
+
   return (
     <div className="space-y-6">
       <Card>
@@ -33,10 +44,21 @@ const Reviews = ({ reviews, averageRating }) => {
             <span className="text-muted-foreground">
               ({reviews.length} reviews)
             </span>
+            <div className="ml-auto">
+              <Select value={sortBy} onValueChange={setSortBy}>
+                <SelectTrigger className="w-[140px]">
+                  <SelectValue placeholder="Sort by" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="date">Newest</SelectItem>
+                  <SelectItem value="rating">Highest Rating</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
 
           <div className="space-y-4">
-            {reviews.map((review) => (
+            {sortedReviews.map((review) => (
               <Card key={review.id}>
                 <CardContent className="p-4">
                   <div className="flex items-start gap-4">

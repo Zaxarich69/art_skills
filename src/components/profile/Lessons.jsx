@@ -6,11 +6,13 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { toast } from '@/components/ui/use-toast';
+import ReviewModal from '@/components/reviews/ReviewModal';
 
 const LessonCard = ({ lesson, isUpcoming, onLeaveReview }) => {
   const [isReviewFormOpen, setIsReviewFormOpen] = useState(false);
   const [reviewRating, setReviewRating] = useState(0);
   const [reviewComment, setReviewComment] = useState('');
+  const [hasLeftReview, setHasLeftReview] = useState(lesson.feedbackLeft || false);
 
   const getRoomName = (lesson) => `artskills_lesson_${lesson.id}`;
 
@@ -92,16 +94,16 @@ const LessonCard = ({ lesson, isUpcoming, onLeaveReview }) => {
                     </a>
                   </Button>
                 )}
-                {lesson.status.toLowerCase() === 'completed' && !lesson.feedbackLeft && (
-                  <Button variant="secondary" size="sm" onClick={handleOpenReviewForm} className="w-full md:w-auto">
+                {lesson.status.toLowerCase() === 'completed' && !hasLeftReview && (
+                  <Button variant="secondary" size="sm" onClick={() => setIsReviewFormOpen(true)} className="w-full md:w-auto">
                     <Star className="mr-2 h-4 w-4" />
-                    Leave a Review
+                    Оставить отзыв
                   </Button>
                 )}
-                {lesson.feedbackLeft && (
+                {lesson.status.toLowerCase() === 'completed' && hasLeftReview && (
                   <span className="text-sm text-muted-foreground flex items-center gap-1 w-full md:w-auto px-4 py-2 border rounded-md bg-secondary">
                     <Star className="h-4 w-4 text-yellow-500" />
-                    Review Left
+                    Отзыв оставлен
                   </span>
                 )}
               </>
@@ -116,39 +118,17 @@ const LessonCard = ({ lesson, isUpcoming, onLeaveReview }) => {
         </div>
       </CardContent>
 
-      <Dialog open={isReviewFormOpen} onOpenChange={setIsReviewFormOpen}>
-        <DialogContent className="sm:max-w-[425px]">
-          <DialogHeader>
-            <DialogTitle>Leave a Review for "{lesson.title}"</DialogTitle>
-          </DialogHeader>
-          <div className="grid gap-4 py-4">
-            <div className="flex items-center gap-2">
-              <Label htmlFor="rating" className="text-right">Rating:</Label>
-              {[1, 2, 3, 4, 5].map((star) => (
-                <Star
-                  key={star}
-                  className={`h-6 w-6 cursor-pointer ${star <= reviewRating ? 'text-yellow-400 fill-current' : 'text-gray-400'}`}
-                  onClick={() => setReviewRating(star)}
-                />
-              ))}
-            </div>
-            <div>
-              <Label htmlFor="comment" className="sr-only">Comment</Label>
-              <Textarea
-                id="comment"
-                placeholder="Your comment about the lesson..."
-                value={reviewComment}
-                onChange={(e) => setReviewComment(e.target.value)}
-                className="mt-2"
-                rows={4}
-              />
-            </div>
-          </div>
-          <DialogFooter>
-            <Button type="submit" onClick={handleSubmitReview}>Submit Review</Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      <ReviewModal
+        open={isReviewFormOpen}
+        onClose={() => setIsReviewFormOpen(false)}
+        onSubmit={async ({ rating, comment }) => {
+          setHasLeftReview(true);
+          setIsReviewFormOpen(false);
+          if (onLeaveReview) onLeaveReview(lesson.id, rating, comment);
+        }}
+        professional={{ id: lesson.teacherId, name: lesson.teacher }}
+        sessionId={lesson.id}
+      />
     </Card>
   );
 };

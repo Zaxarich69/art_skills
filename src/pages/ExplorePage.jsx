@@ -486,24 +486,6 @@ const ExplorePage = () => {
                       className="w-full h-full object-cover"
                       src={professional.image || "https://images.unsplash.com/photo-1586732711591-12c04655338f?auto=format&fit=crop&q=80&w=2070&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"}
                     />
-                    <div className="absolute top-4 right-4 flex space-x-2">
-                      <Button 
-                        variant="secondary" 
-                        size="icon" 
-                        className="h-8 w-8 rounded-full bg-background/80 backdrop-blur-sm"
-                        onClick={() => handleFavorite(professional.id)}
-                      >
-                        <Heart className="h-4 w-4" />
-                      </Button>
-                      <Button 
-                        variant="secondary" 
-                        size="icon" 
-                        className="h-8 w-8 rounded-full bg-background/80 backdrop-blur-sm"
-                        onClick={() => handleShare(professional.id)}
-                      >
-                        <Share2 className="h-4 w-4" />
-                      </Button>
-                    </div>
                   </div>
                   
                   <div className="p-6">

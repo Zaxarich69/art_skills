@@ -11,6 +11,12 @@ import PaymentPage from '@/pages/PaymentPage';
 import FavoritesPage from '@/pages/FavoritesPage'; // <--- добавил
 import NotFoundPage from '@/pages/NotFoundPage';
 import { UserStoreProvider } from './data/userStore';
+import AboutPage from '@/pages/AboutPage';
+import CareersPage from '@/pages/CareersPage';
+import HelpPage from '@/pages/HelpPage';
+import TermsPage from '@/pages/TermsPage';
+import PrivacyPage from '@/pages/PrivacyPage';
+import CookiesPage from '@/pages/CookiesPage';
 
 function App() {
   return (
@@ -24,6 +30,12 @@ function App() {
           <Route path="messages" element={<MessagesPage />} />
           <Route path="payment/:id" element={<PaymentPage />} />
           <Route path="favorites" element={<FavoritesPage />} /> {/* Новая страница избранного */}
+          <Route path="about" element={<AboutPage />} />
+          <Route path="careers" element={<CareersPage />} />
+          <Route path="help" element={<HelpPage />} />
+          <Route path="terms" element={<TermsPage />} />
+          <Route path="privacy" element={<PrivacyPage />} />
+          <Route path="cookies" element={<CookiesPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Route>
       </Routes>

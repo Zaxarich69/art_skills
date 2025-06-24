@@ -10,9 +10,9 @@ const Footer = () => {
 
   // Facebook, LinkedIn и телефон удалены, добавлен Mail
   const socialLinks = [
-    { icon: <Twitter size={18} />, href: '#', label: 'Twitter' },
-    { icon: <Instagram size={18} />, href: '#', label: 'Instagram' },
-    { icon: <Mail size={18} />, href: 'mailto:contact@skillconnect.com', label: 'Email' },
+    { icon: <Twitter size={18} />, href: 'https://twitter.com/artskillsapp', label: 'Twitter' },
+    { icon: <Instagram size={18} />, href: 'https://instagram.com/artskillsapp', label: 'Instagram' },
+    { icon: <Mail size={18} />, href: 'mailto:contact@artskills.com', label: 'Email' },
   ];
 
   // Blog, Press, Safety Center, Community Guidelines — удалены
@@ -20,22 +20,23 @@ const Footer = () => {
     {
       title: 'Company',
       links: [
-        { name: 'About Us', href: '#' },
-        { name: 'Careers', href: '#' },
+        { name: 'About Us', href: '/about', tooltip: 'Learn more about our mission, vision, and the team behind Art Skills.' },
+        { name: 'Careers', href: '/careers', tooltip: 'Explore career opportunities and become part of our growing team.' },
       ],
     },
     {
       title: 'Support',
       links: [
-        { name: 'Help Center', href: '#' },
+        { name: 'Help Center', href: '/help', tooltip: 'Find answers to frequently asked questions and get support.' },
+        { name: 'Contact Us', href: 'mailto:contact@artskills.com', tooltip: 'Reach out to our team for assistance and inquiries.' },
       ],
     },
     {
       title: 'Legal',
       links: [
-        { name: 'Terms of Service', href: '#' },
-        { name: 'Privacy Policy', href: '#' },
-        { name: 'Cookie Policy', href: '#' },
+        { name: 'Terms of Service', href: '/terms', tooltip: 'Read our user agreement and terms of use.' },
+        { name: 'Privacy Policy', href: '/privacy', tooltip: 'Learn how we protect and use your data.' },
+        { name: 'Cookie Policy', href: '/cookies', tooltip: 'Understand how we use cookies and tracking technologies.' },
       ],
     },
   ];
@@ -81,12 +82,25 @@ const Footer = () => {
               <ul className="space-y-2">
                 {section.links.map((link, linkIndex) => (
                   <li key={linkIndex}>
-                    <a 
-                      href={link.href}
-                      className="text-muted-foreground hover:text-foreground transition-colors duration-200"
-                    >
-                      {link.name}
-                    </a>
+                    {link.href.startsWith('/') ? (
+                      <Link 
+                        to={link.href}
+                        className="text-muted-foreground hover:text-foreground transition-colors duration-200"
+                        title={link.tooltip}
+                      >
+                        {link.name}
+                      </Link>
+                    ) : (
+                      <a 
+                        href={link.href}
+                        className="text-muted-foreground hover:text-foreground transition-colors duration-200"
+                        title={link.tooltip}
+                        target={link.href.startsWith('mailto:') ? undefined : '_blank'}
+                        rel="noopener noreferrer"
+                      >
+                        {link.name}
+                      </a>
+                    )}
                   </li>
                 ))}
               </ul>
@@ -97,7 +111,7 @@ const Footer = () => {
         {/* Внизу футера ничего нет, кроме копирайта */}
         <div className="border-t border-border mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
           <p className="text-sm text-muted-foreground">
-            © {currentYear} SkillConnect. All rights reserved.
+            © {currentYear} Art Skills. All rights reserved.
           </p>
         </div>
       </div>

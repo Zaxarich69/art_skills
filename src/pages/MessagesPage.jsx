@@ -12,6 +12,7 @@ import {
 import { useToast } from '@/components/ui/use-toast';
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Textarea } from '@/components/ui/textarea';
+import { useReviewsStore } from '@/data/reviewsStore';
 
 const mockConversationsData = [
   {
@@ -145,6 +146,7 @@ const MessagesPage = () => {
   const messagesEndRef = useRef(null);
   const [sessions, setSessions] = useState(mockSessions);
   const [reviewModal, setReviewModal] = useState({ open: false, sessionId: null, text: '' });
+  const { addReview } = useReviewsStore();
 
   useEffect(() => {
     setTimeout(() => {
@@ -227,7 +229,28 @@ const MessagesPage = () => {
 
   const openReview = (sessionId) => setReviewModal({ open: true, sessionId, text: '' });
   const closeReview = () => setReviewModal({ open: false, sessionId: null, text: '' });
+
+  // Find professionalId by session (mockSessions or real data)
+  const getProfessionalIdBySession = (session) => {
+    // Example: match by name to mockProfessionalsData
+    // In real app, session should have professionalId
+    const prof = require('@/data/professionals').mockProfessionalsData.find(
+      p => p.name === session.specialist
+    );
+    return prof ? prof.id : null;
+  };
+
   const submitReview = () => {
+    const session = sessions.find(s => s.id === reviewModal.sessionId);
+    const professionalId = getProfessionalIdBySession(session);
+    if (professionalId) {
+      addReview(professionalId, {
+        name: 'Current User', // Replace with real user name if available
+        rating: 5, // TODO: get from form (now hardcoded)
+        comment: reviewModal.text,
+        date: new Date().toISOString()
+      });
+    }
     setSessions(sessions.map(s => s.id === reviewModal.sessionId ? { ...s, reviewed: true } : s));
     closeReview();
   };

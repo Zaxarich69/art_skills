@@ -6,7 +6,7 @@ const UserStoreContext = createContext();
 export function UserStoreProvider({ children }) {
   const [user, setUser] = useState(mockUserProfile);
 
-  // Добавить сообщение в чат
+  // Add message to chat
   const sendMessage = useCallback((chatId, text) => {
     setUser(prev => {
       const conversations = prev.conversations.map(conv => {
@@ -30,7 +30,7 @@ export function UserStoreProvider({ children }) {
     });
   }, []);
 
-  // Оставить отзыв по сессии
+  // Leave a review for a session
   const leaveReview = useCallback((lessonId, rating, comment) => {
     setUser(prev => {
       const pastLessons = prev.pastLessons.map(lesson =>
@@ -52,7 +52,7 @@ export function UserStoreProvider({ children }) {
     });
   }, []);
 
-  // Забронировать новую сессию (upcoming)
+  // Book a new session (upcoming)
   const bookSession = useCallback((session) => {
     setUser(prev => ({
       ...prev,
@@ -60,13 +60,13 @@ export function UserStoreProvider({ children }) {
     }));
   }, []);
 
-  // Экспортируемые данные и методы
+  // Exported data and methods
   const value = {
     user,
     sendMessage,
     leaveReview,
     bookSession,
-    setUser // для сложных обновлений
+    setUser // for complex updates
   };
 
   return <UserStoreContext.Provider value={value}>{children}</UserStoreContext.Provider>;

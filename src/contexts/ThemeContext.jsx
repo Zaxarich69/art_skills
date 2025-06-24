@@ -4,7 +4,7 @@ const ThemeContext = createContext();
 
 export const ThemeProvider = ({ children }) => {
   const [darkMode, setDarkMode] = useState(() => {
-    // Проверяем сохраненную тему или системные настройки
+    // Check saved theme or system settings
     const savedTheme = localStorage.getItem('theme');
     if (savedTheme) {
       return savedTheme === 'dark';
@@ -13,7 +13,7 @@ export const ThemeProvider = ({ children }) => {
   });
 
   useEffect(() => {
-    // Обновляем класс на body при изменении темы
+    // Update body class on theme change
     if (darkMode) {
       document.documentElement.classList.add('dark');
       localStorage.setItem('theme', 'dark');
@@ -23,7 +23,7 @@ export const ThemeProvider = ({ children }) => {
     }
   }, [darkMode]);
 
-  // Слушаем изменения системной темы
+  // Listen for system theme changes
   useEffect(() => {
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
     const handleChange = (e) => {

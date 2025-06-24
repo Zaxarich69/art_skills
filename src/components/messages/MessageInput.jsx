@@ -14,7 +14,7 @@ const MessageInput = ({ chatId, socket }) => {
   const fileInputRef = useRef(null);
   const { darkMode } = useTheme();
 
-  // Обработка отправки сообщения
+  // Handle message send
   const handleSend = async () => {
     if (!message.trim() && attachments.length === 0) return;
 
@@ -43,7 +43,7 @@ const MessageInput = ({ chatId, socket }) => {
     }
   };
 
-  // Обработка нажатия Enter
+  // Handle Enter key
   const handleKeyPress = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
@@ -51,7 +51,7 @@ const MessageInput = ({ chatId, socket }) => {
     }
   };
 
-  // Обработка печати
+  // Handle typing
   const handleTyping = () => {
     if (!isTyping) {
       setIsTyping(true);
@@ -66,18 +66,18 @@ const MessageInput = ({ chatId, socket }) => {
     }, 1000);
   };
 
-  // Обработка загрузки файлов
+  // Handle file upload
   const handleFileSelect = (e) => {
     const files = Array.from(e.target.files);
     setAttachments(prev => [...prev, ...files]);
   };
 
-  // Обработка удаления вложения
+  // Handle remove attachment
   const handleRemoveAttachment = (index) => {
     setAttachments(prev => prev.filter((_, i) => i !== index));
   };
 
-  // Обработка выбора эмодзи
+  // Handle emoji select
   const handleEmojiSelect = (emoji) => {
     setMessage(prev => prev + emoji.native);
   };

@@ -84,7 +84,7 @@ const ChatThread = ({
               {user.name}
               {user.isOnline && <span className="ml-2 w-2 h-2 bg-green-500 rounded-full"></span>}
             </h3>
-            <p className="text-xs text-muted-foreground">{user.isOnline ? 'Онлайн' : 'Оффлайн'}</p>
+            <p className="text-xs text-muted-foreground">{user.isOnline ? 'Online' : 'Offline'}</p>
           </div>
         </div>
         <div className="flex items-center">
@@ -104,7 +104,7 @@ const ChatThread = ({
                 key={message.id} 
                 message={message} 
                 userAvatar={message.sender === 'me' ? undefined : user.avatar} 
-                userName={message.sender === 'me' ? 'Вы' : user.name} 
+                userName={message.sender === 'me' ? 'You' : user.name} 
                 isOwnMessage={message.sender === 'me'}
               />
             )

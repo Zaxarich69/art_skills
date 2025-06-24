@@ -5,7 +5,7 @@ import { Tabs, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { 
   User, CreditCard, Bitcoin, Edit, Save, MessageSquare,
-  Calendar, Wallet, Star, Settings as SettingsIcon, BookOpen, PlusCircle, MinusCircle, ArrowUpCircle, ArrowDownCircle
+  Calendar, Wallet, Star, Settings as SettingsIcon, BookOpen, PlusCircle, MinusCircle, ArrowUpCircle, ArrowDownCircle, Clock, Trash2
 } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 import ProfileForm from '@/components/profile/ProfileForm';
@@ -305,6 +305,101 @@ const categories = [
   },
 ];
 
+const daysOfWeek = [
+  'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'
+];
+
+function AvailabilityEditor({ availability, onChange }) {
+  const [editData, setEditData] = useState(() =>
+    daysOfWeek.map(day => ({
+      day,
+      slots: availability.find(a => a.day === day)?.slots || []
+    }))
+  );
+  const [newSlot, setNewSlot] = useState({ day: daysOfWeek[0], start: '', end: '' });
+
+  const handleSlotChange = (day, idx, field, value) => {
+    setEditData(prev => prev.map(a =>
+      a.day === day ? {
+        ...a,
+        slots: a.slots.map((slot, i) =>
+          i === idx ? { ...slot, [field]: value } : slot
+        )
+      } : a
+    ));
+  };
+
+  const handleAddSlot = () => {
+    if (!newSlot.start || !newSlot.end) return;
+    setEditData(prev => prev.map(a =>
+      a.day === newSlot.day ? {
+        ...a,
+        slots: [...a.slots, `${newSlot.start} – ${newSlot.end}`]
+      } : a
+    ));
+    setNewSlot({ day: daysOfWeek[0], start: '', end: '' });
+  };
+
+  const handleRemoveSlot = (day, idx) => {
+    setEditData(prev => prev.map(a =>
+      a.day === day ? {
+        ...a,
+        slots: a.slots.filter((_, i) => i !== idx)
+      } : a
+    ));
+  };
+
+  const handleSave = () => {
+    onChange(editData.filter(a => a.slots.length > 0));
+  };
+
+  return (
+    <div className="mb-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {editData.map((a, i) => (
+          <Card key={a.day}>
+            <CardContent className="p-4">
+              <h4 className="font-medium mb-2">{a.day}</h4>
+              <div className="space-y-2">
+                {a.slots.length === 0 && <span className="text-sm text-muted-foreground">No availability</span>}
+                {a.slots.map((slot, idx) => (
+                  <div key={idx} className="flex items-center text-sm gap-2">
+                    <Clock className="h-4 w-4 text-muted-foreground" />
+                    <span>{slot}</span>
+                    <button type="button" className="ml-2 text-red-500 hover:text-red-700" onClick={() => handleRemoveSlot(a.day, idx)}><Trash2 className="h-4 w-4" /></button>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+      <div className="flex flex-wrap items-end gap-2 mt-4">
+        <label>
+          Day:
+          <select className="ml-2" value={newSlot.day} onChange={e => setNewSlot(s => ({ ...s, day: e.target.value }))}>
+            {daysOfWeek.map(day => <option key={day} value={day}>{day}</option>)}
+          </select>
+        </label>
+        <label>
+          Start:
+          <input type="time" className="ml-2" value={newSlot.start} onChange={e => setNewSlot(s => ({ ...s, start: e.target.value }))} />
+        </label>
+        <label>
+          End:
+          <input type="time" className="ml-2" value={newSlot.end} onChange={e => setNewSlot(s => ({ ...s, end: e.target.value }))} />
+        </label>
+        <button type="button" className="ml-2 px-3 py-1 bg-primary text-white rounded hover:bg-primary/80 flex items-center" onClick={handleAddSlot}>
+          <PlusCircle className="h-4 w-4 mr-1" />Add time slot
+        </button>
+        <button type="button" className="ml-2 px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700 flex items-center" onClick={handleSave}>
+          <Save className="h-4 w-4 mr-1" />Save availability
+        </button>
+      </div>
+    </div>
+  );
+}
+
 const ProfilePage = () => {
   const { toast } = useToast();
   const [userData, setUserData] = useState(initialUserData);
@@ -314,6 +409,8 @@ const ProfilePage = () => {
   const [showWithdrawModal, setShowWithdrawModal] = useState(false);
   const [selectedConversationId, setSelectedConversationId] = useState(null);
   const fileInputRef = useRef(null);
+  const [isEditingAvailability, setIsEditingAvailability] = useState(false);
+  const [availability, setAvailability] = useState(userData.availability || []);
 
   useEffect(() => {
     // Simulate fetching user data from backend
@@ -817,6 +914,42 @@ const ProfilePage = () => {
             </TabsContent>
             <TabsContent value="settings">
               {/* Settings content (previously Settings component) */}
+            </TabsContent>
+            <TabsContent value="availability">
+              <Card className="mb-6">
+                <CardHeader className="flex flex-row items-center justify-between">
+                  <CardTitle>Availability</CardTitle>
+                  <button type="button" className="text-blue-600 hover:underline flex items-center" onClick={() => setIsEditingAvailability(v => !v)}>
+                    <Edit className="h-4 w-4 mr-1" />{isEditingAvailability ? 'Cancel' : 'Edit'}
+                  </button>
+                </CardHeader>
+                <CardContent>
+                  {isEditingAvailability ? (
+                    <AvailabilityEditor availability={availability} onChange={setAvailability} />
+                  ) : (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {daysOfWeek.map(day => {
+                        const slots = availability.find(a => a.day === day)?.slots || [];
+                        return (
+                          <div key={day} className="mb-2">
+                            <h4 className="font-medium mb-1">{day}</h4>
+                            {slots.length === 0 ? (
+                              <span className="text-sm text-muted-foreground">No availability</span>
+                            ) : (
+                              <ul className="list-disc ml-5">
+                                {slots.map((slot, idx) => <li key={idx}>{slot}</li>)}
+                              </ul>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+                  {(!availability || availability.length === 0) && (
+                    <p className="text-sm text-muted-foreground mt-4">No availability hours set. Please contact the professional to arrange a session.</p>
+                  )}
+                </CardContent>
+              </Card>
             </TabsContent>
           </Tabs>
         </main>

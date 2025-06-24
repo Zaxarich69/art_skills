@@ -18,6 +18,8 @@ import { useToast } from '@/components/ui/use-toast';
 import { mockProfessionalsData } from '@/data/professionals';
 import BookingModal from '@/components/BookingModal';
 import ReviewModal from '@/components/reviews/ReviewModal';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useReviewsStore } from '@/data/reviewsStore';
 
 const defaultProfessional = {
   id: null,
@@ -188,65 +190,124 @@ const ExperienceSection = ({ experience }) => (
   </div>
 );
 
-const AvailabilitySection = ({ availability, name }) => (
-  <div>
-    <h3 className="text-xl font-semibold mb-4">Availability</h3>
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-      {(availability || []).map((avail, i) => (
-        <Card key={i}>
-          <CardContent className="p-4">
-            <h4 className="font-medium mb-2">{avail.day || ''}</h4>
-            <div className="space-y-2">
-              {(avail.slots || []).map((slot, j) => (
-                <div key={j} className="flex items-center text-sm">
-                  <Clock className="h-4 w-4 mr-2 text-muted-foreground" />
-                  <span>{slot || ''}</span>
+const CollapsibleAvailabilitySection = ({ availability, name }) => {
+  const [open, setOpen] = React.useState(false);
+  return (
+    <div>
+      <h3
+        className="text-xl font-semibold mb-4 cursor-pointer select-none"
+        onClick={() => setOpen(v => !v)}
+        title={open ? 'Hide availability' : 'Show availability'}
+      >
+        Availability
+      </h3>
+      {open && (
+        <div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+            {availability && availability.length > 0 ? (
+              availability.map((avail, i) => (
+                <Card key={i}>
+                  <CardContent className="p-4">
+                    <h4 className="font-medium mb-2">{avail.day}</h4>
+                    <div className="space-y-2">
+                      {avail.slots && avail.slots.length > 0 ? (
+                        avail.slots.map((slot, j) => (
+                          <div key={j} className="flex items-center text-sm">
+                            <Clock className="h-4 w-4 mr-2 text-muted-foreground" />
+                            <span>{slot}</span>
+                          </div>
+                        ))
+                      ) : (
+                        <span className="text-sm text-muted-foreground">No availability</span>
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
+              ))
+            ) : (
+              <div className="col-span-2">
+                <span className="text-sm text-muted-foreground">No availability hours set. Please contact the professional to arrange a session.</span>
+              </div>
+            )}
+          </div>
+          <p className="text-sm text-muted-foreground">
+            These are {name}'s regular availability hours. Contact directly to confirm specific times or request alternative arrangements.
+          </p>
+        </div>
+      )}
+    </div>
+  );
+};
+
+const ReviewsSection = ({ professionalId }) => {
+  const { getReviews, getAverageRating, getReviewsCount } = useReviewsStore();
+  const [showReviews, setShowReviews] = React.useState(false);
+  const [page, setPage] = React.useState(1);
+  const REVIEWS_PER_PAGE = 3;
+  const reviews = getReviews(professionalId);
+  const total = getReviewsCount(professionalId);
+  const average = getAverageRating(professionalId);
+  const paginated = reviews.slice(0, page * REVIEWS_PER_PAGE);
+  const canShowMore = paginated.length < reviews.length;
+
+  return (
+    <div>
+      <div
+        className="flex items-center justify-between mb-6 cursor-pointer select-none"
+        onClick={() => setShowReviews((prev) => !prev)}
+        title="Show reviews"
+      >
+        <h3 className="text-xl font-semibold">
+          Reviews ({total})
+        </h3>
+        <div className="flex items-center">
+          <Star className="h-5 w-5 text-yellow-500 mr-1" />
+          <span className="font-medium text-lg">{average}</span>
+        </div>
+      </div>
+      <AnimatePresence>
+        {showReviews && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.3 }}
+            className="overflow-hidden"
+          >
+            <div className="space-y-6">
+              {paginated.length === 0 && (
+                <div className="text-muted-foreground">No reviews yet</div>
+              )}
+              {paginated.map((review, i) => (
+                <div key={i} className="border-b border-border pb-6 last:border-0">
+                  <div className="flex justify-between mb-2">
+                    <h4 className="font-medium">{review.name || review.student?.name || ''}</h4>
+                    <span className="text-sm text-muted-foreground">
+                      {review.date ? new Date(review.date).toLocaleDateString() : ''}
+                    </span>
+                  </div>
+                  <div className="flex mb-2">
+                    {[...Array(5)].map((_, j) => (
+                      <Star 
+                        key={j} 
+                        className={`h-4 w-4 ${j < (review.rating || 0) ? 'text-yellow-500' : 'text-muted'}`} 
+                        fill={j < (review.rating || 0) ? 'currentColor' : 'none'}
+                      />
+                    ))}
+                  </div>
+                  <p className="text-muted-foreground">{review.comment || ''}</p>
                 </div>
               ))}
+              {canShowMore && (
+                <button className="text-sm text-blue-600 mt-2" onClick={() => setPage(p => p + 1)}>Show more</button>
+              )}
             </div>
-          </CardContent>
-        </Card>
-      ))}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
-    <p className="text-sm text-muted-foreground">
-      These are {name}'s regular availability hours. Contact directly to confirm specific times or request alternative arrangements.
-    </p>
-  </div>
-);
-
-const ReviewsSection = ({ reviewsCount, rating, testimonials }) => (
-  <div>
-    <div className="flex items-center justify-between mb-6">
-      <h3 className="text-xl font-semibold">Reviews ({reviewsCount || 0})</h3>
-      <div className="flex items-center">
-        <Star className="h-5 w-5 text-yellow-500 mr-1" />
-        <span className="font-medium text-lg">{rating || 0}</span>
-      </div>
-    </div>
-    <div className="space-y-6">
-      {(testimonials || []).map((review, i) => (
-        <div key={i} className="border-b border-border pb-6 last:border-0">
-          <div className="flex justify-between mb-2">
-            <h4 className="font-medium">{review.name || ''}</h4>
-            <span className="text-sm text-muted-foreground">
-              {review.date ? new Date(review.date).toLocaleDateString() : ''}
-            </span>
-          </div>
-          <div className="flex mb-2">
-            {[...Array(5)].map((_, j) => (
-              <Star 
-                key={j} 
-                className={`h-4 w-4 ${j < (review.rating || 0) ? 'text-yellow-500' : 'text-muted'}`} 
-                fill={j < (review.rating || 0) ? 'currentColor' : 'none'}
-              />
-            ))}
-          </div>
-          <p className="text-muted-foreground">{review.comment || ''}</p>
-        </div>
-      ))}
-    </div>
-  </div>
-);
+  );
+};
 
 const ContactCard = ({ professional, toast }) => {
   const [message, setMessage] = useState('');
@@ -635,12 +696,8 @@ const ProfessionalPage = () => {
           <ProfileDetails professional={displayProfessional} />
           <AboutSection professional={displayProfessional} />
           <ExperienceSection experience={displayProfessional.experience || []} />
-          <AvailabilitySection availability={displayProfessional.availability || []} name={displayProfessional.name} />
-          <ReviewsSection 
-            reviewsCount={displayProfessional.reviews || 0} 
-            rating={displayProfessional.rating || 0} 
-            testimonials={displayProfessional.testimonials || []} 
-          />
+          <CollapsibleAvailabilitySection availability={displayProfessional.availability || []} name={displayProfessional.name} />
+          <ReviewsSection professionalId={displayProfessional.id} />
         </div>
         <div>
           <ContactCard professional={displayProfessional} toast={toast} />

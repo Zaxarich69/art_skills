@@ -97,13 +97,13 @@ const LessonCard = ({ lesson, isUpcoming, onLeaveReview }) => {
                 {lesson.status.toLowerCase() === 'completed' && !hasLeftReview && (
                   <Button variant="secondary" size="sm" onClick={() => setIsReviewFormOpen(true)} className="w-full md:w-auto">
                     <Star className="mr-2 h-4 w-4" />
-                    Оставить отзыв
+                    Leave a review
                   </Button>
                 )}
                 {lesson.status.toLowerCase() === 'completed' && hasLeftReview && (
                   <span className="text-sm text-muted-foreground flex items-center gap-1 w-full md:w-auto px-4 py-2 border rounded-md bg-secondary">
                     <Star className="h-4 w-4 text-yellow-500" />
-                    Отзыв оставлен
+                    Review left
                   </span>
                 )}
               </>

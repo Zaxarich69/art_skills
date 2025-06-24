@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useQuery } from '@tanstack/react-query';
 import { format } from 'date-fns';
-import { ru } from 'date-fns/locale';
+import { enUS } from 'date-fns/locale';
 import { Paperclip, Image, File, Video, Mic } from 'lucide-react';
 import { useTheme } from '../../contexts/ThemeContext';
 
@@ -49,7 +49,7 @@ const ChatWindow = ({ chat, socket }) => {
           <div className="relative group">
             <img 
               src={message.content} 
-              alt="Изображение" 
+              alt="Image" 
               className="max-w-xs rounded-lg cursor-pointer"
               onClick={() => window.open(message.content, '_blank')}
             />
@@ -82,14 +82,14 @@ const ChatWindow = ({ chat, socket }) => {
       case MessageTypes.MEETING:
         return (
           <div className="bg-purple-100 dark:bg-purple-900 p-4 rounded-lg">
-            <h4 className="font-semibold mb-2">Новая встреча</h4>
+            <h4 className="font-semibold mb-2">New meeting</h4>
             <p>{message.content}</p>
             <div className="mt-2 flex space-x-2">
               <button className="px-3 py-1 bg-purple-500 text-white rounded-md text-sm">
-                Принять
+                Accept
               </button>
               <button className="px-3 py-1 bg-gray-200 dark:bg-gray-700 rounded-md text-sm">
-                Отклонить
+                Decline
               </button>
             </div>
           </div>
@@ -129,7 +129,7 @@ const ChatWindow = ({ chat, socket }) => {
         <div className="ml-3">
           <div className="font-semibold">{chat.user.name}</div>
           <div className="text-sm text-gray-500">
-            {chat.online ? 'Онлайн' : 'Оффлайн'}
+            {chat.online ? 'Online' : 'Offline'}
           </div>
         </div>
       </div>
@@ -138,7 +138,7 @@ const ChatWindow = ({ chat, socket }) => {
         {Object.entries(groupedMessages).map(([date, messages]) => (
           <div key={date}>
             <div className="text-center text-sm text-gray-500 mb-4">
-              {format(new Date(date), 'd MMMM yyyy', { locale: ru })}
+              {format(new Date(date), 'd MMMM yyyy', { locale: enUS })}
             </div>
             <div className="space-y-4">
               {messages.map((message) => (

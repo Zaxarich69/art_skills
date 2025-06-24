@@ -17,94 +17,8 @@ import {
 } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 import SendMessageModal from '@/components/messages/SendMessageModal';
-
-// Mock data for professionals
-const mockProfessionals = [
-  {
-    id: 1,
-    name: 'Dr. Emily Johnson',
-    title: 'Mathematics Professor',
-    category: 'language_tutor',
-    rating: 4.9,
-    reviews: 128,
-    location: 'New York, NY',
-    hourlyRate: 75,
-    acceptsCrypto: true,
-    about: 'PhD in Mathematics with 10+ years of teaching experience at university level. Specializes in calculus and linear algebra.',
-    image: null,
-    tags: ['Mathematics', 'Calculus', 'University Level'],
-  },
-  {
-    id: 2,
-    name: 'Marcus Chen',
-    title: 'Woodworking Craftsman',
-    category: 'craftsman',
-    rating: 4.8,
-    reviews: 93,
-    location: 'Portland, OR',
-    hourlyRate: 65,
-    acceptsCrypto: true,
-    about: 'Master craftsman with 15 years of experience. Specializes in custom furniture and woodworking projects.',
-    image: null,
-    tags: ['Woodworking', 'Furniture', 'Custom Projects'],
-  },
-  {
-    id: 3,
-    name: 'Sofia Rodriguez',
-    title: 'Spanish Language Tutor',
-    category: 'language_tutor',
-    rating: 4.7,
-    reviews: 156,
-    location: 'Miami, FL',
-    hourlyRate: 45,
-    acceptsCrypto: false,
-    about: 'Native Spanish speaker with 8 years of teaching experience. Specializes in conversational Spanish and business Spanish.',
-    image: null,
-    tags: ['Spanish', 'Language', 'Conversation'],
-  },
-  {
-    id: 4,
-    name: 'James Wilson',
-    title: 'Web Development Instructor',
-    category: 'web_developer',
-    rating: 4.9,
-    reviews: 201,
-    location: 'San Francisco, CA',
-    hourlyRate: 90,
-    acceptsCrypto: true,
-    about: 'Full-stack developer with 12 years of industry experience. Teaches React, Node.js, and modern web development practices.',
-    image: null,
-    tags: ['Web Development', 'React', 'JavaScript'],
-  },
-  {
-    id: 5,
-    name: 'Aisha Patel',
-    title: 'Yoga Instructor',
-    category: 'fitness_coach',
-    rating: 4.8,
-    reviews: 175,
-    location: 'Austin, TX',
-    hourlyRate: 55,
-    acceptsCrypto: false,
-    about: 'Certified yoga instructor with 7 years of experience. Specializes in Hatha and Vinyasa yoga for all levels.',
-    image: null,
-    tags: ['Yoga', 'Fitness', 'Wellness'],
-  },
-  {
-    id: 6,
-    name: 'David Kim',
-    title: 'Piano Teacher',
-    category: 'musician',
-    rating: 4.9,
-    reviews: 112,
-    location: 'Chicago, IL',
-    hourlyRate: 60,
-    acceptsCrypto: true,
-    about: 'Classical pianist with a Master\'s degree in Music. 10+ years teaching experience for all ages and skill levels.',
-    image: null,
-    tags: ['Piano', 'Classical Music', 'Music Theory'],
-  },
-];
+import { mockProfessionalsData } from '@/data/professionals';
+import { useReviewsStore } from '@/data/reviewsStore';
 
 const categories = [
   {
@@ -206,8 +120,7 @@ const ExplorePage = () => {
   const [searchParams] = useSearchParams();
   const [messageModalOpen, setMessageModalOpen] = useState(false);
   const [selectedProfessional, setSelectedProfessional] = useState(null);
-  // Заглушка: авторизован ли пользователь (заменить на реальную логику)
-  const isAuthenticated = Boolean(localStorage.getItem('userProfile'));
+  const { getReviewsCount, getAverageRating } = useReviewsStore();
 
   useEffect(() => {
     const categoryParam = searchParams.get('category');
@@ -252,7 +165,7 @@ const ExplorePage = () => {
         };
       }
 
-      let combinedProfessionals = [...mockProfessionals];
+      let combinedProfessionals = [...mockProfessionalsData];
       if (userProfessional) {
         // Check if userProfessional is already in the list to prevent duplicates
         if (!combinedProfessionals.some(pro => pro.id === userProfessional.id)) {
@@ -516,8 +429,8 @@ const ExplorePage = () => {
                     
                     <div className="flex items-center mb-3">
                       <Star className="h-4 w-4 text-yellow-500 mr-1" />
-                      <span className="font-medium mr-1">{professional.rating}</span>
-                      <span className="text-muted-foreground text-sm">({professional.reviews} reviews)</span>
+                      <span className="font-medium mr-1">{getAverageRating(professional.id)}</span>
+                      <span className="text-muted-foreground text-sm">({getReviewsCount(professional.id)} reviews)</span>
                     </div>
                     
                     <div className="flex items-center text-sm text-muted-foreground mb-3">
@@ -582,7 +495,7 @@ const ExplorePage = () => {
           open={messageModalOpen}
           onClose={() => setMessageModalOpen(false)}
           professional={selectedProfessional || {}}
-          isAuthenticated={isAuthenticated}
+          isAuthenticated={Boolean(localStorage.getItem('userProfile'))}
           onLogin={() => window.location.href = '/login'}
           onRegister={() => window.location.href = '/register'}
           onMessageSent={() => {/* обновить счетчик чатов, если нужно */}}

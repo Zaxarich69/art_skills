@@ -3,6 +3,7 @@ import ReactDOM from "react-dom/client";
 import App from "@/App";
 import { BrowserRouter } from "react-router-dom";
 import "@/index.css";
+import { ReviewsProvider } from '@/data/reviewsStore';
 
 // RainbowKit + wagmi + react-query
 import "@rainbow-me/rainbowkit/styles.css";
@@ -27,7 +28,9 @@ ReactDOM.createRoot(document.getElementById("root")).render(
       <WagmiProvider config={config}>
         <RainbowKitProvider theme={lightTheme()}>
           <BrowserRouter>
-            <App />
+            <ReviewsProvider>
+              <App />
+            </ReviewsProvider>
           </BrowserRouter>
         </RainbowKitProvider>
       </WagmiProvider>

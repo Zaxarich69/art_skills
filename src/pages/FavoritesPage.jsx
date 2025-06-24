@@ -19,7 +19,7 @@ const FavoritesTab = () => {
   }
 
   return (
-    <div className="container py-10">
+    <div className="container pt-20 pb-10">
       <h2 className="text-2xl font-bold mb-8">Your Favorites</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {favorites.map(pro => (

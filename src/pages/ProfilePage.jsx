@@ -21,6 +21,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import FavoritesTab from '@/components/profile/FavoritesTab';
+import { daysOfWeek } from "@/utils/daysOfWeek";
+import AvailabilityBlock from "@/components/profile/AvailabilityBlock";
 
 const initialUserData = {
   name: 'Alexey Morozov',
@@ -303,10 +305,6 @@ const categories = [
     value: 'photography',
     label: 'Photography'
   },
-];
-
-const daysOfWeek = [
-  'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'
 ];
 
 function AvailabilityEditor({ availability, onChange }) {
@@ -668,8 +666,22 @@ const ProfilePage = () => {
     });
   };
 
+  // Новый обработчик для сохранения availability
+  const handleSaveAvailability = (newAvailability) => {
+    setAvailability(newAvailability);
+    setUserData(prev => {
+      const updated = { ...prev, availability: newAvailability };
+      localStorage.setItem('userProfile', JSON.stringify(updated));
+      return updated;
+    });
+    toast({
+      title: "Availability updated",
+      description: "Your availability has been successfully saved.",
+    });
+  };
+
   return (
-    <div className="container mx-auto px-4 py-8 max-w-7xl">
+    <div className="container mx-auto px-4 pt-16 pb-8 max-w-7xl">
       <div className="flex flex-col md:flex-row gap-8">
         {/* Sidebar */}
         <aside className="w-full md:w-64">
@@ -757,6 +769,17 @@ const ProfilePage = () => {
   </div>
 </Button>
 
+<Button
+  variant={activeTab === 'availability' ? 'default' : 'ghost'}
+  className="w-full justify-start"
+  onClick={() => setActiveTab('availability')}
+>
+  <div className="flex items-center gap-4">
+    <Clock className="h-5 w-5 text-muted-foreground" />
+    Availability
+  </div>
+</Button>
+
               <Button
                 variant={activeTab === 'chat' ? 'default' : 'ghost'}
                 className="w-full justify-start"
@@ -785,171 +808,159 @@ const ProfilePage = () => {
         <main className="flex-1">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
             <TabsContent value="profile">
-              <ProfileForm 
-                userData={userData} 
-                onSave={handleSaveProfile} 
-                isEditing={isEditing} 
-                onEditToggle={handleEditToggle}
-                categories={categories}
-              />
+              <div className="mt-12">
+                <ProfileForm 
+                  userData={userData} 
+                  onSave={handleSaveProfile} 
+                  isEditing={isEditing} 
+                  onEditToggle={handleEditToggle}
+                  categories={categories}
+                />
+              </div>
             </TabsContent>
             <TabsContent value="balance">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Your Balance</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-4xl font-bold mb-4">
-                    {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(userData.balance)} available
-                  </div>
-                  <div className="flex gap-4 mb-8">
-                    <Button onClick={handleOpenDepositModal} className="flex-1">
-                      <PlusCircle className="mr-2 h-4 w-4" /> Top Up
-                    </Button>
-                    <Button onClick={handleOpenWithdrawModal} className="flex-1" variant="outline">
-                      <MinusCircle className="mr-2 h-4 w-4" /> Withdraw
-                    </Button>
-                  </div>
-                  <h3 className="text-2xl font-semibold mb-4">Transaction History</h3>
-                  <div className="space-y-4">
-                    {userData.transactions.length > 0 ? (
-                      userData.transactions.map(transaction => (
-                        <div key={transaction.id} className="flex items-center justify-between bg-muted p-4 rounded-md">
-                          <div className="flex items-center gap-3">
-                            {transaction.type === 'deposit' ? (
-                              <ArrowUpCircle className="h-6 w-6 text-green-500" />
-                            ) : (
-                              <ArrowDownCircle className="h-6 w-6 text-red-500" />
-                            )}
-                            <div>
-                              <p className="font-medium">{transaction.description}</p>
-                              <p className="text-sm text-muted-foreground">{new Date(transaction.date).toLocaleDateString()}</p>
+              <div className="mt-12">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Your Balance</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-4xl font-bold mb-4">
+                      {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(userData.balance)} available
+                    </div>
+                    <div className="flex gap-4 mb-8">
+                      <Button onClick={handleOpenDepositModal} className="flex-1">
+                        <PlusCircle className="mr-2 h-4 w-4" /> Top Up
+                      </Button>
+                      <Button onClick={handleOpenWithdrawModal} className="flex-1" variant="outline">
+                        <MinusCircle className="mr-2 h-4 w-4" /> Withdraw
+                      </Button>
+                    </div>
+                    <h3 className="text-2xl font-semibold mb-4">Transaction History</h3>
+                    <div className="space-y-4">
+                      {userData.transactions.length > 0 ? (
+                        userData.transactions.map(transaction => (
+                          <div key={transaction.id} className="flex items-center justify-between bg-muted p-4 rounded-md">
+                            <div className="flex items-center gap-3">
+                              {transaction.type === 'deposit' ? (
+                                <ArrowUpCircle className="h-6 w-6 text-green-500" />
+                              ) : (
+                                <ArrowDownCircle className="h-6 w-6 text-red-500" />
+                              )}
+                              <div>
+                                <p className="font-medium">{transaction.description}</p>
+                                <p className="text-sm text-muted-foreground">{new Date(transaction.date).toLocaleDateString()}</p>
+                              </div>
+                            </div>
+                            <div className={`font-bold ${transaction.type === 'deposit' ? 'text-green-500' : 'text-red-500'}`}>
+                              {transaction.type === 'deposit' ? '+' : '-'}{new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(transaction.amount)}
                             </div>
                           </div>
-                          <div className={`font-bold ${transaction.type === 'deposit' ? 'text-green-500' : 'text-red-500'}`}>
-                            {transaction.type === 'deposit' ? '+' : '-'}{new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(transaction.amount)}
-                          </div>
-                        </div>
-                      ))
-                    ) : (
-                      <p className="text-muted-foreground">No transactions yet.</p>
-                    )}
-                  </div>
-                </CardContent>
-              </Card>
+                        ))
+                      ) : (
+                        <p className="text-muted-foreground">No transactions yet.</p>
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
             </TabsContent>
             <TabsContent value="lessons">
-              <Lessons 
-                upcomingLessons={userData.upcomingLessons} 
-                pastLessons={userData.pastLessons} 
-                onLeaveReview={handleLeaveReview} 
-              />
+              <div className="mt-12">
+                <Lessons 
+                  upcomingLessons={userData.upcomingLessons} 
+                  pastLessons={userData.pastLessons} 
+                  onLeaveReview={handleLeaveReview} 
+                />
+              </div>
             </TabsContent>
             <TabsContent value="reviews">
-              <Reviews reviews={userData.reviews} averageRating={userData.averageRating} />
+              <div className="mt-12">
+                <Reviews reviews={userData.reviews} averageRating={userData.averageRating} />
+              </div>
             </TabsContent>
             <TabsContent value="favorites">
-  <FavoritesTab />
-</TabsContent>
+              <div className="mt-12">
+                <FavoritesTab />
+              </div>
+            </TabsContent>
 
             <TabsContent value="payments">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Your Payment Methods</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  {/* Placeholder for payment methods content */}
-                  <p className="text-muted-foreground">No payment methods added.</p>
-                </CardContent>
-              </Card>
+              <div className="mt-12">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Your Payment Methods</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    {/* Placeholder for payment methods content */}
+                    <p className="text-muted-foreground">No payment methods added.</p>
+                  </CardContent>
+                </Card>
+              </div>
             </TabsContent>
             <TabsContent value="chat">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Messages</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  {userData.conversations && userData.conversations.length > 0 ? (
-                    <div className="flex h-[600px] max-h-[600px]">
-                      <div className="flex flex-col w-1/3 border-r pr-4 space-y-2 overflow-y-auto">
-                        {userData.conversations.map(conv => (
-                          <div
-                            key={conv.id}
-                            className={`flex items-center gap-3 p-3 rounded-md cursor-pointer ${
-                              selectedConversationId === conv.id ? 'bg-accent text-accent-foreground' : 'hover:bg-muted'
-                            }`}
-                            onClick={() => setSelectedConversationId(conv.id)}
-                          >
-                            <Avatar>
-                              <AvatarImage src={conv.user.avatar} />
-                              <AvatarFallback>{conv.user.name.charAt(0)}</AvatarFallback>
-                            </Avatar>
-                            <div>
-                              <p className="font-medium">{conv.user.name}</p>
-                              <p className="text-sm text-muted-foreground truncate">{conv.lastMessage}</p>
+              <div className="mt-12">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Messages</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    {userData.conversations && userData.conversations.length > 0 ? (
+                      <div className="flex h-[600px] max-h-[600px]">
+                        <div className="flex flex-col w-1/3 border-r pr-4 space-y-2 overflow-y-auto">
+                          {userData.conversations.map(conv => (
+                            <div
+                              key={conv.id}
+                              className={`flex items-center gap-3 p-3 rounded-md cursor-pointer ${
+                                selectedConversationId === conv.id ? 'bg-accent text-accent-foreground' : 'hover:bg-muted'
+                              }`}
+                              onClick={() => setSelectedConversationId(conv.id)}
+                            >
+                              <Avatar>
+                                <AvatarImage src={conv.user.avatar} />
+                                <AvatarFallback>{conv.user.name.charAt(0)}</AvatarFallback>
+                              </Avatar>
+                              <div>
+                                <p className="font-medium">{conv.user.name}</p>
+                                <p className="text-sm text-muted-foreground truncate">{conv.lastMessage}</p>
+                              </div>
                             </div>
-                          </div>
-                        ))}
+                          ))}
+                        </div>
+                        <div className="flex flex-col w-2/3 pl-4">
+                          {selectedConversationId ? (
+                            <ChatWindow 
+                              conversation={userData.conversations.find(c => c.id === selectedConversationId)}
+                              onSendMessage={handleSendMessage}
+                            />
+                          ) : (
+                            <div className="flex-1 flex items-center justify-center text-muted-foreground">
+                              Select a chat to start messaging
+                            </div>
+                          )}
+                        </div>
                       </div>
-                      <div className="flex flex-col w-2/3 pl-4">
-                        {selectedConversationId ? (
-                          <ChatWindow 
-                            conversation={userData.conversations.find(c => c.id === selectedConversationId)}
-                            onSendMessage={handleSendMessage}
-                          />
-                        ) : (
-                          <div className="flex-1 flex items-center justify-center text-muted-foreground">
-                            Select a chat to start messaging
-                          </div>
-                        )}
+                    ) : (
+                      <div className="flex-1 flex items-center justify-center text-muted-foreground">
+                        No conversations yet.
                       </div>
-                    </div>
-                  ) : (
-                    <div className="flex-1 flex items-center justify-center text-muted-foreground">
-                      No conversations yet.
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
+                    )}
+                  </CardContent>
+                </Card>
+              </div>
             </TabsContent>
             <TabsContent value="settings">
-              {/* Settings content (previously Settings component) */}
+              <div className="mt-12">
+                {/* Settings content (previously Settings component) */}
+              </div>
             </TabsContent>
             <TabsContent value="availability">
-              <Card className="mb-6">
-                <CardHeader className="flex flex-row items-center justify-between">
-                  <CardTitle>Availability</CardTitle>
-                  <button type="button" className="text-blue-600 hover:underline flex items-center" onClick={() => setIsEditingAvailability(v => !v)}>
-                    <Edit className="h-4 w-4 mr-1" />{isEditingAvailability ? 'Cancel' : 'Edit'}
-                  </button>
-                </CardHeader>
-                <CardContent>
-                  {isEditingAvailability ? (
-                    <AvailabilityEditor availability={availability} onChange={setAvailability} />
-                  ) : (
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      {daysOfWeek.map(day => {
-                        const slots = availability.find(a => a.day === day)?.slots || [];
-                        return (
-                          <div key={day} className="mb-2">
-                            <h4 className="font-medium mb-1">{day}</h4>
-                            {slots.length === 0 ? (
-                              <span className="text-sm text-muted-foreground">No availability</span>
-                            ) : (
-                              <ul className="list-disc ml-5">
-                                {slots.map((slot, idx) => <li key={idx}>{slot}</li>)}
-                              </ul>
-                            )}
-                          </div>
-                        );
-                      })}
-                    </div>
-                  )}
-                  {(!availability || availability.length === 0) && (
-                    <p className="text-sm text-muted-foreground mt-4">No availability hours set. Please contact the professional to arrange a session.</p>
-                  )}
-                </CardContent>
-              </Card>
+              <div className="mt-12">
+                <AvailabilityBlock
+                  availability={userData.availability || []}
+                  onSave={handleSaveAvailability}
+                />
+              </div>
             </TabsContent>
           </Tabs>
         </main>

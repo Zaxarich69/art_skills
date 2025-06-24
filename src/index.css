@@ -140,3 +140,122 @@
 ::-webkit-scrollbar-thumb:hover {
   background: hsl(var(--primary) / 0.6);
 }
+
+/* Availability Block - Глобальная стилизация dropdown элементов */
+.availability-block select,
+.availability-block input[type="time"] {
+  background-color: #393A63 !important;
+  color: white !important;
+  border-color: #49497a !important;
+}
+
+.availability-block select option {
+  background-color: #393A63 !important;
+  color: white !important;
+}
+
+/* Убрать фон у всех карточек и секций расписания */
+.availability-block * {
+  background: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+/* Задать общий фон для контейнера расписания */
+.availability-block {
+  background: #393964 !important;
+  box-shadow: none !important;
+  border-radius: 18px;
+  padding: 32px;
+}
+
+/* Оставить стили кнопок и форм как есть */
+.availability-block button,
+.availability-block select,
+.availability-block input[type="time"] {
+  background-color: #393A63 !important;
+  border: 1px solid #49497a !important;
+}
+
+/* Стили для Badge компонентов */
+.availability-block .bg-\[#f3f3fa\] {
+  background-color: #f3f3fa !important;
+  border: 1px solid #e5e7eb !important;
+}
+
+.availability-block .bg-\[#715bf7\],
+.availability-block .bg-\[#5d4bd4\] {
+  background-color: #715bf7 !important;
+}
+
+.availability-block .hover\:bg-\[#5d4bd4\]:hover {
+  background-color: #5d4bd4 !important;
+}
+
+.availability-block .bg-zinc-200,
+.availability-block .hover\:bg-zinc-300 {
+  background-color: #e5e7eb !important;
+}
+
+.availability-block .hover\:bg-zinc-300:hover {
+  background-color: #d1d5db !important;
+}
+
+/* Time picker специфичная стилизация */
+.availability-block input[type="time"]::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+  cursor: pointer;
+}
+
+.availability-block input[type="time"]::-webkit-datetime-edit {
+  color: white !important;
+}
+
+.availability-block input[type="time"]::-webkit-datetime-edit-fields-wrapper {
+  background-color: #393A63 !important;
+}
+
+.availability-block input[type="time"]::-webkit-datetime-edit-text {
+  color: white !important;
+}
+
+.availability-block input[type="time"]::-webkit-datetime-edit-month-field,
+.availability-block input[type="time"]::-webkit-datetime-edit-day-field,
+.availability-block input[type="time"]::-webkit-datetime-edit-year-field,
+.availability-block input[type="time"]::-webkit-datetime-edit-hour-field,
+.availability-block input[type="time"]::-webkit-datetime-edit-minute-field,
+.availability-block input[type="time"]::-webkit-datetime-edit-second-field,
+.availability-block input[type="time"]::-webkit-datetime-edit-millisecond-field,
+.availability-block input[type="time"]::-webkit-datetime-edit-meridiem-field {
+  color: white !important;
+}
+
+/* Единый фон для всех основных блоков */
+.profile-availability,
+.card,
+.modal,
+.dropdown,
+.select,
+.timepicker,
+.ant-picker-panel,
+.custom-select,
+.custom-timepicker {
+  background-color: #3b3860 !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* Для вложенных элементов — убираем отличия */
+.profile-availability *,
+.card *,
+.modal *,
+.dropdown *,
+.select *,
+.timepicker *,
+.ant-picker-panel *,
+.custom-select *,
+.custom-timepicker * {
+  background-color: #3b3860 !important;
+  border: none !important;
+  box-shadow: none !important;
+}

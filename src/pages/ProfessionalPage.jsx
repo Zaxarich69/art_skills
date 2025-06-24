@@ -557,6 +557,7 @@ const ProfessionalPage = () => {
             instagram: String(userData.socialLinks?.instagram || ''),
             facebook: String(userData.socialLinks?.facebook || '')
           },
+          availability: userData.availability || [],
         };
         setProfessional(userProfessional);
       } else {

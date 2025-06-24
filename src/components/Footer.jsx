@@ -108,6 +108,13 @@ const Footer = () => {
           ))}
         </div>
 
+        <div className="mt-10 mb-6 p-4 bg-secondary/30 rounded-lg max-w-2xl mx-auto">
+          <h2 className="text-lg font-semibold mb-2">Support the Platform</h2>
+          <p className="mb-2">Art Skills thrives thanks to the support of our community. If you would like to help us grow, you can contribute by making a donation or becoming a sponsor.</p>
+          <p className="mb-2">Crypto donations and Stripe payments will be available soon.</p>
+          <p className="font-medium">For partnership or sponsorship, contact: <a href="mailto:sponsor@artskills.com" className="text-primary underline">sponsor@artskills.com</a></p>
+        </div>
+
         {/* Внизу футера ничего нет, кроме копирайта */}
         <div className="border-t border-border mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
           <p className="text-sm text-muted-foreground">
